@@ -166,6 +166,10 @@ allprojects {
         }
     }
 
+    tasks.named('publish') {
+        dependsOn(tasks.named('artifactoryPublish'))
+    }
+
     processResources {
         duplicatesStrategy DuplicatesStrategy.INCLUDE
 
