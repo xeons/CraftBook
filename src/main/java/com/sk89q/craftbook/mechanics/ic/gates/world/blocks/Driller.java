@@ -92,7 +92,7 @@ public class Driller extends AbstractSelfTriggeredIC {
         int depth = 0;
         while (brokenType == Material.AIR) {
 
-            if (blockToBreak.getLocation().getBlockY() == 0 || depth > signMaxDepth) return false;
+            if (blockToBreak.getLocation().getBlockY() <= blockToBreak.getWorld().getMinHeight() || depth > signMaxDepth) return false;
             blockToBreak = blockToBreak.getRelative(0, -1, 0);
             depth += 1;
             brokenType = blockToBreak.getType();
@@ -146,7 +146,7 @@ public class Driller extends AbstractSelfTriggeredIC {
         public void addConfiguration(YAMLProcessor config, String path) {
 
             drillSize = config.getInt(path + "drill-size", 3);
-            maxDrillDepth = config.getInt(path + "max-drill-depth", 256);
+            maxDrillDepth = config.getInt(path + "max-drill-depth", 384);
         }
 
         @Override
