@@ -179,15 +179,10 @@ public class ContainerDispenser extends AbstractSelfTriggeredIC {
             if(!event.isValid())
                 return true;
 
-            for (ItemStack it : event.getItems()) {
-
-                if (item.getAmount() - it.getAmount() < 1) continue;
-                CraftBookBukkitUtil.toSign(getSign()).getWorld().dropItemNaturally(
-                        CraftBookBukkitUtil.toSign(getSign()).getLocation(), new ItemStack(it.getType(), item.getAmount() - it.getAmount(), it.getDurability()));
-                return true;
-            }
+            for (ItemStack it : event.getItems())
+                CraftBookBukkitUtil.toSign(getSign()).getWorld().dropItemNaturally(CraftBookBukkitUtil.toSign(getSign()).getLocation(), it);
+            return true;
         }
-        return false;
     }
 
     public static class Factory extends AbstractICFactory {
