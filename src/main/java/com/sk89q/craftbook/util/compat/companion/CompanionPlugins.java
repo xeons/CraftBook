@@ -5,7 +5,6 @@ import net.milkbowl.vault.economy.Economy;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 
-import com.comphenix.protocol.ProtocolLibrary;
 import com.sk89q.craftbook.bukkit.CraftBookPlugin;
 import com.sk89q.craftbook.bukkit.util.CraftBookBukkitUtil;
 import com.sk89q.worldedit.bukkit.WorldEditPlugin;
@@ -22,7 +21,7 @@ public class CompanionPlugins {
      * Optional dependencies
      */
     private Economy economy;
-    private ProtocolLibrary protocolLib;
+    private Plugin protocolLib;
     private WorldGuardPlugin worldGuardPlugin;
 
     public void initiate(CraftBookPlugin plugin) {
@@ -49,8 +48,8 @@ public class CompanionPlugins {
         // Resolve ProtocolLib
         try {
             checkPlugin = plugin.getServer().getPluginManager().getPlugin("ProtocolLib");
-            if (checkPlugin != null && checkPlugin instanceof ProtocolLibrary) {
-                protocolLib = (ProtocolLibrary) checkPlugin;
+            if (checkPlugin != null && checkPlugin.isEnabled()) {
+                protocolLib = checkPlugin;
             } else protocolLib = null;
         } catch(Throwable e){
             protocolLib = null;
@@ -98,11 +97,13 @@ public class CompanionPlugins {
     }
 
     /**
-     * Gets a copy of {@link ProtocolLibrary}.
+     * Gets the ProtocolLib {@link Plugin} instance if it is present and enabled.
      *
-     * @return The {@link ProtocolLibrary} instance
+     * This method can return null.
+     *
+     * @return The ProtocolLib {@link Plugin} instance
      */
-    public ProtocolLibrary getProtocolLib() {
+    public Plugin getProtocolLib() {
 
         return protocolLib;
     }
