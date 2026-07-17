@@ -38,8 +38,7 @@ public class CombinationLock extends AbstractIC {
 
         try {
             Character[] data = ArrayUtils.toObject(getSign().getLine(2).toCharArray());
-            checkCombo:
-            {
+            checkCombo : {
                 if (state.getInput(0) != (data[1] == 'X'))
                     break checkCombo;
                 if (state.getInput(1) != (data[2] == 'X'))
@@ -85,18 +84,18 @@ public class CombinationLock extends AbstractIC {
         @Override
         public String[] getPinDescription(ChipState state) {
 
-            return new String[] {
-                    "Combination Bit 1",//Inputs
+            return new String[]{
+                    "Combination Bit 1", // Inputs
                     "Combination Bit 2",
                     "Combination Bit 3",
-                    "High on Correct Combination"//Outputs
+                    "High on Correct Combination"// Outputs
             };
         }
 
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"Combination. X = On, O = Off (XOX)", null};
+            return new String[]{"Combination. X = On, O = Off (XOX)", null};
         }
     }
 }

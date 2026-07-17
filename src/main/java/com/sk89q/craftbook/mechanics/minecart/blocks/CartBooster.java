@@ -15,20 +15,22 @@ public class CartBooster extends CartBlockMechanism {
     public void onVehicleImpact(CartBlockImpactEvent event) {
 
         // care?
-        if (event.isMinor()) return;
+        if (event.isMinor())
+            return;
 
         // enabled?
-        if (Power.OFF == isActive(event.getBlocks())) return;
+        if (Power.OFF == isActive(event.getBlocks()))
+            return;
 
         Vector newVelocity = event.getVehicle().getVelocity();
 
-        if(event.getBlocks().matches(minecartSpeedModMaxBoostBlock)) {
+        if (event.getBlocks().matches(minecartSpeedModMaxBoostBlock)) {
             newVelocity.normalize().multiply(event.getMinecart().getMaxSpeed());
-        } else if(event.getBlocks().matches(minecartSpeedMod25xBoostBlock))
+        } else if (event.getBlocks().matches(minecartSpeedMod25xBoostBlock))
             newVelocity.multiply(1.25d);
-        else if(event.getBlocks().matches(minecartSpeedMod20xSlowBlock))
+        else if (event.getBlocks().matches(minecartSpeedMod20xSlowBlock))
             newVelocity.multiply(0.8d);
-        else if(event.getBlocks().matches(minecartSpeedMod50xSlowBlock))
+        else if (event.getBlocks().matches(minecartSpeedMod50xSlowBlock))
             newVelocity.multiply(0.5d);
         else
             return;
@@ -55,18 +57,22 @@ public class CartBooster extends CartBlockMechanism {
     private BlockStateHolder minecartSpeedMod20xSlowBlock;
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadConfiguration(YAMLProcessor config, String path) {
 
         config.setComment(path + "max-boost-block", "Sets the block that is the base of the max boost block.");
-        minecartSpeedModMaxBoostBlock = BlockSyntax.getBlock(config.getString(path + "max-boost-block", BlockTypes.GOLD_BLOCK.id()), true);
+        minecartSpeedModMaxBoostBlock = BlockSyntax
+                .getBlock(config.getString(path + "max-boost-block", BlockTypes.GOLD_BLOCK.id()), true);
 
         config.setComment(path + "25x-boost-block", "Sets the block that is the base of the 25x boost block.");
-        minecartSpeedMod25xBoostBlock = BlockSyntax.getBlock(config.getString(path + "25x-boost-block", BlockTypes.GOLD_ORE.id()), true);
+        minecartSpeedMod25xBoostBlock = BlockSyntax
+                .getBlock(config.getString(path + "25x-boost-block", BlockTypes.GOLD_ORE.id()), true);
 
         config.setComment(path + "50x-slow-block", "Sets the block that is the base of the 50x slower block.");
-        minecartSpeedMod50xSlowBlock = BlockSyntax.getBlock(config.getString(path + "50x-slow-block", BlockTypes.SOUL_SAND.id()), true);
+        minecartSpeedMod50xSlowBlock = BlockSyntax
+                .getBlock(config.getString(path + "50x-slow-block", BlockTypes.SOUL_SAND.id()), true);
 
         config.setComment(path + "20x-slow-block", "Sets the block that is the base of the 20x slower block.");
-        minecartSpeedMod20xSlowBlock = BlockSyntax.getBlock(config.getString(path + "20x-slow-block", BlockTypes.GRAVEL.id()), true);
+        minecartSpeedMod20xSlowBlock = BlockSyntax
+                .getBlock(config.getString(path + "20x-slow-block", BlockTypes.GRAVEL.id()), true);
     }
 }

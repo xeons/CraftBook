@@ -43,24 +43,27 @@ public class VariableManager extends AbstractCraftBookMechanic {
 
         try {
             File varFile = new File(CraftBookPlugin.inst().getDataFolder(), "variables.yml");
-            if(!varFile.exists())
+            if (!varFile.exists())
                 varFile.createNewFile();
-            variableConfiguration = new VariableConfiguration(new YAMLProcessor(varFile, true, YAMLFormat.EXTENDED), CraftBookPlugin.logger());
+            variableConfiguration = new VariableConfiguration(new YAMLProcessor(varFile, true, YAMLFormat.EXTENDED),
+                    CraftBookPlugin.logger());
             variableConfiguration.load();
-        } catch(Exception ignored){
+        } catch (Exception ignored) {
             CraftBookBukkitUtil.printStacktrace(ignored);
             return false;
         }
 
-        if(packetMessageOverride) {
-            if(!CraftBookPlugin.plugins.hasProtocolLib()) {
-                CraftBookPlugin.inst().getLogger().warning("The Variables 'override-all-text' option requires ProtocolLib, which is not installed. Packet message overrides will be disabled.");
+        if (packetMessageOverride) {
+            if (!CraftBookPlugin.plugins.hasProtocolLib()) {
+                CraftBookPlugin.inst().getLogger().warning(
+                        "The Variables 'override-all-text' option requires ProtocolLib, which is not installed. Packet message overrides will be disabled.");
             } else {
                 try {
                     new VariablePacketModifier();
                 } catch (Throwable t) {
                     // ProtocolLib present but a linkage/runtime error occurred; don't let it break the mechanic.
-                    CraftBookPlugin.inst().getLogger().warning("Failed to enable Variables packet message overrides: " + t.getMessage());
+                    CraftBookPlugin.inst().getLogger()
+                            .warning("Failed to enable Variables packet message overrides: " + t.getMessage());
                 }
             }
         }
@@ -71,7 +74,7 @@ public class VariableManager extends AbstractCraftBookMechanic {
     @Override
     public void disable() {
 
-        if(variableConfiguration != null) {
+        if (variableConfiguration != null) {
             variableConfiguration.save();
             variableConfiguration = null;
         }
@@ -106,15 +109,16 @@ public class VariableManager extends AbstractCraftBookMechanic {
 
     /**
      * Grabs the namespace off a variable. Returns global if none.
-     * 
+     *
      * @param variable The variable
      * @return The namespace or global.
      */
     public static String getNamespace(String variable) {
 
-        if(variable.contains("|")) {
+        if (variable.contains("|")) {
             String[] bits = RegexUtil.PIPE_PATTERN.split(variable);
-            if(bits.length < 2) return "global";
+            if (bits.length < 2)
+                return "global";
             return bits[0];
         } else {
             return "global";
@@ -123,15 +127,16 @@ public class VariableManager extends AbstractCraftBookMechanic {
 
     /**
      * Grabs the variable name off a variable.
-     * 
+     *
      * @param variable The variable
      * @return The name.
      */
     public static String getVariableName(String variable) {
 
-        if(variable.contains("|")) {
+        if (variable.contains("|")) {
             String[] bits = RegexUtil.PIPE_PATTERN.split(variable);
-            if(bits.length < 2) return variable;
+            if (bits.length < 2)
+                return variable;
             return bits[1];
         } else {
             return variable;
@@ -141,47 +146,51 @@ public class VariableManager extends AbstractCraftBookMechanic {
     @EventHandler
     public void onPlayerChat(AsyncPlayerChatEvent event) {
 
-        if(playerChatOverride && event.getPlayer().hasPermission("craftbook.variables.chat"))
+        if (playerChatOverride && event.getPlayer().hasPermission("craftbook.variables.chat"))
             event.setMessage(ParsingUtil.parseVariables(event.getMessage(), event.getPlayer()));
     }
 
     @EventHandler
     public void onPlayerCommandPreprocess(PlayerCommandPreprocessEvent event) {
 
-        if(playerCommandOverride && event.getPlayer().hasPermission("craftbook.variables.commands"))
+        if (playerCommandOverride && event.getPlayer().hasPermission("craftbook.variables.commands"))
             event.setMessage(ParsingUtil.parseVariables(event.getMessage(), event.getPlayer()));
     }
 
     @EventHandler
     public void onConsoleCommandPreprocess(ServerCommandEvent event) {
 
-        if(consoleOverride)
+        if (consoleOverride)
             event.setCommand(ParsingUtil.parseVariables(event.getCommand(), null));
     }
 
     @EventHandler
     public void onSelfTriggerPing(SelfTriggerPingEvent event) {
 
-        if(!CraftBookPlugin.inst().getConfiguration().convertNamesToCBID) return;
-        if(SignUtil.isSign(event.getBlock())) {
+        if (!CraftBookPlugin.inst().getConfiguration().convertNamesToCBID)
+            return;
+        if (SignUtil.isSign(event.getBlock())) {
 
             ChangedSign sign = CraftBookBukkitUtil.toChangedSign(event.getBlock());
 
             int i = 0;
 
-            for(String line : sign.getLines()) {
-                for(String var : ParsingUtil.getPossibleVariables(line)) {
+            for (String line : sign.getLines()) {
+                for (String var : ParsingUtil.getPossibleVariables(line)) {
                     String namespace = getNamespace(var);
-                    if(namespace == null || namespace.isEmpty() || namespace.equals("global")) continue;
-                    if(CraftBookPlugin.inst().getUUIDMappings().getUUID(namespace) != null) continue;
+                    if (namespace == null || namespace.isEmpty() || namespace.equals("global"))
+                        continue;
+                    if (CraftBookPlugin.inst().getUUIDMappings().getUUID(namespace) != null)
+                        continue;
                     OfflinePlayer player = Bukkit.getOfflinePlayer(namespace);
-                    if(player.hasPlayedBefore()) {
+                    if (player.hasPlayedBefore()) {
                         try {
                             ProfileService resolver = HttpRepositoryService.forMinecraft();
                             Profile profile = resolver.findByName(player.getName()); // May be null
 
                             UUID uuid = profile.getUniqueId();
-                            line = StringUtils.replace(line, var, var.replace(namespace, CraftBookPlugin.inst().getUUIDMappings().getCBID(uuid)));
+                            line = StringUtils.replace(line, var,
+                                    var.replace(namespace, CraftBookPlugin.inst().getUUIDMappings().getCBID(uuid)));
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -201,21 +210,24 @@ public class VariableManager extends AbstractCraftBookMechanic {
     private boolean packetMessageOverride;
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadConfiguration(YAMLProcessor config, String path) {
 
-        config.setComment(path + "default-to-global", "When a variable is accessed via command, if no namespace is provided... It will default to global. If this is false, it will use the players name.");
+        config.setComment(path + "default-to-global",
+                "When a variable is accessed via command, if no namespace is provided... It will default to global. If this is false, it will use the players name.");
         defaultToGlobal = config.getBoolean(path + "default-to-global", false);
 
         config.setComment(path + "enable-in-console", "Allows variables to work on the Console.");
         consoleOverride = config.getBoolean(path + "enable-in-console", false);
 
-        config.setComment(path + "enable-in-player-commands", "Allows variables to work in any command a player performs.");
+        config.setComment(path + "enable-in-player-commands",
+                "Allows variables to work in any command a player performs.");
         playerCommandOverride = config.getBoolean(path + "enable-in-player-commands", false);
 
         config.setComment(path + "enable-in-player-chat", "Allow variables to work in player chat.");
         playerChatOverride = config.getBoolean(path + "enable-in-player-chat", false);
 
-        config.setComment(path + "override-all-text", "Modify outgoing packets to replace variables in all text. (Requires ProtocolLib)");
+        config.setComment(path + "override-all-text",
+                "Modify outgoing packets to replace variables in all text. (Requires ProtocolLib)");
         packetMessageOverride = config.getBoolean(path + "override-all-text", false);
     }
 

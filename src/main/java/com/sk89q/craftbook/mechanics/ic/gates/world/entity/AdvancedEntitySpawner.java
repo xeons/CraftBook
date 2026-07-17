@@ -77,10 +77,11 @@ public class AdvancedEntitySpawner extends AbstractIC {
     @Override
     public void trigger(ChipState chip) {
 
-        if(!location.getChunk().isLoaded())
+        if (!location.getChunk().isLoaded())
             return;
 
-        if (!chip.getInput(0)) return;
+        if (!chip.getInput(0))
+            return;
         Block left = SignUtil.getLeftBlock(CraftBookBukkitUtil.toSign(getSign()).getBlock());
         ChangedSign effectSign = null;
         if (SignUtil.isWallSign(left))
@@ -103,16 +104,16 @@ public class AdvancedEntitySpawner extends AbstractIC {
                         ItemStack slot = ItemUtil.makeItemValid(ItemSyntax.getItem(bit));
 
                         switch (s) {
-                            case 0:
+                            case 0 :
                                 ((LivingEntity) ent).getEquipment().setHelmet(slot);
                                 break;
-                            case 1:
+                            case 1 :
                                 ((LivingEntity) ent).getEquipment().setChestplate(slot);
                                 break;
-                            case 2:
+                            case 2 :
                                 ((LivingEntity) ent).getEquipment().setLeggings(slot);
                                 break;
-                            case 3:
+                            case 3 :
                                 ((LivingEntity) ent).getEquipment().setBoots(slot);
                                 break;
                         }
@@ -125,11 +126,13 @@ public class AdvancedEntitySpawner extends AbstractIC {
             while (effectSign != null) { // Apply effects
                 for (int s = 0; s < 4; s++) {
                     String bit = effectSign.getLine(s);
-                    if (bit == null || bit.trim().isEmpty()) continue;
+                    if (bit == null || bit.trim().isEmpty())
+                        continue;
 
                     String[] data = RegexUtil.COLON_PATTERN.split(bit);
 
-                    if (data[0].equalsIgnoreCase("e")) EntityUtil.setEntityData(ent, bit.substring(2));
+                    if (data[0].equalsIgnoreCase("e"))
+                        EntityUtil.setEntityData(ent, bit.substring(2));
                     else if (data[0].equalsIgnoreCase("r")) {
                         EntityType rider = EntityType.fromName(data[1].trim());
                         Entity rid = CraftBookBukkitUtil.toSign(getSign()).getWorld().spawnEntity(location, rider);
@@ -138,7 +141,9 @@ public class AdvancedEntitySpawner extends AbstractIC {
                         for (int a = 1; a < data.length; a++) {
                             try {
                                 String[] potionBits = RegexUtil.SEMICOLON_PATTERN.split(data[a]);
-                                PotionEffect effect = new PotionEffect(PotionEffectType.getById(Integer.parseInt(potionBits[0])), Integer.parseInt(potionBits[1]), Integer.parseInt(potionBits[2]));
+                                PotionEffect effect = new PotionEffect(
+                                        PotionEffectType.getById(Integer.parseInt(potionBits[0])),
+                                        Integer.parseInt(potionBits[1]), Integer.parseInt(potionBits[2]));
                                 ((LivingEntity) ent).addPotionEffect(effect);
                             } catch (Exception ignored) {
                             }
@@ -154,7 +159,8 @@ public class AdvancedEntitySpawner extends AbstractIC {
                         } catch (Exception ignored) {
                         }
                     } else if (data[0].equalsIgnoreCase("s")) {
-                        if (!(ent instanceof LivingEntity)) continue;
+                        if (!(ent instanceof LivingEntity))
+                            continue;
 
                         ItemStack slot = ItemUtil.makeItemValid(ItemSyntax.getItem(bit.replace("s:", "")));
                         ((LivingEntity) ent).getEquipment().setItemInMainHand(slot);
@@ -162,17 +168,24 @@ public class AdvancedEntitySpawner extends AbstractIC {
                 }
                 if (upwards == null) {
                     if (SignUtil.isWallSign(CraftBookBukkitUtil.toSign(effectSign).getBlock().getRelative(0, 1, 0))) {
-                        effectSign = CraftBookBukkitUtil.toChangedSign(CraftBookBukkitUtil.toSign(effectSign).getBlock().getRelative(0, 1, 0));
-                        upwards = true;
-                    } else if (SignUtil.isWallSign(CraftBookBukkitUtil.toSign(effectSign).getBlock().getRelative(0, -1, 0))) {
-                        effectSign = CraftBookBukkitUtil.toChangedSign(CraftBookBukkitUtil.toSign(effectSign).getBlock().getRelative(0, -1, 0));
-                        upwards = false;
-                    } else break;
-                } else {
-                    if (SignUtil.isWallSign(CraftBookBukkitUtil.toSign(effectSign).getBlock().getRelative(0, upwards ? 1 : -1, 0)))
                         effectSign = CraftBookBukkitUtil
-                                .toChangedSign(CraftBookBukkitUtil.toSign(effectSign).getBlock().getRelative(0, upwards ? 1 : -1, 0));
-                    else break;
+                                .toChangedSign(CraftBookBukkitUtil.toSign(effectSign).getBlock().getRelative(0, 1, 0));
+                        upwards = true;
+                    } else if (SignUtil
+                            .isWallSign(CraftBookBukkitUtil.toSign(effectSign).getBlock().getRelative(0, -1, 0))) {
+                        effectSign = CraftBookBukkitUtil
+                                .toChangedSign(CraftBookBukkitUtil.toSign(effectSign).getBlock().getRelative(0, -1, 0));
+                        upwards = false;
+                    } else
+                        break;
+                } else {
+                    if (SignUtil.isWallSign(
+                            CraftBookBukkitUtil.toSign(effectSign).getBlock().getRelative(0, upwards ? 1 : -1, 0)))
+                        effectSign = CraftBookBukkitUtil
+                                .toChangedSign(CraftBookBukkitUtil.toSign(effectSign).getBlock().getRelative(0,
+                                        upwards ? 1 : -1, 0));
+                    else
+                        break;
                 }
             }
         }
@@ -200,7 +213,7 @@ public class AdvancedEntitySpawner extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"+ox:y:z", "entitytype{*amount}"};
+            return new String[]{"+ox:y:z", "entitytype{*amount}"};
         }
 
         @Override
@@ -208,7 +221,7 @@ public class AdvancedEntitySpawner extends AbstractIC {
 
             String[] splitLine3 = RegexUtil.ASTERISK_PATTERN.split(sign.getLine(3).trim());
             EntityType type = EntityType.fromName(splitLine3[0].trim().toLowerCase(Locale.ENGLISH));
-            if(type == null)
+            if (type == null)
                 try {
                     EntityType.valueOf(splitLine3[0].trim().toUpperCase(Locale.ENGLISH));
                 } catch (IllegalArgumentException e) {

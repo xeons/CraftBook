@@ -35,11 +35,14 @@ public class CartSorter extends CartBlockMechanism {
     public void onVehicleImpact(CartBlockImpactEvent event) {
 
         // care?
-        if (!event.getBlocks().matches(getMaterial())) return;
-        if (event.isMinor()) return;
+        if (!event.getBlocks().matches(getMaterial()))
+            return;
+        if (event.isMinor())
+            return;
 
         // validate
-        if (!event.getBlocks().matches("sort")) return;
+        if (!event.getBlocks().matches("sort"))
+            return;
         ChangedSign sign = event.getBlocks().getSign();
 
         // pi(sign)hich sort conditions apply
@@ -57,55 +60,55 @@ public class CartSorter extends CartBlockMechanism {
         Rail trackData = (Rail) Material.RAIL.createBlockData();
         BlockFace next = SignUtil.getFacing(event.getBlocks().sign);
         switch (next) {
-            case SOUTH:
+            case SOUTH :
                 switch (dir) {
-                    case LEFT:
+                    case LEFT :
                         trackData.setShape(Rail.Shape.NORTH_EAST);
                         break;
-                    case RIGHT:
+                    case RIGHT :
                         trackData.setShape(Rail.Shape.NORTH_WEST);
                         break;
-                    default:
+                    default :
                         trackData.setShape(Rail.Shape.NORTH_SOUTH);
                 }
                 break;
-            case NORTH:
+            case NORTH :
                 switch (dir) {
-                    case LEFT:
+                    case LEFT :
                         trackData.setShape(Rail.Shape.SOUTH_WEST);
                         break;
-                    case RIGHT:
+                    case RIGHT :
                         trackData.setShape(Rail.Shape.SOUTH_EAST);
                         break;
-                    default:
+                    default :
                         trackData.setShape(Rail.Shape.NORTH_SOUTH);
                 }
                 break;
-            case WEST:
+            case WEST :
                 switch (dir) {
-                    case LEFT:
+                    case LEFT :
                         trackData.setShape(Rail.Shape.SOUTH_EAST);
                         break;
-                    case RIGHT:
+                    case RIGHT :
                         trackData.setShape(Rail.Shape.NORTH_EAST);
                         break;
-                    default:
+                    default :
                         trackData.setShape(Rail.Shape.EAST_WEST);
                 }
                 break;
-            case EAST:
+            case EAST :
                 switch (dir) {
-                    case LEFT:
+                    case LEFT :
                         trackData.setShape(Rail.Shape.NORTH_WEST);
                         break;
-                    case RIGHT:
+                    case RIGHT :
                         trackData.setShape(Rail.Shape.SOUTH_WEST);
                         break;
-                    default:
+                    default :
                         trackData.setShape(Rail.Shape.EAST_WEST);
                 }
                 break;
-            default:
+            default :
                 return;
         }
         Block targetTrack = event.getBlocks().rail.getRelative(next);
@@ -131,7 +134,8 @@ public class CartSorter extends CartBlockMechanism {
                 player = (Player) test;
             }
 
-            if ((line.equalsIgnoreCase("Unoccupied") || line.equalsIgnoreCase("Empty")) && minecart.getPassenger() == null)
+            if ((line.equalsIgnoreCase("Unoccupied") || line.equalsIgnoreCase("Empty"))
+                    && minecart.getPassenger() == null)
                 return true;
 
             if (line.equalsIgnoreCase("Storage") && minecart instanceof StorageMinecart)
@@ -225,11 +229,11 @@ public class CartSorter extends CartBlockMechanism {
     @Override
     public String[] getApplicableSigns() {
 
-        return new String[] {"Sort"};
+        return new String[]{"Sort"};
     }
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadConfiguration(YAMLProcessor config, String path) {
 
         config.setComment(path + "block", "Sets the block that is the base of the sorter mechanic.");
         material = BlockSyntax.getBlock(config.getString(path + "block", BlockTypes.NETHERRACK.id()), true);

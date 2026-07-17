@@ -20,28 +20,28 @@ import com.sk89q.craftbook.util.SearchArea;
 
 public class PlayerInventorySensor extends AbstractSelfTriggeredIC {
 
-    public PlayerInventorySensor (Server server, ChangedSign sign, ICFactory factory) {
+    public PlayerInventorySensor(Server server, ChangedSign sign, ICFactory factory) {
         super(server, sign, factory);
     }
 
     @Override
-    public void think (ChipState chip) {
+    public void think(ChipState chip) {
 
         chip.setOutput(0, isDetected());
     }
 
     @Override
-    public String getTitle () {
+    public String getTitle() {
         return "Player Inventory Sensor";
     }
 
     @Override
-    public String getSignTitle () {
+    public String getSignTitle() {
         return "PLAYER INV SENSOR";
     }
 
     @Override
-    public void trigger (ChipState chip) {
+    public void trigger(ChipState chip) {
         if (chip.getInput(0))
             chip.setOutput(0, isDetected());
     }
@@ -59,7 +59,7 @@ public class PlayerInventorySensor extends AbstractSelfTriggeredIC {
 
         String[] parts = RegexUtil.EQUALS_PATTERN.split(getLine(3));
         item = ItemUtil.makeItemValid(ItemSyntax.getItem(parts[0]));
-        if(parts.length > 1) {
+        if (parts.length > 1) {
 
             String[] data = RegexUtil.COLON_PATTERN.split(parts[1]);
             try {
@@ -67,11 +67,11 @@ public class PlayerInventorySensor extends AbstractSelfTriggeredIC {
                 inHand = Boolean.parseBoolean(data[1]);
                 try {
                     slot = Integer.parseInt(data[2]);
-                } catch(Exception e){
+                } catch (Exception e) {
                     slot = -1;
                 }
-            } catch(Exception e){
-                if(minPlayers <= 0)
+            } catch (Exception e) {
+                if (minPlayers <= 0)
                     minPlayers = 1;
                 inHand = false;
             }
@@ -90,10 +90,10 @@ public class PlayerInventorySensor extends AbstractSelfTriggeredIC {
             if (e == null || !e.isValid())
                 continue;
 
-            if(testPlayer(e))
+            if (testPlayer(e))
                 players += 1;
 
-            if(players >= minPlayers)
+            if (players >= minPlayers)
                 return true;
         }
 
@@ -102,14 +102,19 @@ public class PlayerInventorySensor extends AbstractSelfTriggeredIC {
 
     public boolean testPlayer(Player e) {
 
-        if(slot == -1 && !inHand)
+        if (slot == -1 && !inHand)
             return InventoryUtil.doesInventoryContain(e.getInventory(), false, item);
-        else if (inHand) { //Eclipse messes with indentation without these {'s
-            return (e.getInventory().getItemInMainHand() != null && ItemUtil.areItemsIdentical(e.getInventory().getItemInMainHand(), item) && e.getInventory().getItemInMainHand().getAmount() >= item.getAmount())
-                    || (e.getInventory().getItemInOffHand() != null && ItemUtil.areItemsIdentical(e.getInventory().getItemInOffHand(), item) && e.getInventory().getItemInOffHand().getAmount() >= item.getAmount());
-        }
-        else if (slot > -1) {
-            return e.getInventory().getItem(slot) != null && ItemUtil.areItemsIdentical(e.getInventory().getItem(slot), item) && e.getInventory().getItem(slot).getAmount() >= item.getAmount();
+        else if (inHand) { // Eclipse messes with indentation without these {'s
+            return (e.getInventory().getItemInMainHand() != null
+                    && ItemUtil.areItemsIdentical(e.getInventory().getItemInMainHand(), item)
+                    && e.getInventory().getItemInMainHand().getAmount() >= item.getAmount())
+                    || (e.getInventory().getItemInOffHand() != null
+                            && ItemUtil.areItemsIdentical(e.getInventory().getItemInOffHand(), item)
+                            && e.getInventory().getItemInOffHand().getAmount() >= item.getAmount());
+        } else if (slot > -1) {
+            return e.getInventory().getItem(slot) != null
+                    && ItemUtil.areItemsIdentical(e.getInventory().getItem(slot), item)
+                    && e.getInventory().getItem(slot).getAmount() >= item.getAmount();
         }
 
         return false;
@@ -137,7 +142,7 @@ public class PlayerInventorySensor extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {
+            return new String[]{
                     "+oSearchArea",
                     "item=minPlayers:inHand:slot"
             };

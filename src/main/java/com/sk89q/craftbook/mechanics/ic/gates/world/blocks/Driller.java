@@ -23,24 +23,25 @@ import org.bukkit.inventory.ItemStack;
 
 public class Driller extends AbstractSelfTriggeredIC {
 
-    public Driller (Server server, ChangedSign sign, ICFactory factory) {
+    public Driller(Server server, ChangedSign sign, ICFactory factory) {
         super(server, sign, factory);
     }
 
     @Override
-    public void think (ChipState chip) {
+    public void think(ChipState chip) {
 
-        if (!chip.getInput(0)) chip.setOutput(0, drill());
+        if (!chip.getInput(0))
+            chip.setOutput(0, drill());
     }
 
     @Override
-    public String getTitle () {
+    public String getTitle() {
 
         return "Driller";
     }
 
     @Override
-    public String getSignTitle () {
+    public String getSignTitle() {
 
         return "DRILLER";
     }
@@ -67,7 +68,8 @@ public class Driller extends AbstractSelfTriggeredIC {
 
     public boolean drill() {
 
-        if (CraftBookPlugin.inst().getRandom().nextInt(100) < 60) return false;
+        if (CraftBookPlugin.inst().getRandom().nextInt(100) < 60)
+            return false;
 
         Block center = getBackBlock().getRelative(0, -1, 0);
         ItemStack tool = null;
@@ -79,11 +81,11 @@ public class Driller extends AbstractSelfTriggeredIC {
             }
         }
 
-        int random = CraftBookPlugin.inst().getRandom().nextInt(signDrillSize*signDrillSize);
+        int random = CraftBookPlugin.inst().getRandom().nextInt(signDrillSize * signDrillSize);
         int x = random / signDrillSize;
         int y = random % signDrillSize;
 
-        return drillLine(tool, center.getRelative(signDrillSize/2 - x, 0, signDrillSize/2 - y));
+        return drillLine(tool, center.getRelative(signDrillSize / 2 - x, 0, signDrillSize / 2 - y));
     }
 
     public boolean drillLine(ItemStack tool, Block blockToBreak) {
@@ -92,11 +94,14 @@ public class Driller extends AbstractSelfTriggeredIC {
         int depth = 0;
         while (brokenType == Material.AIR) {
 
-            if (blockToBreak.getLocation().getBlockY() <= blockToBreak.getWorld().getMinHeight() || depth > signMaxDepth) return false;
+            if (blockToBreak.getLocation().getBlockY() <= blockToBreak.getWorld().getMinHeight()
+                    || depth > signMaxDepth)
+                return false;
             blockToBreak = blockToBreak.getRelative(0, -1, 0);
             depth += 1;
             brokenType = blockToBreak.getType();
-            if (brokenType == Material.BEDROCK) return false;
+            if (brokenType == Material.BEDROCK)
+                return false;
         }
 
         ICUtil.collectItem(this, BlockVector3.at(0, 1, 0), BlockUtil.getBlockDrops(blockToBreak, tool));
@@ -109,9 +114,10 @@ public class Driller extends AbstractSelfTriggeredIC {
     }
 
     @Override
-    public void trigger (ChipState chip) {
+    public void trigger(ChipState chip) {
 
-        if (chip.getInput(0)) chip.setOutput(0, drill());
+        if (chip.getInput(0))
+            chip.setOutput(0, drill());
     }
 
     public static class Factory extends AbstractICFactory implements RestrictedIC, ConfigurableIC {
@@ -139,7 +145,7 @@ public class Driller extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"+odrill size", "+omax depth"};
+            return new String[]{"+odrill size", "+omax depth"};
         }
 
         @Override

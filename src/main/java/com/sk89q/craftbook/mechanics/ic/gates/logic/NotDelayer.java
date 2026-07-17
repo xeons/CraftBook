@@ -49,7 +49,7 @@ public class NotDelayer extends AbstractIC {
                 }
             }, delay * 20);
         } else {
-            if(taskId != null)
+            if (taskId != null)
                 taskId.cancel();
             chip.setOutput(0, true);
         }
@@ -71,9 +71,9 @@ public class NotDelayer extends AbstractIC {
         @Override
         public String[] getPinDescription(ChipState state) {
 
-            return new String[] {
-                    "Trigger IC",//Inputs
-                    "Delayed Output",//Outputs
+            return new String[]{
+                    "Trigger IC", // Inputs
+                    "Delayed Output",// Outputs
             };
         }
 

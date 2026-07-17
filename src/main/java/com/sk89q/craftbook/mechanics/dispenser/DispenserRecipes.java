@@ -26,15 +26,20 @@ public class DispenserRecipes extends AbstractCraftBookMechanic {
     private static DispenserRecipes instance;
 
     @Override
-    public boolean enable () {
+    public boolean enable() {
 
         instance = this;
         recipes = new HashSet<>();
-        if(xpShooterEnable) addRecipe(new XPShooter());
-        if(snowShooterEnable) addRecipe(new SnowShooter());
-        if(fireArrowsEnable) addRecipe(new FireArrows());
-        if(fanEnable) addRecipe(new Fan());
-        if(cannonEnable) addRecipe(new Cannon());
+        if (xpShooterEnable)
+            addRecipe(new XPShooter());
+        if (snowShooterEnable)
+            addRecipe(new SnowShooter());
+        if (fireArrowsEnable)
+            addRecipe(new FireArrows());
+        if (fanEnable)
+            addRecipe(new Fan());
+        if (cannonEnable)
+            addRecipe(new Cannon());
 
         return recipes.size() > 0;
     }
@@ -51,7 +56,7 @@ public class DispenserRecipes extends AbstractCraftBookMechanic {
 
     /**
      * Gets the instance of this DispenserRecipe manager.
-     * 
+     *
      * @return The instance
      */
     public static DispenserRecipes inst() {
@@ -62,9 +67,11 @@ public class DispenserRecipes extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockDispense(BlockDispenseEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event))
+            return;
 
-        if (event.getBlock().getType() != Material.DISPENSER) return;
+        if (event.getBlock().getType() != Material.DISPENSER)
+            return;
         if (dispenseNew(event.getBlock(), event.getItem(), event.getVelocity(), event)) {
             event.setCancelled(true);
         }
@@ -73,7 +80,8 @@ public class DispenserRecipes extends AbstractCraftBookMechanic {
     private boolean dispenseNew(Block block, ItemStack item, Vector velocity, BlockDispenseEvent event) {
 
         Dispenser dis = (Dispenser) block.getState();
-        if (dis == null || dis.getInventory() == null || dis.getInventory().getContents() == null) return false;
+        if (dis == null || dis.getInventory() == null || dis.getInventory().getContents() == null)
+            return false;
         ItemStack[] stacks = dis.getInventory().getContents();
         for (Recipe r : recipes) {
             Material[] recipe = r.getRecipe();
@@ -110,8 +118,10 @@ public class DispenserRecipes extends AbstractCraftBookMechanic {
      */
     public boolean addRecipe(Recipe recipe) {
 
-        if (recipe == null) throw new NullPointerException("Dispenser recipe must not be null.");
-        if (recipes.contains(recipe)) return false;
+        if (recipe == null)
+            throw new NullPointerException("Dispenser recipe must not be null.");
+        if (recipes.contains(recipe))
+            return false;
         recipes.add(recipe);
         return true;
     }
@@ -123,7 +133,7 @@ public class DispenserRecipes extends AbstractCraftBookMechanic {
     private boolean xpShooterEnable;
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadConfiguration(YAMLProcessor config, String path) {
 
         config.setComment(path + "cannon-enable", "Enables Cannon Dispenser Recipe.");
         cannonEnable = config.getBoolean(path + "cannon-enable", true);

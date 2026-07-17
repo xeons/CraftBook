@@ -17,11 +17,14 @@ public class ConstantSpeed extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onVehicleMove(VehicleMoveEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event))
+            return;
 
-        if (!(event.getVehicle() instanceof Minecart)) return;
+        if (!(event.getVehicle() instanceof Minecart))
+            return;
 
-        if (RailUtil.isTrack(event.getTo().getBlock().getType()) && event.getVehicle().getVelocity().lengthSquared() > 0) {
+        if (RailUtil.isTrack(event.getTo().getBlock().getType())
+                && event.getVehicle().getVelocity().lengthSquared() > 0) {
             if (event.getTo().getBlock().getType() == Material.POWERED_RAIL && !ignorePoweredRail) {
                 if ((event.getTo().getBlock().getData() & 8) == 0) {
                     return;
@@ -36,7 +39,7 @@ public class ConstantSpeed extends AbstractCraftBookMechanic {
     private boolean ignorePoweredRail;
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadConfiguration(YAMLProcessor config, String path) {
 
         config.setComment(path + "speed", "Sets the speed to move at constantly.");
         speed = config.getDouble(path + "speed", 0.5);

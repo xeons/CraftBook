@@ -16,7 +16,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 @PrepareForTest(ChangedSign.class)
 public class BukkitChangedSignTest {
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testBukkitChangedSign() {
 
         new ChangedSign(null, null);
@@ -24,7 +24,7 @@ public class BukkitChangedSignTest {
         Block mockBlock = mock(Block.class);
         when(mockBlock.getState()).thenReturn(mock(Sign.class));
 
-        ChangedSign sign = new ChangedSign(mockBlock, new String[]{"","","",""});
+        ChangedSign sign = new ChangedSign(mockBlock, new String[]{"", "", "", ""});
         assertTrue(sign.getSign() != null);
         assertTrue(sign.getLines().length == 4);
     }

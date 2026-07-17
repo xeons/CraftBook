@@ -42,7 +42,7 @@ public class LowDelayer extends AbstractIC {
 
         long delay = Long.parseLong(getSign().getLine(2));
         if (chip.getInput(0)) {
-            if(taskId != null)
+            if (taskId != null)
                 taskId.cancel();
             chip.setOutput(0, true);
         } else {
@@ -71,9 +71,9 @@ public class LowDelayer extends AbstractIC {
         @Override
         public String[] getPinDescription(ChipState state) {
 
-            return new String[] {
-                    "Trigger IC",//Inputs
-                    "Delayed Output",//Outputs
+            return new String[]{
+                    "Trigger IC", // Inputs
+                    "Delayed Output",// Outputs
             };
         }
 

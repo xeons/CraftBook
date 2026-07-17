@@ -76,8 +76,8 @@ public class ContainerCollector extends AbstractSelfTriggeredIC {
 
         boolean collected = false;
         for (Item item : ItemUtil.getItemsAtBlock(CraftBookBukkitUtil.toSign(getSign()).getBlock()))
-            if(item.isValid() && !item.isDead())
-                if(collectItem(item))
+            if (item.isValid() && !item.isDead())
+                if (collectItem(item))
                     collected = true;
 
         return collected;
@@ -87,7 +87,7 @@ public class ContainerCollector extends AbstractSelfTriggeredIC {
 
         ItemStack stack = item.getItemStack();
 
-        if(!ItemUtil.isStackValid(stack))
+        if (!ItemUtil.isStackValid(stack))
             return false;
 
         // Check to see if it matches either test stack, if not stop
@@ -100,25 +100,27 @@ public class ContainerCollector extends AbstractSelfTriggeredIC {
         BlockFace back = SignUtil.getBack(CraftBookBukkitUtil.toSign(getSign()).getBlock());
         Block pipe = getBackBlock().getRelative(back);
 
-        PipeRequestEvent event = new PipeRequestEvent(pipe, new ArrayList<>(Collections.singletonList(stack)), getBackBlock());
+        PipeRequestEvent event = new PipeRequestEvent(pipe, new ArrayList<>(Collections.singletonList(stack)),
+                getBackBlock());
         Bukkit.getPluginManager().callEvent(event);
 
-        if(event.getItems().isEmpty()) {
+        if (event.getItems().isEmpty()) {
             item.remove();
             return true;
         }
 
-        if(!InventoryUtil.doesBlockHaveInventory(chest))
+        if (!InventoryUtil.doesBlockHaveInventory(chest))
             return false;
 
         // Add the items to a container, and destroy them.
-        List<ItemStack> leftovers = InventoryUtil.addItemsToInventory((InventoryHolder)chest.getState(), stack);
-        if(leftovers.isEmpty()) {
+        List<ItemStack> leftovers = InventoryUtil.addItemsToInventory((InventoryHolder) chest.getState(), stack);
+        if (leftovers.isEmpty()) {
             item.remove();
             return true;
         } else {
-            if(ItemUtil.areItemsIdentical(leftovers.get(0), stack) && leftovers.get(0).getAmount() != stack.getAmount()) {
-                if(!ItemUtil.isStackValid(leftovers.get(0)))
+            if (ItemUtil.areItemsIdentical(leftovers.get(0), stack)
+                    && leftovers.get(0).getAmount() != stack.getAmount()) {
+                if (!ItemUtil.isStackValid(leftovers.get(0)))
                     item.remove();
                 else
                     item.setItemStack(leftovers.get(0));
@@ -151,7 +153,7 @@ public class ContainerCollector extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"included id:data", "excluded id:data"};
+            return new String[]{"included id:data", "excluded id:data"};
         }
     }
 }

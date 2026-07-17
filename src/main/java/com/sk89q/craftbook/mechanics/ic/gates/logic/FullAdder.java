@@ -53,11 +53,11 @@ public class FullAdder extends AbstractIC {
         @Override
         public String[] getPinDescription(ChipState state) {
 
-            return new String[] {
-                    "First bit to add",//Inputs
+            return new String[]{
+                    "First bit to add", // Inputs
                     "Second bit to add",
                     "Third bit to add (carry in)",
-                    "Sum",//Outputs
+                    "Sum", // Outputs
                     "Carry out",
                     "Carry out (Same as Output 2)"
             };

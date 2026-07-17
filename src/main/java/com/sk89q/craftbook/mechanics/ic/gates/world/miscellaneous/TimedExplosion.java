@@ -33,7 +33,7 @@ public class TimedExplosion extends AbstractIC {
     @Override
     public void load() {
 
-        if(getLine(3).length() > 0 && !getLine(3).contains(":")) {
+        if (getLine(3).length() > 0 && !getLine(3).contains(":")) {
             getSign().setLine(2, getSign().getLine(2) + ":" + getSign().getLine(3));
             getSign().update(false);
         }
@@ -75,10 +75,10 @@ public class TimedExplosion extends AbstractIC {
         if (chip.getInput(0)) {
             Location loc = center.getLocation();
 
-            if(!loc.getChunk().isLoaded())
+            if (!loc.getChunk().isLoaded())
                 return;
 
-            while(loc.getBlock().getType().isSolid())
+            while (loc.getBlock().getType().isSolid())
                 loc = loc.add(0, 1, 0);
             TNTPrimed tnt = (TNTPrimed) loc.getWorld().spawnEntity(BlockUtil.getBlockCentre(loc.getBlock()),
                     EntityType.TNT);
@@ -114,7 +114,7 @@ public class TimedExplosion extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"time in ticks:radius (ending with ! makes fire)", "x:y:z offset"};
+            return new String[]{"time in ticks:radius (ending with ! makes fire)", "x:y:z offset"};
         }
     }
 }

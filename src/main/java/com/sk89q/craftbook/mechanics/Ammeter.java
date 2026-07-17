@@ -1,15 +1,15 @@
 // $Id$
 /*
  * CraftBook Copyright (C) 2010 sk89q <http://www.sk89q.com>
- * 
+ *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
  * License as published by the Free
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
  * warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with this program. If not,
  * see <http://www.gnu.org/licenses/>.
  */
@@ -48,20 +48,24 @@ public class Ammeter extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onRightClick(PlayerInteractEvent event) {
 
-        if(event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getHand() != EquipmentSlot.HAND) return;
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getHand() != EquipmentSlot.HAND)
+            return;
 
-        if (!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event))
+            return;
 
         CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
-        if(player.getItemInHand(HandSide.MAIN_HAND).getType() != item) return;
-        if(!player.hasPermission("craftbook.mech.ammeter.use")) {
-            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+        if (player.getItemInHand(HandSide.MAIN_HAND).getType() != item)
+            return;
+        if (!player.hasPermission("craftbook.mech.ammeter.use")) {
+            if (CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
                 player.printError("mech.use-permission");
             return;
         }
 
-        if(!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
-            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+        if (!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(),
+                event.getAction())) {
+            if (CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
                 player.printError("area.use-permissions");
             return;
         }
@@ -114,9 +118,10 @@ public class Ammeter extends AbstractCraftBookMechanic {
     private ItemType item;
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadConfiguration(YAMLProcessor config, String path) {
 
         config.setComment(path + "item", "Set the item that is the ammeter tool.");
-        item = BukkitAdapter.asItemType(ItemSyntax.getItem(config.getString(path + "item", ItemTypes.COAL.id())).getType());
+        item = BukkitAdapter
+                .asItemType(ItemSyntax.getItem(config.getString(path + "item", ItemTypes.COAL.id())).getType());
     }
 }

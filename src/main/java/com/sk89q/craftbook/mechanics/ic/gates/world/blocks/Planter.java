@@ -30,8 +30,7 @@ import java.util.List;
 
 /**
  * Sapling planter Hybrid variant of MCX206 and MCX203 chest collector When there is a sapling or seed item drop in
- * range it will auto plant it above
- * the IC.
+ * range it will auto plant it above the IC.
  *
  * @authors Drathus, Me4502
  */
@@ -49,7 +48,7 @@ public class Planter extends AbstractSelfTriggeredIC {
     @Override
     public void load() {
 
-        if(getLine(2).isEmpty())
+        if (getLine(2).isEmpty())
             item = null;
         else
             item = ItemSyntax.getItem(getLine(2));
@@ -72,31 +71,38 @@ public class Planter extends AbstractSelfTriggeredIC {
     @Override
     public void trigger(ChipState chip) {
 
-        if (chip.getInput(0)) chip.setOutput(0, plant());
+        if (chip.getInput(0))
+            chip.setOutput(0, plant());
     }
 
     @Override
     public void think(ChipState state) {
 
-        if(state.getInput(0)) return;
+        if (state.getInput(0))
+            return;
 
-        for(int i = 0; i < 10; i++)
+        for (int i = 0; i < 10; i++)
             plant();
     }
 
     public boolean plant() {
 
-        if (item != null && !plantableItem(item)) return false;
+        if (item != null && !plantableItem(item))
+            return false;
 
-        if (getBackBlock().getRelative(0, 1, 0).getType() == Material.CHEST || getBackBlock().getRelative(0, 1, 0).getType() == Material.TRAPPED_CHEST) {
+        if (getBackBlock().getRelative(0, 1, 0).getType() == Material.CHEST
+                || getBackBlock().getRelative(0, 1, 0).getType() == Material.TRAPPED_CHEST) {
 
             Chest c = (Chest) getBackBlock().getRelative(0, 1, 0).getState();
             for (ItemStack it : c.getInventory().getContents()) {
 
-                if (!ItemUtil.isStackValid(it)) continue;
-                if (!plantableItem(it)) continue;
+                if (!ItemUtil.isStackValid(it))
+                    continue;
+                if (!plantableItem(it))
+                    continue;
 
-                if (item != null && !ItemUtil.areItemsIdentical(it, item)) continue;
+                if (item != null && !ItemUtil.areItemsIdentical(it, item))
+                    continue;
 
                 Block b;
 
@@ -108,12 +114,14 @@ public class Planter extends AbstractSelfTriggeredIC {
             }
         } else {
             for (Entity ent : area.getEntitiesInArea()) {
-                if (!(ent instanceof Item)) continue;
+                if (!(ent instanceof Item))
+                    continue;
 
                 Item itemEnt = (Item) ent;
                 ItemStack stack = itemEnt.getItemStack();
 
-                if (!ItemUtil.isStackValid(stack)) continue;
+                if (!ItemUtil.isStackValid(stack))
+                    continue;
 
                 if (item == null || ItemUtil.areItemsIdentical(item, stack)) {
 
@@ -145,24 +153,24 @@ public class Planter extends AbstractSelfTriggeredIC {
 
     protected boolean plantableItem(ItemStack item) {
         switch (item.getType()) {
-            case WHEAT_SEEDS:
-            case NETHER_WART:
-            case MELON_SEEDS:
-            case PUMPKIN_SEEDS:
-            case CACTUS:
-            case POTATO:
-            case CARROT:
-            case POPPY:
-            case DANDELION:
-            case RED_MUSHROOM:
-            case BROWN_MUSHROOM:
-            case LILY_PAD:
-            case BEETROOT_SEEDS:
-            case COCOA_BEANS:
-            case CRIMSON_FUNGUS:
-            case WARPED_FUNGUS:
+            case WHEAT_SEEDS :
+            case NETHER_WART :
+            case MELON_SEEDS :
+            case PUMPKIN_SEEDS :
+            case CACTUS :
+            case POTATO :
+            case CARROT :
+            case POPPY :
+            case DANDELION :
+            case RED_MUSHROOM :
+            case BROWN_MUSHROOM :
+            case LILY_PAD :
+            case BEETROOT_SEEDS :
+            case COCOA_BEANS :
+            case CRIMSON_FUNGUS :
+            case WARPED_FUNGUS :
                 return true;
-            default:
+            default :
                 return Tag.SAPLINGS.isTagged(item.getType());
         }
     }
@@ -171,33 +179,34 @@ public class Planter extends AbstractSelfTriggeredIC {
         Material belowType = block.getRelative(0, -1, 0).getType();
 
         switch (item.getType()) {
-            case WHEAT_SEEDS:
-            case MELON_SEEDS:
-            case PUMPKIN_SEEDS:
-            case POTATO:
-            case CARROT:
-            case BEETROOT_SEEDS:
+            case WHEAT_SEEDS :
+            case MELON_SEEDS :
+            case PUMPKIN_SEEDS :
+            case POTATO :
+            case CARROT :
+            case BEETROOT_SEEDS :
                 return belowType == Material.FARMLAND;
-            case NETHER_WART:
+            case NETHER_WART :
                 return belowType == Material.SOUL_SAND;
-            case CACTUS:
+            case CACTUS :
                 return belowType == Material.SAND;
-            case RED_MUSHROOM:
-            case BROWN_MUSHROOM:
+            case RED_MUSHROOM :
+            case BROWN_MUSHROOM :
                 return belowType.isSolid();
-            case LILY_PAD:
+            case LILY_PAD :
                 return belowType == Material.WATER;
-            case COCOA_BEANS:
+            case COCOA_BEANS :
                 BlockFace[] faces = new BlockFace[]{BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH, BlockFace.SOUTH};
-                for(BlockFace face : faces) {
-                    if(block.getRelative(face).getType() == Material.JUNGLE_LOG)
+                for (BlockFace face : faces) {
+                    if (block.getRelative(face).getType() == Material.JUNGLE_LOG)
                         return true;
                 }
                 return false;
-            case CRIMSON_FUNGUS:
-            case WARPED_FUNGUS:
-                return belowType == Material.CRIMSON_NYLIUM || belowType == Material.WARPED_NYLIUM || Tag.DIRT.isTagged(belowType);
-            default:
+            case CRIMSON_FUNGUS :
+            case WARPED_FUNGUS :
+                return belowType == Material.CRIMSON_NYLIUM || belowType == Material.WARPED_NYLIUM
+                        || Tag.DIRT.isTagged(belowType);
+            default :
                 if (Tag.SAPLINGS.isTagged(item.getType()) || Tag.SMALL_FLOWERS.isTagged(item.getType())) {
                     return Tag.DIRT.isTagged(belowType);
                 }
@@ -208,54 +217,54 @@ public class Planter extends AbstractSelfTriggeredIC {
     protected boolean plantBlockAt(ItemStack item, Block block) {
 
         switch (item.getType()) {
-            case POPPY:
-            case DANDELION:
-            case CACTUS:
-            case RED_MUSHROOM:
-            case BROWN_MUSHROOM:
-            case LILY_PAD:
+            case POPPY :
+            case DANDELION :
+            case CACTUS :
+            case RED_MUSHROOM :
+            case BROWN_MUSHROOM :
+            case LILY_PAD :
                 block.setType(item.getType());
                 return true;
-            case WHEAT_SEEDS:
+            case WHEAT_SEEDS :
                 block.setType(Material.WHEAT);
                 return true;
-            case MELON_SEEDS:
+            case MELON_SEEDS :
                 block.setType(Material.MELON_STEM);
                 return true;
-            case PUMPKIN_SEEDS:
+            case PUMPKIN_SEEDS :
                 block.setType(Material.PUMPKIN_STEM);
                 return true;
-            case NETHER_WART:
+            case NETHER_WART :
                 block.setType(Material.NETHER_WART);
                 return true;
-            case POTATO:
+            case POTATO :
                 block.setType(Material.POTATOES);
                 return true;
-            case CARROT:
+            case CARROT :
                 block.setType(Material.CARROTS);
                 return true;
-            case BEETROOT_SEEDS:
+            case BEETROOT_SEEDS :
                 block.setType(Material.BEETROOTS);
                 return true;
-            case COCOA_BEANS:
-                List<BlockFace> faces =
-                        new ArrayList<>(Arrays.asList(BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH, BlockFace.SOUTH));
+            case COCOA_BEANS :
+                List<BlockFace> faces = new ArrayList<>(
+                        Arrays.asList(BlockFace.EAST, BlockFace.WEST, BlockFace.NORTH, BlockFace.SOUTH));
                 Collections.shuffle(faces, CraftBookPlugin.inst().getRandom());
-                for(BlockFace face : faces) {
-                    if(block.getRelative(face).getType() == Material.JUNGLE_LOG) {
+                for (BlockFace face : faces) {
+                    if (block.getRelative(face).getType() == Material.JUNGLE_LOG) {
                         block.setType(Material.COCOA);
                         ((Cocoa) block.getBlockData()).setFacing(face);
                         return true;
                     }
                 }
                 return false;
-            case CRIMSON_FUNGUS:
+            case CRIMSON_FUNGUS :
                 block.setType(Material.CRIMSON_FUNGUS);
                 return true;
-            case WARPED_FUNGUS:
+            case WARPED_FUNGUS :
                 block.setType(Material.WARPED_FUNGUS);
                 return true;
-            default:
+            default :
                 if (Tag.SAPLINGS.isTagged(item.getType())) {
                     block.setType(item.getType());
                     return true;
@@ -286,12 +295,12 @@ public class Planter extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"+oItem to plant id{:data}", "SearchArea"};
+            return new String[]{"+oItem to plant id{:data}", "SearchArea"};
         }
 
         @Override
         public void verify(ChangedSign sign) throws ICVerificationException {
-            if(!SearchArea.isValidArea(CraftBookBukkitUtil.toSign(sign).getBlock(), sign.getLine(3)))
+            if (!SearchArea.isValidArea(CraftBookBukkitUtil.toSign(sign).getBlock(), sign.getLine(3)))
                 throw new ICVerificationException("Invalid SearchArea on 4th line!");
         }
     }

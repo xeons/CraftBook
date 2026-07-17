@@ -43,20 +43,22 @@ public class SignCopier extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onRightClick(SignClickEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event))
+            return;
 
         CraftBookPlayer player = event.getWrappedPlayer();
 
-        if (player.getItemInHand(HandSide.MAIN_HAND).getType() != item) return;
+        if (player.getItemInHand(HandSide.MAIN_HAND).getType() != item)
+            return;
 
         if (!player.hasPermission("craftbook.mech.signcopy.use")) {
-            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+            if (CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
                 player.printError("mech.use-permission");
             return;
         }
 
-        if(!ProtectionUtil.canBuild(event.getPlayer(), event.getClickedBlock().getLocation(), false)) {
-            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+        if (!ProtectionUtil.canBuild(event.getPlayer(), event.getClickedBlock().getLocation(), false)) {
+            if (CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
                 player.printError("area.use-permissions");
             return;
         }
@@ -66,7 +68,7 @@ public class SignCopier extends AbstractCraftBookMechanic {
             player.print("mech.signcopy.copy");
             event.setCancelled(true);
         } else if (event.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
-            if(signs.containsKey(player.getName())) {
+            if (signs.containsKey(player.getName())) {
 
                 Sign s = (Sign) event.getClickedBlock().getState();
                 String[] lines = signs.get(player.getName());
@@ -95,9 +97,10 @@ public class SignCopier extends AbstractCraftBookMechanic {
     private ItemType item;
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadConfiguration(YAMLProcessor config, String path) {
 
         config.setComment(path + "item", "The item the Sign Copy mechanic uses.");
-        item = BukkitAdapter.asItemType(ItemSyntax.getItem(config.getString(path + "item", ItemTypes.FLINT.id())).getType());
+        item = BukkitAdapter
+                .asItemType(ItemSyntax.getItem(config.getString(path + "item", ItemTypes.FLINT.id())).getType());
     }
 }

@@ -47,7 +47,7 @@ public class TeleportTransmitter extends AbstractSelfTriggeredIC {
     public void load() {
 
         band = RegexUtil.PIPE_PATTERN.split(getLine(2))[0];
-        if(getLine(2).contains("|")) {
+        if (getLine(2).contains("|")) {
             type = PlayerType.getFromChar(RegexUtil.PIPE_PATTERN.split(getLine(2))[1].charAt(0));
             typeData = RegexUtil.COLON_PATTERN.split(RegexUtil.PIPE_PATTERN.split(getLine(2))[1])[1];
         }
@@ -62,7 +62,7 @@ public class TeleportTransmitter extends AbstractSelfTriggeredIC {
     }
 
     @Override
-    public void think (ChipState chip) {
+    public void think(ChipState chip) {
 
         if (chip.getInput(0))
             chip.setOutput(0, sendPlayer());
@@ -76,12 +76,16 @@ public class TeleportTransmitter extends AbstractSelfTriggeredIC {
             if (e == null || !e.isValid() || e.isDead())
                 continue;
 
-            if(type != null && !type.doesPlayerPass(e, typeData))
+            if (type != null && !type.doesPlayerPass(e, typeData))
                 continue;
 
-            if (closest == null) closest = e;
-            if(area.getCenter() == null) break;
-            else if (LocationUtil.getDistanceSquared(closest.getLocation(), area.getCenter()) >= LocationUtil.getDistanceSquared(e.getLocation(), area.getCenter())) closest = e;
+            if (closest == null)
+                closest = e;
+            if (area.getCenter() == null)
+                break;
+            else if (LocationUtil.getDistanceSquared(closest.getLocation(), area.getCenter()) >= LocationUtil
+                    .getDistanceSquared(e.getLocation(), area.getCenter()))
+                closest = e;
         }
         if (closest != null && lastKnownLocations.containsKey(band))
             lastKnownLocations.get(band).getChunk().load();
@@ -114,7 +118,8 @@ public class TeleportTransmitter extends AbstractSelfTriggeredIC {
             int seconds = (int) (time / 1000) % 60;
             if (seconds > 3) { // Expired.
                 memory.remove(band);
-            } else return false;
+            } else
+                return false;
         }
         memory.put(band, val);
         return true;
@@ -136,7 +141,7 @@ public class TeleportTransmitter extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLongDescription() {
 
-            return new String[] {
+            return new String[]{
                     "The '''MC1112''' teleports a player located within IC's radius to a receiver ([[../MC1113/]]) tuned to the same ''frequency''.",
                     "This IC requires the recieving chunk to be loaded for the initial teleport, future teleports should not require the chunk to be loaded."
             };
@@ -151,16 +156,16 @@ public class TeleportTransmitter extends AbstractSelfTriggeredIC {
         @Override
         public String[] getPinDescription(ChipState state) {
 
-            return new String[] {
-                    "Trigger IC",//Inputs
-                    "High on successful teleport queue",//Outputs
+            return new String[]{
+                    "Trigger IC", // Inputs
+                    "High on successful teleport queue",// Outputs
             };
         }
 
         @Override
         public void verify(ChangedSign sign) throws ICVerificationException {
 
-            if(!SearchArea.isValidArea(CraftBookBukkitUtil.toSign(sign).getBlock(), sign.getLine(3)))
+            if (!SearchArea.isValidArea(CraftBookBukkitUtil.toSign(sign).getBlock(), sign.getLine(3)))
                 throw new ICVerificationException("Invalid SearchArea on 4th line!");
         }
 
@@ -168,16 +173,20 @@ public class TeleportTransmitter extends AbstractSelfTriggeredIC {
         @Override
         public void load() {
 
-            if(!(ICMechanic.instance.savePersistentData && CraftBookPlugin.inst().hasPersistentStorage())) return;
+            if (!(ICMechanic.instance.savePersistentData && CraftBookPlugin.inst().hasPersistentStorage()))
+                return;
 
-            if(CraftBookPlugin.inst().getPersistentStorage().has("teleport-ic-locations.list")) {
+            if (CraftBookPlugin.inst().getPersistentStorage().has("teleport-ic-locations.list")) {
 
-                Set<String> list = new HashSet<>((Set<String>) CraftBookPlugin.inst().getPersistentStorage().get("teleport-ic-locations.list"));
+                Set<String> list = new HashSet<>(
+                        (Set<String>) CraftBookPlugin.inst().getPersistentStorage().get("teleport-ic-locations.list"));
 
-                for(String ent : list) {
-                    String locString = (String) CraftBookPlugin.inst().getPersistentStorage().get("teleport-ic-locations." + ent);
+                for (String ent : list) {
+                    String locString = (String) CraftBookPlugin.inst().getPersistentStorage()
+                            .get("teleport-ic-locations." + ent);
                     String[] bits = RegexUtil.COLON_PATTERN.split(locString);
-                    Location loc = new Location(Bukkit.getWorld(bits[0]), Double.parseDouble(bits[1]), Double.parseDouble(bits[2]), Double.parseDouble(bits[3]));
+                    Location loc = new Location(Bukkit.getWorld(bits[0]), Double.parseDouble(bits[1]),
+                            Double.parseDouble(bits[2]), Double.parseDouble(bits[3]));
                     TeleportTransmitter.lastKnownLocations.put(ent, loc);
                 }
             }
@@ -186,16 +195,18 @@ public class TeleportTransmitter extends AbstractSelfTriggeredIC {
         @Override
         public void unload() {
 
-            if(!(ICMechanic.instance.savePersistentData && CraftBookPlugin.inst().hasPersistentStorage())) return;
+            if (!(ICMechanic.instance.savePersistentData && CraftBookPlugin.inst().hasPersistentStorage()))
+                return;
 
             CraftBookPlugin.inst().getPersistentStorage().set("teleport-ic-locations.list",
                     new HashSet<>(TeleportTransmitter.lastKnownLocations.keySet()));
 
-            for(Entry<String, Location> locations : TeleportTransmitter.lastKnownLocations.entrySet()) {
-                if(locations == null || locations.getValue() == null)
+            for (Entry<String, Location> locations : TeleportTransmitter.lastKnownLocations.entrySet()) {
+                if (locations == null || locations.getValue() == null)
                     continue;
 
-                String loc = locations.getValue().getWorld().getName() + ":" + locations.getValue().getBlockX() + ":" + locations.getValue().getBlockY() + ":" + locations.getValue().getBlockZ();
+                String loc = locations.getValue().getWorld().getName() + ":" + locations.getValue().getBlockX() + ":"
+                        + locations.getValue().getBlockY() + ":" + locations.getValue().getBlockZ();
 
                 CraftBookPlugin.inst().getPersistentStorage().set("teleport-ic-locations." + locations.getKey(), loc);
             }
@@ -204,7 +215,7 @@ public class TeleportTransmitter extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"Frequency|PlayerType", "SearchArea"};
+            return new String[]{"Frequency|PlayerType", "SearchArea"};
         }
     }
 }

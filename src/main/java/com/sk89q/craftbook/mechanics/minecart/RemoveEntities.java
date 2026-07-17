@@ -19,7 +19,8 @@ public class RemoveEntities extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onVehicleEntityCollision(VehicleEntityCollisionEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event))
+            return;
 
         if (!(event.getVehicle() instanceof Minecart))
             return;
@@ -31,20 +32,21 @@ public class RemoveEntities extends AbstractCraftBookMechanic {
             return;
         }
 
-        if(event.getVehicle() instanceof RideableMinecart && event.getVehicle().isEmpty() && !empty)
+        if (event.getVehicle() instanceof RideableMinecart && event.getVehicle().isEmpty() && !empty)
             return;
 
         if (event.getEntity() instanceof LivingEntity) {
-            if(event.getEntity().isInsideVehicle())
+            if (event.getEntity().isInsideVehicle())
                 return;
             ((LivingEntity) event.getEntity()).damage(10);
-            Vector newVelocity = event.getVehicle().getVelocity().normalize().multiply(1.8).add(new Vector(0,0.5,0));
-            if (Double.isFinite(newVelocity.getX()) && Double.isFinite(newVelocity.getY()) && Double.isFinite(newVelocity.getZ())) {
+            Vector newVelocity = event.getVehicle().getVelocity().normalize().multiply(1.8).add(new Vector(0, 0.5, 0));
+            if (Double.isFinite(newVelocity.getX()) && Double.isFinite(newVelocity.getY())
+                    && Double.isFinite(newVelocity.getZ())) {
                 event.getEntity().setVelocity(newVelocity);
             }
         } else if (event.getEntity() instanceof Vehicle) {
 
-            if(!event.getEntity().isEmpty())
+            if (!event.getEntity().isEmpty())
                 return;
             else
                 event.getEntity().remove();
@@ -61,9 +63,10 @@ public class RemoveEntities extends AbstractCraftBookMechanic {
     private boolean players;
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadConfiguration(YAMLProcessor config, String path) {
 
-        config.setComment(path + "remove-other-minecarts", "Allows the remove entities mechanic to remove other minecarts.");
+        config.setComment(path + "remove-other-minecarts",
+                "Allows the remove entities mechanic to remove other minecarts.");
         otherCarts = config.getBoolean(path + "remove-other-minecarts", false);
 
         config.setComment(path + "allow-empty-carts", "Allows the cart to be empty.");

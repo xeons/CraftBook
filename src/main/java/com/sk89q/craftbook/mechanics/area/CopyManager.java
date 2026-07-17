@@ -3,15 +3,15 @@ package com.sk89q.craftbook.mechanics.area;
 // $Id$
 /*
  * CraftBook Copyright (C) 2010 sk89q <http://www.sk89q.com>
- * 
+ *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
  * License as published by the Free
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
  * warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with this program. If not,
  * see <http://www.gnu.org/licenses/>.
  */
@@ -101,7 +101,7 @@ public class CopyManager {
 
     /**
      * Renames a namespace.
-     * 
+     *
      * @param originalName The old name.
      * @param newName The new name. (Post rename)
      */
@@ -121,23 +121,23 @@ public class CopyManager {
      * Checks if the area and namespace exists.
      *
      * @param namespace to check
-     * @param area      to check
+     * @param area to check
      */
     public static boolean isExistingArea(File dataFolder, String namespace, String area) {
         area = StringUtils.replace(area, "-", "");
         File file = new File(dataFolder, "areas/" + namespace);
         if (!new File(file, area + getFileSuffix()).exists()) {
-            return new File(file, area + '.' + BuiltInClipboardFormat.MCEDIT_SCHEMATIC.getPrimaryFileExtension()).exists();
+            return new File(file, area + '.' + BuiltInClipboardFormat.MCEDIT_SCHEMATIC.getPrimaryFileExtension())
+                    .exists();
         } else {
             return true;
         }
     }
 
     /**
-     * Load a copy from disk. This may return a cached copy. If the copy is not cached,
-     * the file will be loaded from disk if possible. If the copy
-     * does not exist, an exception will be raised. An exception may be raised if the file exists but cannot be read
-     * for whatever reason.
+     * Load a copy from disk. This may return a cached copy. If the copy is not cached, the file will be loaded from
+     * disk if possible. If the copy does not exist, an exception will be raised. An exception may be raised if the file
+     * exists but cannot be read for whatever reason.
      *
      * @param namespace The clipboard namespace
      * @param id The clipboard ID
@@ -153,7 +153,8 @@ public class CopyManager {
 
         if (missing.containsKey(cacheKey)) {
             long lastCheck = missing.get(cacheKey);
-            if (lastCheck > System.currentTimeMillis()) throw new FileNotFoundException(id);
+            if (lastCheck > System.currentTimeMillis())
+                throw new FileNotFoundException(id);
         }
 
         BlockArrayClipboard copy = cache.get(cacheKey);
@@ -231,12 +232,14 @@ public class CopyManager {
      * @return The BlockArrayClipboard
      * @throws WorldEditException If something went wrong.
      */
-    public BlockArrayClipboard copy(Region region, World world, boolean copyEntities, boolean copyBiomes) throws WorldEditException {
+    public BlockArrayClipboard copy(Region region, World world, boolean copyEntities, boolean copyBiomes)
+            throws WorldEditException {
         BlockArrayClipboard copy = new BlockArrayClipboard(region);
 
         EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(world, -1);
 
-        ForwardExtentCopy forwardExtentCopy = new ForwardExtentCopy(editSession, region, copy, region.getMinimumPoint());
+        ForwardExtentCopy forwardExtentCopy = new ForwardExtentCopy(editSession, region, copy,
+                region.getMinimumPoint());
         forwardExtentCopy.setCopyingEntities(copyEntities);
         forwardExtentCopy.setCopyingBiomes(copyBiomes);
         Operations.complete(forwardExtentCopy);
@@ -293,13 +296,16 @@ public class CopyManager {
 
         String[] files = new File(new File(plugin.getDataFolder(), "areas"), namespace).list();
 
-        if (files == null) return quota > 0 ? -1 : 0;
-        else if (ignore == null) return files.length < quota ? -1 : files.length;
+        if (files == null)
+            return quota > 0 ? -1 : 0;
+        else if (ignore == null)
+            return files.length < quota ? -1 : files.length;
         else {
             int count = 0;
 
             for (String f : files) {
-                if (f.equals(ignoreFilename)) return -1;
+                if (f.equals(ignoreFilename))
+                    return -1;
 
                 count++;
             }

@@ -53,11 +53,11 @@ public class LevelTriggeredDFlipFlop extends AbstractIC {
         @Override
         public String[] getPinDescription(ChipState state) {
 
-            return new String[] {
-                    "Sets Output to Input 2",//Inputs
+            return new String[]{
+                    "Sets Output to Input 2", // Inputs
                     "Carries over to Output 1",
                     "Sets Output 1 to Low.",
-                    "Carried Value"//Outputs
+                    "Carried Value"// Outputs
             };
         }
 

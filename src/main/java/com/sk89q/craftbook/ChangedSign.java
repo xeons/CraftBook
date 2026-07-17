@@ -50,21 +50,22 @@ public class ChangedSign {
     }
 
     public void checkPlayerVariablePermissions(CraftBookPlayer player) {
-        if(this.lines != null && VariableManager.instance != null) {
-            for(int i = 0; i < 4; i++) {
+        if (this.lines != null && VariableManager.instance != null) {
+            for (int i = 0; i < 4; i++) {
 
                 String line = this.lines[i];
-                for(String var : ParsingUtil.getPossibleVariables(line)) {
+                for (String var : ParsingUtil.getPossibleVariables(line)) {
 
                     String key;
 
-                    if(var.contains("|")) {
+                    if (var.contains("|")) {
                         String[] bits = RegexUtil.PIPE_PATTERN.split(var);
                         key = bits[0];
                     } else
                         key = "global";
 
-                    if(!VariableCommands.hasVariablePermission(((BukkitCraftBookPlayer) player).getPlayer(), key, var, "use"))
+                    if (!VariableCommands.hasVariablePermission(((BukkitCraftBookPlayer) player).getPlayer(), key, var,
+                            "use"))
                         setLine(i, StringUtils.replace(line, '%' + key + '|' + var + '%', ""));
                 }
             }
@@ -134,10 +135,10 @@ public class ChangedSign {
 
     public boolean update(boolean force) {
 
-        if(!hasChanged() && !force)
+        if (!hasChanged() && !force)
             return false;
         SignSide signSide = getSign().getSide(side);
-        for(int i = 0; i < 4; i++) {
+        for (int i = 0; i < 4; i++) {
             signSide.setLine(i, lines[i]);
         }
         System.arraycopy(this.lines, 0, this.oldLines, 0, this.lines.length);
@@ -153,20 +154,20 @@ public class ChangedSign {
         this.oldLines = oldLines;
     }
 
-    public boolean hasChanged () {
+    public boolean hasChanged() {
         boolean ret = false;
         try {
-            for(int i = 0; i < 4; i++)
-                if(!oldLines[i].equals(lines[i])) {
+            for (int i = 0; i < 4; i++)
+                if (!oldLines[i].equals(lines[i])) {
                     ret = true;
                     break;
                 }
+        } catch (Exception ignored) {
         }
-        catch(Exception ignored){}
         return ret;
     }
 
-    public void flushLines () {
+    public void flushLines() {
         this.sign = null;
         Sign state = this.getSign();
         // Prefer the front side, but fall back to the back when the front is blank so that
@@ -187,7 +188,8 @@ public class ChangedSign {
     }
 
     private static boolean isBlank(String[] lines) {
-        if (lines == null) return true;
+        if (lines == null)
+            return true;
         for (String line : lines)
             if (line != null && !line.isEmpty())
                 return false;
@@ -195,7 +197,7 @@ public class ChangedSign {
     }
 
     public boolean updateSign(ChangedSign sign) {
-        if(!equals(sign)) {
+        if (!equals(sign)) {
             flushLines();
             return true;
         }
@@ -205,19 +207,19 @@ public class ChangedSign {
 
     @Override
     public boolean equals(Object o) {
-        if(o instanceof ChangedSign) {
-            if(((ChangedSign) o).getType() != getType())
+        if (o instanceof ChangedSign) {
+            if (((ChangedSign) o).getType() != getType())
                 return false;
-            for(int i = 0; i < 4; i++)
-                if(!((ChangedSign) o).getRawLine(i).equals(getRawLine(i)))
+            for (int i = 0; i < 4; i++)
+                if (!((ChangedSign) o).getRawLine(i).equals(getRawLine(i)))
                     return false;
-            if(((ChangedSign) o).getX() != getX())
+            if (((ChangedSign) o).getX() != getX())
                 return false;
-            if(((ChangedSign) o).getY() != getY())
+            if (((ChangedSign) o).getY() != getY())
                 return false;
-            if(((ChangedSign) o).getZ() != getZ())
+            if (((ChangedSign) o).getZ() != getZ())
                 return false;
-            if(!((ChangedSign) o).block.getWorld().getUID().equals(block.getWorld().getUID()))
+            if (!((ChangedSign) o).block.getWorld().getUID().equals(block.getWorld().getUID()))
                 return false;
             return true;
         }
@@ -241,9 +243,13 @@ public class ChangedSign {
     }
 
     public boolean hasVariable(String var) {
-        if(VariableManager.instance == null) return false;
+        if (VariableManager.instance == null)
+            return false;
 
         var = var.toLowerCase(Locale.ENGLISH);
-        return lines[0].toLowerCase(Locale.ENGLISH).contains('%' + var + '%') || lines[1].toLowerCase(Locale.ENGLISH).contains('%' + var + '%') || lines[2].toLowerCase(Locale.ENGLISH).contains('%' + var + '%') || lines[3].toLowerCase(Locale.ENGLISH).contains('%' + var + '%');
+        return lines[0].toLowerCase(Locale.ENGLISH).contains('%' + var + '%')
+                || lines[1].toLowerCase(Locale.ENGLISH).contains('%' + var + '%')
+                || lines[2].toLowerCase(Locale.ENGLISH).contains('%' + var + '%')
+                || lines[3].toLowerCase(Locale.ENGLISH).contains('%' + var + '%');
     }
 }

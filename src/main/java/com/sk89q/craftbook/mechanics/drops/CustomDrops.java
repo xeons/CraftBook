@@ -48,8 +48,10 @@ public class CustomDrops extends AbstractCraftBookMechanic {
 
         definitions = new LinkedHashSet<>();
 
-        CraftBookPlugin.inst().createDefaultConfiguration(new File(CraftBookPlugin.inst().getDataFolder(), "custom-drops.yml"), "custom-drops.yml");
-        config = new YAMLProcessor(new File(CraftBookPlugin.inst().getDataFolder(), "custom-drops.yml"), false, YAMLFormat.EXTENDED);
+        CraftBookPlugin.inst().createDefaultConfiguration(
+                new File(CraftBookPlugin.inst().getDataFolder(), "custom-drops.yml"), "custom-drops.yml");
+        config = new YAMLProcessor(new File(CraftBookPlugin.inst().getDataFolder(), "custom-drops.yml"), false,
+                YAMLFormat.EXTENDED);
 
         load();
 
@@ -67,23 +69,26 @@ public class CustomDrops extends AbstractCraftBookMechanic {
             return false;
         }
 
-        for(String key : config.getKeys("custom-drops")) {
+        for (String key : config.getKeys("custom-drops")) {
 
             String type = config.getString("custom-drops." + key + ".type");
 
             boolean append = config.getBoolean("custom-drops." + key + ".append", false);
-            TernaryState silkTouch = TernaryState.getFromString(config.getString("custom-drops." + key + ".silk-touch", "none"));
+            TernaryState silkTouch = TernaryState
+                    .getFromString(config.getString("custom-drops." + key + ".silk-touch", "none"));
             List<String> regions = config.getStringList("custom-drops." + key + ".regions", null);
             List<String> requiredItems = config.getStringList("custom-drops." + key + ".required-items", null);
             List<String> biomeStrings = config.getStringList("custom-drops." + key + ".biomes", null);
 
             List<DropItemStack> drops = new ArrayList<>();
 
-            for(String drop : config.getKeys("custom-drops." + key + ".drops")) {
+            for (String drop : config.getKeys("custom-drops." + key + ".drops")) {
 
-                ItemStack item = ItemUtil.makeItemValid(ItemSyntax.getItem(config.getString("custom-drops." + key + ".drops." + drop + ".item")));
+                ItemStack item = ItemUtil.makeItemValid(
+                        ItemSyntax.getItem(config.getString("custom-drops." + key + ".drops." + drop + ".item")));
 
-                if(item == null) continue; //Invalid Drop.
+                if (item == null)
+                    continue; // Invalid Drop.
 
                 DropItemStack stack = new DropItemStack(item);
 
@@ -98,39 +103,41 @@ public class CustomDrops extends AbstractCraftBookMechanic {
 
             List<DropReward> rewards = new ArrayList<>();
 
-            if(config.getKeys("custom-drops." + key + ".rewards") != null) {
-                for(String reward : config.getKeys("custom-drops." + key + ".rewards")) {
+            if (config.getKeys("custom-drops." + key + ".rewards") != null) {
+                for (String reward : config.getKeys("custom-drops." + key + ".rewards")) {
 
-                    String rewardType = config.getString("custom-drops." + key + ".rewards." + reward + ".type", "None");
+                    String rewardType = config.getString("custom-drops." + key + ".rewards." + reward + ".type",
+                            "None");
 
                     DropReward dropReward = null;
 
-                    if(rewardType.equalsIgnoreCase("money")) {
+                    if (rewardType.equalsIgnoreCase("money")) {
 
                         double amount = config.getDouble("custom-drops." + key + ".rewards." + reward + ".amount", 10);
 
                         dropReward = new MonetaryDropReward(reward, amount);
                     }
 
-                    if(dropReward == null) continue;
+                    if (dropReward == null)
+                        continue;
 
                     rewards.add(dropReward);
                 }
             }
 
             CustomDropDefinition def = null;
-            if(type.equalsIgnoreCase("entity") || type.equalsIgnoreCase("mob")) {
+            if (type.equalsIgnoreCase("entity") || type.equalsIgnoreCase("mob")) {
 
                 EntityType ent = EntityType.valueOf(config.getString("custom-drops." + key + ".entity-type"));
 
                 def = new EntityCustomDropDefinition(key, drops, rewards, silkTouch, ent);
-            } else if(type.equalsIgnoreCase("block")) {
+            } else if (type.equalsIgnoreCase("block")) {
                 BlockStateHolder data = BlockSyntax.getBlock(config.getString("custom-drops." + key + ".block"), true);
 
                 def = new BlockCustomDropDefinition(key, drops, rewards, silkTouch, data);
             }
 
-            if(def != null) {
+            if (def != null) {
                 def.setAppend(append);
                 if (regions != null) {
                     def.setRegions(regions);
@@ -150,7 +157,8 @@ public class CustomDrops extends AbstractCraftBookMechanic {
                             Biome biome = Biome.valueOf(biomeString);
                             biomes.add(biome);
                         } catch (IllegalArgumentException e) {
-                            CraftBookPlugin.logger().warning("Tried to assign invalid biome " + biomeString + " to custom drop!");
+                            CraftBookPlugin.logger()
+                                    .warning("Tried to assign invalid biome " + biomeString + " to custom drop!");
                         }
                     }
                     def.setBiomes(biomes);
@@ -164,7 +172,7 @@ public class CustomDrops extends AbstractCraftBookMechanic {
 
     public void save() {
 
-        for(CustomDropDefinition def : definitions) {
+        for (CustomDropDefinition def : definitions) {
 
             config.setProperty("custom-drops." + def.getName() + ".append", def.getAppend());
             config.setProperty("custom-drops." + def.getName() + ".silk-touch", def.getSilkTouch().toString());
@@ -188,31 +196,39 @@ public class CustomDrops extends AbstractCraftBookMechanic {
             }
 
             int i = 0;
-            for(DropItemStack stack : def.getDrops()) {
+            for (DropItemStack stack : def.getDrops()) {
 
                 String stackName = stack.getName();
-                if(stackName == null)
+                if (stackName == null)
                     stackName = "Drop" + i++;
 
-                config.setProperty("custom-drops." + def.getName() + ".drops." + stackName + ".item", ItemSyntax.getStringFromItem(stack.getStack()));
-                config.setProperty("custom-drops." + def.getName() + ".drops." + stackName + ".chance", stack.getChance());
-                config.setProperty("custom-drops." + def.getName() + ".drops." + stackName + ".minimum-amount", stack.getMinimum());
-                config.setProperty("custom-drops." + def.getName() + ".drops." + stackName + ".maximum-amount", stack.getMaximum());
+                config.setProperty("custom-drops." + def.getName() + ".drops." + stackName + ".item",
+                        ItemSyntax.getStringFromItem(stack.getStack()));
+                config.setProperty("custom-drops." + def.getName() + ".drops." + stackName + ".chance",
+                        stack.getChance());
+                config.setProperty("custom-drops." + def.getName() + ".drops." + stackName + ".minimum-amount",
+                        stack.getMinimum());
+                config.setProperty("custom-drops." + def.getName() + ".drops." + stackName + ".maximum-amount",
+                        stack.getMaximum());
             }
 
-            for(DropReward reward : def.getRewards()) {
-                if(reward instanceof MonetaryDropReward) {
-                    config.setProperty("custom-drops." + def.getName() + ".rewards." + reward.getName() + ".type", "money");
-                    config.setProperty("custom-drops." + def.getName() + ".rewards." + reward.getName() + ".amount", ((MonetaryDropReward) reward).getAmount());
+            for (DropReward reward : def.getRewards()) {
+                if (reward instanceof MonetaryDropReward) {
+                    config.setProperty("custom-drops." + def.getName() + ".rewards." + reward.getName() + ".type",
+                            "money");
+                    config.setProperty("custom-drops." + def.getName() + ".rewards." + reward.getName() + ".amount",
+                            ((MonetaryDropReward) reward).getAmount());
                 }
             }
 
-            if(def instanceof EntityCustomDropDefinition) {
+            if (def instanceof EntityCustomDropDefinition) {
                 config.setProperty("custom-drops." + def.getName() + ".type", "ENTITY");
-                config.setProperty("custom-drops." + def.getName() + ".entity-type", ((EntityCustomDropDefinition) def).getEntityType().name());
-            } else if(def instanceof BlockCustomDropDefinition) {
+                config.setProperty("custom-drops." + def.getName() + ".entity-type",
+                        ((EntityCustomDropDefinition) def).getEntityType().name());
+            } else if (def instanceof BlockCustomDropDefinition) {
                 config.setProperty("custom-drops." + def.getName() + ".type", "BLOCK");
-                config.setProperty("custom-drops." + def.getName() + ".block", ((BlockCustomDropDefinition) def).getBlockType().toString());
+                config.setProperty("custom-drops." + def.getName() + ".block",
+                        ((BlockCustomDropDefinition) def).getBlockType().toString());
             }
         }
 
@@ -228,27 +244,34 @@ public class CustomDrops extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockBreak(BlockBreakEvent event) {
 
-        if (customDropPermissions && !CraftBookPlugin.inst().wrapPlayer(event.getPlayer()).hasPermission("craftbook.mech.drops")) return;
-
-        if(event.getPlayer().getGameMode() == GameMode.CREATIVE) //Don't drop in creative.
+        if (customDropPermissions
+                && !CraftBookPlugin.inst().wrapPlayer(event.getPlayer()).hasPermission("craftbook.mech.drops"))
             return;
 
-        if(!EventUtil.passesFilter(event))
+        if (event.getPlayer().getGameMode() == GameMode.CREATIVE) // Don't drop in creative.
             return;
 
-        for(CustomDropDefinition def : definitions) {
-            if(!(def instanceof BlockCustomDropDefinition)) continue; //Nope, we only want block drop definitions.
+        if (!EventUtil.passesFilter(event))
+            return;
 
-            if(!((BlockCustomDropDefinition) def).getBlockType().equalsFuzzy(BukkitAdapter.adapt(event.getBlock().getBlockData()))) continue;
+        for (CustomDropDefinition def : definitions) {
+            if (!(def instanceof BlockCustomDropDefinition))
+                continue; // Nope, we only want block drop definitions.
 
-            if (def.getPermissionNode() != null && !CraftBookPlugin.inst().wrapPlayer(event.getPlayer()).hasPermission(def.getPermissionNode())) {
+            if (!((BlockCustomDropDefinition) def).getBlockType()
+                    .equalsFuzzy(BukkitAdapter.adapt(event.getBlock().getBlockData())))
+                continue;
+
+            if (def.getPermissionNode() != null
+                    && !CraftBookPlugin.inst().wrapPlayer(event.getPlayer()).hasPermission(def.getPermissionNode())) {
                 return;
             }
 
             if (def.getRegions() != null) {
                 boolean found = false;
                 for (String region : def.getRegions()) {
-                    ProtectedRegion r = WorldGuard.getInstance().getPlatform().getRegionContainer().get(BukkitAdapter.adapt(event.getBlock().getWorld())).getRegion(region);
+                    ProtectedRegion r = WorldGuard.getInstance().getPlatform().getRegionContainer()
+                            .get(BukkitAdapter.adapt(event.getBlock().getWorld())).getRegion(region);
                     if (r != null && r.contains(event.getBlock().getX(), event.getBlock().getY(),
                             event.getBlock().getZ())) {
                         found = true;
@@ -289,22 +312,24 @@ public class CustomDrops extends AbstractCraftBookMechanic {
                 }
             }
 
-            boolean isSilkTouch = event.getPlayer().getInventory().getItemInMainHand() != null && event.getPlayer().getInventory().getItemInMainHand().getEnchantmentLevel(Enchantment.SILK_TOUCH) > 0;
-            if(!def.getSilkTouch().doesPass(isSilkTouch))
+            boolean isSilkTouch = event.getPlayer().getInventory().getItemInMainHand() != null && event.getPlayer()
+                    .getInventory().getItemInMainHand().getEnchantmentLevel(Enchantment.SILK_TOUCH) > 0;
+            if (!def.getSilkTouch().doesPass(isSilkTouch))
                 continue;
 
-            if(!def.getAppend()) {
+            if (!def.getAppend()) {
                 event.setCancelled(true);
                 event.getBlock().setType(Material.AIR);
-                if(event.getExpToDrop() > 0)
-                    ((ExperienceOrb) event.getBlock().getWorld().spawnEntity(BlockUtil.getBlockCentre(event.getBlock()), EntityType.EXPERIENCE_ORB)).setExperience(event.getExpToDrop());
+                if (event.getExpToDrop() > 0)
+                    ((ExperienceOrb) event.getBlock().getWorld().spawnEntity(BlockUtil.getBlockCentre(event.getBlock()),
+                            EntityType.EXPERIENCE_ORB)).setExperience(event.getExpToDrop());
             }
 
-            for(ItemStack stack : def.getRandomDrops()) {
+            for (ItemStack stack : def.getRandomDrops()) {
                 event.getBlock().getWorld().dropItemNaturally(BlockUtil.getBlockCentre(event.getBlock()), stack);
             }
 
-            for(DropReward reward : def.getRewards()) {
+            for (DropReward reward : def.getRewards()) {
                 reward.giveReward(event.getPlayer());
             }
         }
@@ -318,24 +343,28 @@ public class CustomDrops extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onEntityDeath(EntityDeathEvent event) {
 
-        if(!EventUtil.passesFilter(event))
+        if (!EventUtil.passesFilter(event))
             return;
 
-        for(CustomDropDefinition def : definitions) {
-            if(!(def instanceof EntityCustomDropDefinition)) continue; //Nope, we only want entity drop definitions.
+        for (CustomDropDefinition def : definitions) {
+            if (!(def instanceof EntityCustomDropDefinition))
+                continue; // Nope, we only want entity drop definitions.
 
-            if(!((EntityCustomDropDefinition) def).getEntityType().equals(event.getEntityType())) continue;
+            if (!((EntityCustomDropDefinition) def).getEntityType().equals(event.getEntityType()))
+                continue;
 
             if (def.getPermissionNode() != null) {
                 if (event.getEntity().getKiller() == null
-                        || !CraftBookPlugin.inst().wrapPlayer(event.getEntity().getKiller()).hasPermission(def.getPermissionNode()))
+                        || !CraftBookPlugin.inst().wrapPlayer(event.getEntity().getKiller())
+                                .hasPermission(def.getPermissionNode()))
                     return;
             }
 
             if (def.getRegions() != null) {
                 boolean found = false;
                 for (String region : def.getRegions()) {
-                    ProtectedRegion r = WorldGuard.getInstance().getPlatform().getRegionContainer().get(BukkitAdapter.adapt(event.getEntity().getWorld())).getRegion(region);
+                    ProtectedRegion r = WorldGuard.getInstance().getPlatform().getRegionContainer()
+                            .get(BukkitAdapter.adapt(event.getEntity().getWorld())).getRegion(region);
                     if (r != null && r.contains(event.getEntity().getLocation().getBlockX(),
                             event.getEntity().getLocation().getBlockY(),
                             event.getEntity().getLocation().getBlockZ())) {
@@ -381,22 +410,25 @@ public class CustomDrops extends AbstractCraftBookMechanic {
                 }
             }
 
-            boolean isSilkTouch = killer != null && killer.getInventory().getItemInMainHand() != null && killer.getInventory().getItemInMainHand().getEnchantmentLevel(Enchantment.SILK_TOUCH) > 0;
-            if(!def.getSilkTouch().doesPass(isSilkTouch))
+            boolean isSilkTouch = killer != null && killer.getInventory().getItemInMainHand() != null
+                    && killer.getInventory().getItemInMainHand().getEnchantmentLevel(Enchantment.SILK_TOUCH) > 0;
+            if (!def.getSilkTouch().doesPass(isSilkTouch))
                 continue;
 
-            if(!def.getAppend()) {
+            if (!def.getAppend()) {
                 event.getDrops().clear();
-                if(event.getDroppedExp() > 0)
-                    ((ExperienceOrb) event.getEntity().getWorld().spawnEntity(event.getEntity().getLocation(), EntityType.EXPERIENCE_ORB)).setExperience(event.getDroppedExp());
+                if (event.getDroppedExp() > 0)
+                    ((ExperienceOrb) event.getEntity().getWorld().spawnEntity(event.getEntity().getLocation(),
+                            EntityType.EXPERIENCE_ORB)).setExperience(event.getDroppedExp());
             }
 
-            for(ItemStack stack : def.getRandomDrops()) {
+            for (ItemStack stack : def.getRandomDrops()) {
                 event.getEntity().getWorld().dropItemNaturally(event.getEntity().getLocation(), stack);
             }
 
-            for(DropReward reward : def.getRewards()) {
-                if(killer == null && reward.doesRequirePlayer()) continue;
+            for (DropReward reward : def.getRewards()) {
+                if (killer == null && reward.doesRequirePlayer())
+                    continue;
                 reward.giveReward(killer);
             }
         }
@@ -410,7 +442,7 @@ public class CustomDrops extends AbstractCraftBookMechanic {
     private boolean removeVanillaDrops;
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadConfiguration(YAMLProcessor config, String path) {
 
         config.setComment(path + "require-permissions", "Require a permission node to get custom drops.");
         customDropPermissions = config.getBoolean(path + "require-permissions", false);

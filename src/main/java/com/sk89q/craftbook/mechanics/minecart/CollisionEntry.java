@@ -15,11 +15,14 @@ public class CollisionEntry extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.LOW)
     public void onVehicleEntityCollision(VehicleEntityCollisionEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event))
+            return;
 
         if (event.getVehicle() instanceof RideableMinecart) {
-            if (!event.getVehicle().isEmpty()) return;
-            if (!(event.getEntity() instanceof HumanEntity)) return;
+            if (!event.getVehicle().isEmpty())
+                return;
+            if (!(event.getEntity() instanceof HumanEntity))
+                return;
             event.getVehicle().addPassenger(event.getEntity());
 
             event.setCollisionCancelled(true);
@@ -27,7 +30,7 @@ public class CollisionEntry extends AbstractCraftBookMechanic {
     }
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadConfiguration(YAMLProcessor config, String path) {
 
     }
 }

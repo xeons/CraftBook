@@ -26,7 +26,7 @@ public class VariableCommands {
         this.plugin = plugin;
     }
 
-    @Command(aliases = "set", desc = "Sets a variable.", max=2, min=2, flags="n:", usage = "<Variable> <Value> -n <Namespace>")
+    @Command(aliases = "set", desc = "Sets a variable.", max = 2, min = 2, flags = "n:", usage = "<Variable> <Value> -n <Namespace>")
     public void set(CommandContext context, CommandSender sender) throws CommandException {
 
         if (VariableManager.instance == null) {
@@ -36,29 +36,30 @@ public class VariableCommands {
 
         String key = "global";
 
-        if(!VariableManager.instance.defaultToGlobal && sender instanceof Player)
+        if (!VariableManager.instance.defaultToGlobal && sender instanceof Player)
             key = CraftBookPlugin.inst().wrapPlayer((Player) sender).getCraftBookId();
 
-        if(context.hasFlag('n'))
+        if (context.hasFlag('n'))
             key = context.getFlag('n');
 
-        if(VariableManager.instance.hasVariable(context.getString(0), key)) {
+        if (VariableManager.instance.hasVariable(context.getString(0), key)) {
 
-            if(!RegexUtil.VARIABLE_KEY_PATTERN.matcher(context.getString(0)).find())
+            if (!RegexUtil.VARIABLE_KEY_PATTERN.matcher(context.getString(0)).find())
                 throw new FastCommandException("Invalid Variable Name!");
 
             checkModifyPermissions(sender, key, context.getString(0));
 
-            if(!RegexUtil.VARIABLE_VALUE_PATTERN.matcher(context.getString(1)).find())
+            if (!RegexUtil.VARIABLE_VALUE_PATTERN.matcher(context.getString(1)).find())
                 throw new FastCommandException("Invalid Variable Value!");
             VariableManager.instance.setVariable(context.getString(0), key, context.getString(1));
             resetICCache(context.getString(0), key);
-            sender.sendMessage(ChatColor.YELLOW + "Variable is now: " + VariableManager.instance.getVariable(context.getString(0), key));
+            sender.sendMessage(ChatColor.YELLOW + "Variable is now: "
+                    + VariableManager.instance.getVariable(context.getString(0), key));
         } else
             throw new FastCommandException("Unknown Variable!");
     }
 
-    @Command(aliases = "define", desc = "Defines a variable.", max=2, min=2, flags="n:", usage = "<Variable> <Value> -n <Namespace>")
+    @Command(aliases = "define", desc = "Defines a variable.", max = 2, min = 2, flags = "n:", usage = "<Variable> <Value> -n <Namespace>")
     public void define(CommandContext context, CommandSender sender) throws CommandException {
 
         if (VariableManager.instance == null) {
@@ -68,28 +69,29 @@ public class VariableCommands {
 
         String key = "global";
 
-        if(!VariableManager.instance.defaultToGlobal && sender instanceof Player)
+        if (!VariableManager.instance.defaultToGlobal && sender instanceof Player)
             key = CraftBookPlugin.inst().wrapPlayer((Player) sender).getCraftBookId();
 
-        if(context.hasFlag('n'))
+        if (context.hasFlag('n'))
             key = context.getFlag('n');
 
-        if(!VariableManager.instance.hasVariable(context.getString(0), key)) {
+        if (!VariableManager.instance.hasVariable(context.getString(0), key)) {
 
-            if(!hasVariablePermission(sender, key, context.getString(0), "define"))
+            if (!hasVariablePermission(sender, key, context.getString(0), "define"))
                 throw new CommandPermissionsException();
-            if(!RegexUtil.VARIABLE_KEY_PATTERN.matcher(context.getString(0)).find())
+            if (!RegexUtil.VARIABLE_KEY_PATTERN.matcher(context.getString(0)).find())
                 throw new FastCommandException("Invalid Variable Name!");
-            if(!RegexUtil.VARIABLE_VALUE_PATTERN.matcher(context.getString(1)).find())
+            if (!RegexUtil.VARIABLE_VALUE_PATTERN.matcher(context.getString(1)).find())
                 throw new FastCommandException("Invalid Variable Value!");
             VariableManager.instance.setVariable(context.getString(0), key, context.getString(1));
             resetICCache(context.getString(0), key);
-            sender.sendMessage(ChatColor.YELLOW + "Variable is now: " + VariableManager.instance.getVariable(context.getString(0), key));
+            sender.sendMessage(ChatColor.YELLOW + "Variable is now: "
+                    + VariableManager.instance.getVariable(context.getString(0), key));
         } else
             throw new FastCommandException("Existing Variable!");
     }
 
-    @Command(aliases = "get", desc = "Checks a variable.", max=1, min=1, flags="n:", usage = "<Variable> -n <Namespace>")
+    @Command(aliases = "get", desc = "Checks a variable.", max = 1, min = 1, flags = "n:", usage = "<Variable> -n <Namespace>")
     public void get(CommandContext context, CommandSender sender) throws CommandException {
 
         if (VariableManager.instance == null) {
@@ -99,24 +101,25 @@ public class VariableCommands {
 
         String key = "global";
 
-        if(!VariableManager.instance.defaultToGlobal && sender instanceof Player)
+        if (!VariableManager.instance.defaultToGlobal && sender instanceof Player)
             key = CraftBookPlugin.inst().wrapPlayer((Player) sender).getCraftBookId();
 
-        if(context.hasFlag('n'))
+        if (context.hasFlag('n'))
             key = context.getFlag('n');
 
-        if(VariableManager.instance.hasVariable(context.getString(0), key)) {
+        if (VariableManager.instance.hasVariable(context.getString(0), key)) {
 
-            if(!hasVariablePermission(sender, key, context.getString(0), "get"))
+            if (!hasVariablePermission(sender, key, context.getString(0), "get"))
                 throw new CommandPermissionsException();
-            if(!RegexUtil.VARIABLE_KEY_PATTERN.matcher(context.getString(0)).find())
+            if (!RegexUtil.VARIABLE_KEY_PATTERN.matcher(context.getString(0)).find())
                 throw new FastCommandException("Invalid Variable Name!");
-            sender.sendMessage(ChatColor.YELLOW + context.getString(0) + ": " + VariableManager.instance.getVariable(context.getString(0), key));
+            sender.sendMessage(ChatColor.YELLOW + context.getString(0) + ": "
+                    + VariableManager.instance.getVariable(context.getString(0), key));
         } else
             throw new FastCommandException("Unknown Variable!");
     }
 
-    @Command(aliases = "list", desc = "Lists variables", flags="an:p:", usage = "-p <page> -n <Namespace> -a")
+    @Command(aliases = "list", desc = "Lists variables", flags = "an:p:", usage = "-p <page> -n <Namespace> -a")
     public void list(CommandContext context, CommandSender sender) throws CommandException {
 
         if (VariableManager.instance == null) {
@@ -126,10 +129,10 @@ public class VariableCommands {
 
         String key = "global";
 
-        if(!VariableManager.instance.defaultToGlobal && sender instanceof Player)
+        if (!VariableManager.instance.defaultToGlobal && sender instanceof Player)
             key = CraftBookPlugin.inst().wrapPlayer((Player) sender).getCraftBookId();
 
-        if(context.hasFlag('n'))
+        if (context.hasFlag('n'))
             key = context.getFlag('n');
 
         if (context.hasFlag('a'))
@@ -147,7 +150,8 @@ public class VariableCommands {
                 keyName = entry.getKey().b + '|' + keyName;
             }
 
-            variablesLines.add(ChatColor.YELLOW + keyName + ChatColor.WHITE + ": " + ChatColor.GREEN + entry.getValue());
+            variablesLines
+                    .add(ChatColor.YELLOW + keyName + ChatColor.WHITE + ": " + ChatColor.GREEN + entry.getValue());
         }
 
         String[] lines = variablesLines.toArray(new String[variablesLines.size()]);
@@ -173,7 +177,8 @@ public class VariableCommands {
         }
     }
 
-    @Command(aliases = {"erase","remove","delete","rm"}, desc = "Erase a variable.", max=1, min=1, flags="n:", usage = "<Variable> -n <Namespace>")
+    @Command(aliases = {"erase", "remove", "delete",
+            "rm"}, desc = "Erase a variable.", max = 1, min = 1, flags = "n:", usage = "<Variable> -n <Namespace>")
     public void erase(CommandContext context, CommandSender sender) throws CommandException {
 
         if (VariableManager.instance == null) {
@@ -183,17 +188,17 @@ public class VariableCommands {
 
         String key = "global";
 
-        if(!VariableManager.instance.defaultToGlobal && sender instanceof Player)
+        if (!VariableManager.instance.defaultToGlobal && sender instanceof Player)
             key = CraftBookPlugin.inst().wrapPlayer((Player) sender).getCraftBookId();
 
-        if(context.hasFlag('n'))
+        if (context.hasFlag('n'))
             key = context.getFlag('n');
 
-        if(VariableManager.instance.hasVariable(context.getString(0), key)) {
+        if (VariableManager.instance.hasVariable(context.getString(0), key)) {
 
-            if(!hasVariablePermission(sender, key, context.getString(0), "erase"))
+            if (!hasVariablePermission(sender, key, context.getString(0), "erase"))
                 throw new CommandPermissionsException();
-            if(!RegexUtil.VARIABLE_KEY_PATTERN.matcher(context.getString(0)).find())
+            if (!RegexUtil.VARIABLE_KEY_PATTERN.matcher(context.getString(0)).find())
                 throw new FastCommandException("Invalid Variable Name!");
             VariableManager.instance.removeVariable(context.getString(0), key);
             resetICCache(context.getString(0), key);
@@ -204,14 +209,15 @@ public class VariableCommands {
 
     private static void resetICCache(String variable, String namespace) {
 
-        if(ICManager.inst() != null) {//Make sure IC's are enabled.
+        if (ICManager.inst() != null) {// Make sure IC's are enabled.
 
             ICManager.getCachedICs().entrySet()
-                    .removeIf(ic -> ic.getValue().getSign().hasVariable(namespace + '|' + variable) || ic.getValue().getSign().hasVariable(variable));
+                    .removeIf(ic -> ic.getValue().getSign().hasVariable(namespace + '|' + variable)
+                            || ic.getValue().getSign().hasVariable(variable));
         }
     }
 
-    @Command(aliases = "append", desc = "Append to a variable.", max=2, min=2, flags="n:", usage = "<Variable> <Appended Value> -n <Namespace>")
+    @Command(aliases = "append", desc = "Append to a variable.", max = 2, min = 2, flags = "n:", usage = "<Variable> <Appended Value> -n <Namespace>")
     public void append(CommandContext context, CommandSender sender) throws CommandException {
 
         if (VariableManager.instance == null) {
@@ -221,29 +227,31 @@ public class VariableCommands {
 
         String key = "global";
 
-        if(!VariableManager.instance.defaultToGlobal && sender instanceof Player)
+        if (!VariableManager.instance.defaultToGlobal && sender instanceof Player)
             key = CraftBookPlugin.inst().wrapPlayer((Player) sender).getCraftBookId();
 
-        if(context.hasFlag('n'))
+        if (context.hasFlag('n'))
             key = context.getFlag('n');
 
-        if(VariableManager.instance.hasVariable(context.getString(0), key)) {
+        if (VariableManager.instance.hasVariable(context.getString(0), key)) {
 
-            if(!RegexUtil.VARIABLE_KEY_PATTERN.matcher(context.getString(0)).find())
+            if (!RegexUtil.VARIABLE_KEY_PATTERN.matcher(context.getString(0)).find())
                 throw new FastCommandException("Invalid Variable Name!");
 
             checkModifyPermissions(sender, key, context.getString(0));
 
-            if(!RegexUtil.VARIABLE_VALUE_PATTERN.matcher(context.getString(1)).find())
+            if (!RegexUtil.VARIABLE_VALUE_PATTERN.matcher(context.getString(1)).find())
                 throw new FastCommandException("Invalid Variable Value!");
-            VariableManager.instance.setVariable(context.getString(0), key, VariableManager.instance.getVariable(context.getString(0), key) + context.getString(1));
+            VariableManager.instance.setVariable(context.getString(0), key,
+                    VariableManager.instance.getVariable(context.getString(0), key) + context.getString(1));
             resetICCache(context.getString(0), key);
-            sender.sendMessage(ChatColor.YELLOW + "Variable is now: " + VariableManager.instance.getVariable(context.getString(0), key));
+            sender.sendMessage(ChatColor.YELLOW + "Variable is now: "
+                    + VariableManager.instance.getVariable(context.getString(0), key));
         } else
             throw new FastCommandException("Unknown Variable!");
     }
 
-    @Command(aliases = "prepend", desc = "Prepend to a variable.", max=2, min=2, flags="n:", usage = "<Variable> <Prepended Value> -n <Namespace>")
+    @Command(aliases = "prepend", desc = "Prepend to a variable.", max = 2, min = 2, flags = "n:", usage = "<Variable> <Prepended Value> -n <Namespace>")
     public void prepend(CommandContext context, CommandSender sender) throws CommandException {
 
         if (VariableManager.instance == null) {
@@ -253,29 +261,31 @@ public class VariableCommands {
 
         String key = "global";
 
-        if(!VariableManager.instance.defaultToGlobal && sender instanceof Player)
+        if (!VariableManager.instance.defaultToGlobal && sender instanceof Player)
             key = CraftBookPlugin.inst().wrapPlayer((Player) sender).getCraftBookId();
 
-        if(context.hasFlag('n'))
+        if (context.hasFlag('n'))
             key = context.getFlag('n');
 
-        if(VariableManager.instance.hasVariable(context.getString(0), key)) {
+        if (VariableManager.instance.hasVariable(context.getString(0), key)) {
 
-            if(!RegexUtil.VARIABLE_KEY_PATTERN.matcher(context.getString(0)).find())
+            if (!RegexUtil.VARIABLE_KEY_PATTERN.matcher(context.getString(0)).find())
                 throw new FastCommandException("Invalid Variable Name!");
 
             checkModifyPermissions(sender, key, context.getString(0));
 
-            if(!RegexUtil.VARIABLE_VALUE_PATTERN.matcher(context.getString(1)).find())
+            if (!RegexUtil.VARIABLE_VALUE_PATTERN.matcher(context.getString(1)).find())
                 throw new FastCommandException("Invalid Variable Value!");
-            VariableManager.instance.setVariable(context.getString(0), key, context.getString(1) + VariableManager.instance.getVariable(context.getString(0), key));
+            VariableManager.instance.setVariable(context.getString(0), key,
+                    context.getString(1) + VariableManager.instance.getVariable(context.getString(0), key));
             resetICCache(context.getString(0), key);
-            sender.sendMessage(ChatColor.YELLOW + "Variable is now: " + VariableManager.instance.getVariable(context.getString(0), key));
+            sender.sendMessage(ChatColor.YELLOW + "Variable is now: "
+                    + VariableManager.instance.getVariable(context.getString(0), key));
         } else
             throw new FastCommandException("Unknown Variable!");
     }
 
-    @Command(aliases = "toggle", desc = "Toggle a boolean.", max=1, min=1, flags="n:", usage = "<Variable> -n <Namespace>")
+    @Command(aliases = "toggle", desc = "Toggle a boolean.", max = 1, min = 1, flags = "n:", usage = "<Variable> -n <Namespace>")
     public void toggle(CommandContext context, CommandSender sender) throws CommandException {
 
         if (VariableManager.instance == null) {
@@ -285,25 +295,25 @@ public class VariableCommands {
 
         String key = "global";
 
-        if(!VariableManager.instance.defaultToGlobal && sender instanceof Player)
+        if (!VariableManager.instance.defaultToGlobal && sender instanceof Player)
             key = CraftBookPlugin.inst().wrapPlayer((Player) sender).getCraftBookId();
 
-        if(context.hasFlag('n'))
+        if (context.hasFlag('n'))
             key = context.getFlag('n');
 
-        if(VariableManager.instance.hasVariable(context.getString(0), key)) {
+        if (VariableManager.instance.hasVariable(context.getString(0), key)) {
 
-            if(!RegexUtil.VARIABLE_KEY_PATTERN.matcher(context.getString(0)).find())
+            if (!RegexUtil.VARIABLE_KEY_PATTERN.matcher(context.getString(0)).find())
                 throw new FastCommandException("Invalid Variable Name!");
 
             checkModifyPermissions(sender, key, context.getString(0));
 
             String var = VariableManager.instance.getVariable(context.getString(0), key);
-            if(var.equalsIgnoreCase("0") || var.equalsIgnoreCase("1"))
+            if (var.equalsIgnoreCase("0") || var.equalsIgnoreCase("1"))
                 var = var.equalsIgnoreCase("1") ? "0" : "1";
-            else if(var.equalsIgnoreCase("true") || var.equalsIgnoreCase("false"))
+            else if (var.equalsIgnoreCase("true") || var.equalsIgnoreCase("false"))
                 var = var.equalsIgnoreCase("true") ? "false" : "true";
-            else if(var.equalsIgnoreCase("yes") || var.equalsIgnoreCase("no"))
+            else if (var.equalsIgnoreCase("yes") || var.equalsIgnoreCase("no"))
                 var = var.equalsIgnoreCase("yes") ? "no" : "yes";
             else
                 throw new FastCommandException("Variable not of boolean type!");
@@ -314,7 +324,7 @@ public class VariableCommands {
             throw new FastCommandException("Unknown Variable!");
     }
 
-    @Command(aliases = "add", desc = "Add to a numeric variable.", max=2, min=2, flags="n:", usage = "<Variable> <Added Value> -n <Namespace>")
+    @Command(aliases = "add", desc = "Add to a numeric variable.", max = 2, min = 2, flags = "n:", usage = "<Variable> <Added Value> -n <Namespace>")
     public void add(CommandContext context, CommandSender sender) throws CommandException {
 
         if (VariableManager.instance == null) {
@@ -324,20 +334,20 @@ public class VariableCommands {
 
         String key = "global";
 
-        if(!VariableManager.instance.defaultToGlobal && sender instanceof Player)
+        if (!VariableManager.instance.defaultToGlobal && sender instanceof Player)
             key = CraftBookPlugin.inst().wrapPlayer((Player) sender).getCraftBookId();
 
-        if(context.hasFlag('n'))
+        if (context.hasFlag('n'))
             key = context.getFlag('n');
 
-        if(VariableManager.instance.hasVariable(context.getString(0), key)) {
+        if (VariableManager.instance.hasVariable(context.getString(0), key)) {
 
-            if(!RegexUtil.VARIABLE_KEY_PATTERN.matcher(context.getString(0)).find())
+            if (!RegexUtil.VARIABLE_KEY_PATTERN.matcher(context.getString(0)).find())
                 throw new FastCommandException("Invalid Variable Name!");
 
             checkModifyPermissions(sender, key, context.getString(0));
 
-            if(!RegexUtil.VARIABLE_VALUE_PATTERN.matcher(context.getString(1)).find())
+            if (!RegexUtil.VARIABLE_VALUE_PATTERN.matcher(context.getString(1)).find())
                 throw new FastCommandException("Invalid Variable Value!");
 
             String var = VariableManager.instance.getVariable(context.getString(0), key);
@@ -348,7 +358,7 @@ public class VariableCommands {
                 var = String.valueOf(f);
                 if (var.endsWith(".0"))
                     var = var.replace(".0", "");
-            } catch(Exception e) {
+            } catch (Exception e) {
                 throw new FastCommandException("Variable not of numeric type!");
             }
             VariableManager.instance.setVariable(context.getString(0), key, var);
@@ -358,7 +368,7 @@ public class VariableCommands {
             throw new FastCommandException("Unknown Variable!");
     }
 
-    @Command(aliases = "subtract", desc = "Subtract from a numeric variable.", max=2, min=2, flags="n:", usage = "<Variable> <Subtracting Value> -n <Namespace>")
+    @Command(aliases = "subtract", desc = "Subtract from a numeric variable.", max = 2, min = 2, flags = "n:", usage = "<Variable> <Subtracting Value> -n <Namespace>")
     public void subtract(CommandContext context, CommandSender sender) throws CommandException {
 
         if (VariableManager.instance == null) {
@@ -368,20 +378,20 @@ public class VariableCommands {
 
         String key = "global";
 
-        if(!VariableManager.instance.defaultToGlobal && sender instanceof Player)
+        if (!VariableManager.instance.defaultToGlobal && sender instanceof Player)
             key = CraftBookPlugin.inst().wrapPlayer((Player) sender).getCraftBookId();
 
-        if(context.hasFlag('n'))
+        if (context.hasFlag('n'))
             key = context.getFlag('n');
 
-        if(VariableManager.instance.hasVariable(context.getString(0), key)) {
+        if (VariableManager.instance.hasVariable(context.getString(0), key)) {
 
-            if(!RegexUtil.VARIABLE_KEY_PATTERN.matcher(context.getString(0)).find())
+            if (!RegexUtil.VARIABLE_KEY_PATTERN.matcher(context.getString(0)).find())
                 throw new FastCommandException("Invalid Variable Name!");
 
             checkModifyPermissions(sender, key, context.getString(0));
 
-            if(!RegexUtil.VARIABLE_VALUE_PATTERN.matcher(context.getString(1)).find())
+            if (!RegexUtil.VARIABLE_VALUE_PATTERN.matcher(context.getString(1)).find())
                 throw new FastCommandException("Invalid Variable Value!");
 
             String var = VariableManager.instance.getVariable(context.getString(0), key);
@@ -392,7 +402,7 @@ public class VariableCommands {
                 var = String.valueOf(f);
                 if (var.endsWith(".0"))
                     var = var.replace(".0", "");
-            } catch(Exception e) {
+            } catch (Exception e) {
                 throw new FastCommandException("Variable not of numeric type!");
             }
             VariableManager.instance.setVariable(context.getString(0), key, var);
@@ -402,7 +412,8 @@ public class VariableCommands {
             throw new FastCommandException("Unknown Variable!");
     }
 
-    @Command(aliases = {"multiply","multiple"}, desc = "Multiply a numeric variable.", max=2, min=2, flags="n:", usage = "<Variable> <Multiplying Value> -n <Namespace>")
+    @Command(aliases = {"multiply",
+            "multiple"}, desc = "Multiply a numeric variable.", max = 2, min = 2, flags = "n:", usage = "<Variable> <Multiplying Value> -n <Namespace>")
     public void multiple(CommandContext context, CommandSender sender) throws CommandException {
 
         if (VariableManager.instance == null) {
@@ -412,20 +423,20 @@ public class VariableCommands {
 
         String key = "global";
 
-        if(!VariableManager.instance.defaultToGlobal && sender instanceof Player)
+        if (!VariableManager.instance.defaultToGlobal && sender instanceof Player)
             key = CraftBookPlugin.inst().wrapPlayer((Player) sender).getCraftBookId();
 
-        if(context.hasFlag('n'))
+        if (context.hasFlag('n'))
             key = context.getFlag('n');
 
-        if(VariableManager.instance.hasVariable(context.getString(0), key)) {
+        if (VariableManager.instance.hasVariable(context.getString(0), key)) {
 
-            if(!RegexUtil.VARIABLE_KEY_PATTERN.matcher(context.getString(0)).find())
+            if (!RegexUtil.VARIABLE_KEY_PATTERN.matcher(context.getString(0)).find())
                 throw new FastCommandException("Invalid Variable Name!");
 
             checkModifyPermissions(sender, key, context.getString(0));
 
-            if(!RegexUtil.VARIABLE_VALUE_PATTERN.matcher(context.getString(1)).find())
+            if (!RegexUtil.VARIABLE_VALUE_PATTERN.matcher(context.getString(1)).find())
                 throw new FastCommandException("Invalid Variable Value!");
 
             String var = VariableManager.instance.getVariable(context.getString(0), key);
@@ -436,7 +447,7 @@ public class VariableCommands {
                 var = String.valueOf(f);
                 if (var.endsWith(".0"))
                     var = var.replace(".0", "");
-            } catch(Exception e) {
+            } catch (Exception e) {
                 throw new FastCommandException("Variable not of numeric type!");
             }
             VariableManager.instance.setVariable(context.getString(0), key, var);
@@ -446,7 +457,7 @@ public class VariableCommands {
             throw new FastCommandException("Unknown Variable!");
     }
 
-    @Command(aliases = "divide", desc = "Divide a numeric variable.", max=2, min=2, flags="n:", usage = "<Variable> <Dividing Value> -n <Namespace>")
+    @Command(aliases = "divide", desc = "Divide a numeric variable.", max = 2, min = 2, flags = "n:", usage = "<Variable> <Dividing Value> -n <Namespace>")
     public void divide(CommandContext context, CommandSender sender) throws CommandException {
 
         if (VariableManager.instance == null) {
@@ -456,27 +467,27 @@ public class VariableCommands {
 
         String key = "global";
 
-        if(!VariableManager.instance.defaultToGlobal && sender instanceof Player)
+        if (!VariableManager.instance.defaultToGlobal && sender instanceof Player)
             key = CraftBookPlugin.inst().wrapPlayer((Player) sender).getCraftBookId();
 
-        if(context.hasFlag('n'))
+        if (context.hasFlag('n'))
             key = context.getFlag('n');
 
-        if(VariableManager.instance.hasVariable(context.getString(0), key)) {
+        if (VariableManager.instance.hasVariable(context.getString(0), key)) {
 
-            if(!RegexUtil.VARIABLE_KEY_PATTERN.matcher(context.getString(0)).find())
+            if (!RegexUtil.VARIABLE_KEY_PATTERN.matcher(context.getString(0)).find())
                 throw new FastCommandException("Invalid Variable Name!");
 
             checkModifyPermissions(sender, key, context.getString(0));
 
-            if(!RegexUtil.VARIABLE_VALUE_PATTERN.matcher(context.getString(1)).find())
+            if (!RegexUtil.VARIABLE_VALUE_PATTERN.matcher(context.getString(1)).find())
                 throw new FastCommandException("Invalid Variable Value!");
 
             String var = VariableManager.instance.getVariable(context.getString(0), key);
             try {
 
                 double f = Double.parseDouble(var);
-                if(f == 0)
+                if (f == 0)
                     throw new FastCommandException("Can't divide by 0!");
                 f /= context.getDouble(1);
                 var = String.valueOf(f);
@@ -484,7 +495,7 @@ public class VariableCommands {
                     var = var.replace(".0", "");
             } catch (RuntimeException e) {
                 throw e;
-            } catch(Exception e) {
+            } catch (Exception e) {
                 throw new FastCommandException("Variable not of numeric type!");
             }
             VariableManager.instance.setVariable(context.getString(0), key, var);
@@ -495,13 +506,13 @@ public class VariableCommands {
     }
 
     private static void checkModifyPermissions(CommandSender sender, String key, String var) throws CommandException {
-        if(!hasVariablePermission(sender, key, var, "modify"))
+        if (!hasVariablePermission(sender, key, var, "modify"))
             throw new CommandPermissionsException();
     }
 
     /**
      * Checks a players ability to interact with variables.
-     * 
+     *
      * @param sender The one who is attempting to interact.
      * @param namespace The namespace
      * @param var The variable
@@ -510,8 +521,10 @@ public class VariableCommands {
      */
     public static boolean hasVariablePermission(CommandSender sender, String namespace, String var, String action) {
 
-        if(sender instanceof Player && namespace.equalsIgnoreCase(CraftBookPlugin.inst().wrapPlayer((Player) sender).getCraftBookId()))
-            if(sender.hasPermission("craftbook.variables." + action + ".self") || sender.hasPermission("craftbook.variables." + action + ".self." + var))
+        if (sender instanceof Player
+                && namespace.equalsIgnoreCase(CraftBookPlugin.inst().wrapPlayer((Player) sender).getCraftBookId()))
+            if (sender.hasPermission("craftbook.variables." + action + ".self")
+                    || sender.hasPermission("craftbook.variables." + action + ".self." + var))
                 return true;
 
         return !(!sender.hasPermission("craftbook.variables." + action + "")

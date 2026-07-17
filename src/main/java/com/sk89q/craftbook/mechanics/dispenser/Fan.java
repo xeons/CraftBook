@@ -21,10 +21,10 @@ public class Fan extends Recipe {
     }
 
     public Fan() {
-        super(new Material[] {
-                Material.COBWEB,    Material.OAK_LEAVES,         Material.COBWEB,
-                Material.OAK_LEAVES, Material.PISTON,    Material.OAK_LEAVES,
-                Material.COBWEB,    Material.OAK_LEAVES,         Material.COBWEB
+        super(new Material[]{
+                Material.COBWEB, Material.OAK_LEAVES, Material.COBWEB,
+                Material.OAK_LEAVES, Material.PISTON, Material.OAK_LEAVES,
+                Material.COBWEB, Material.OAK_LEAVES, Material.COBWEB
         });
     }
 

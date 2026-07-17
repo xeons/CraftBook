@@ -66,10 +66,11 @@ public class ParticleEffect extends AbstractSelfTriggeredIC {
         } catch (Exception e) {
             try {
                 effectID = Effect.valueOf(eff[0]).getId();
+            } catch (Exception ignored) {
             }
-            catch(Exception ignored){}
         }
-        if (Effect.getById(effectID) == null) return;
+        if (Effect.getById(effectID) == null)
+            return;
         try {
             effectData = Integer.parseInt(eff[1]);
         } catch (Exception e) {
@@ -81,13 +82,13 @@ public class ParticleEffect extends AbstractSelfTriggeredIC {
         } catch (Exception ignored) {
             times = 1;
         }
-        if(getLine(2).contains("=")) {
+        if (getLine(2).contains("=")) {
             String extra = getLine(2).split("=")[1];
             getSign().setLine(2, getLine(2).split("=")[0]);
             getSign().setLine(3, getLine(3) + "=" + extra);
             getSign().update(false);
         }
-        if(getLine(3).contains("="))
+        if (getLine(3).contains("="))
             offset = ICUtil.parseBlockLocation(getSign(), 3).getLocation();
         else
             offset = getBackBlock().getLocation().add(0, 1, 0);
@@ -95,7 +96,8 @@ public class ParticleEffect extends AbstractSelfTriggeredIC {
 
     public void doEffect() {
 
-        if (effectID == 0) return;
+        if (effectID == 0)
+            return;
 
         for (int i = 0; i < times; i++) {
             offset.getWorld().playEffect(offset, Effect.getById(effectID), effectData, 50);
@@ -124,7 +126,7 @@ public class ParticleEffect extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"effectID:effectData=xOff:yOff:zOff", "amount of particles=offset"};
+            return new String[]{"effectID:effectData=xOff:yOff:zOff", "amount of particles=offset"};
         }
 
         @Override
@@ -138,17 +140,17 @@ public class ParticleEffect extends AbstractSelfTriggeredIC {
                 } catch (Exception e) {
                     try {
                         effectID = Effect.valueOf(eff[0]).getId();
+                    } catch (Exception ignored) {
                     }
-                    catch(Exception ignored){}
                 }
-                if (Effect.getById(effectID) == null) throw new ICVerificationException("Invalid effect!");
+                if (Effect.getById(effectID) == null)
+                    throw new ICVerificationException("Invalid effect!");
                 try {
                     effectData = Integer.parseInt(eff[1]);
                 } catch (Exception e) {
                     effectData = 0;
                 }
-            }
-            catch(Exception e) {
+            } catch (Exception e) {
                 throw new ICVerificationException("Invalid effect!");
             }
         }

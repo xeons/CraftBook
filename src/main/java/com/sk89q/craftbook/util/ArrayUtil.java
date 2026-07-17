@@ -19,7 +19,8 @@ public final class ArrayUtil {
      */
     public static String[] getArrayPage(List<String> list, int page) {
 
-        if (list.size() < 1) return EMPTY_STRINGS;
+        if (list.size() < 1)
+            return EMPTY_STRINGS;
         page = Math.abs(page - 1);
         String[] array;
         if (list.size() < 8) {

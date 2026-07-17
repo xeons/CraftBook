@@ -23,8 +23,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public final class LogListBlock {
-    private LinkedHashMap <String, Object> items
-    = new LinkedHashMap<>();
+    private LinkedHashMap<String, Object> items = new LinkedHashMap<>();
     private int maxKeyLength = 0;
 
     private void updateKey(String key) {
@@ -50,7 +49,7 @@ public final class LogListBlock {
         return this;
     }
 
-    public LogListBlock put(String key, String value, Object ... args) {
+    public LogListBlock put(String key, String value, Object... args) {
         put(key, String.format(value, args));
         return this;
     }

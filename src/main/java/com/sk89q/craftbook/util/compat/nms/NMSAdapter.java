@@ -25,7 +25,8 @@ public class NMSAdapter {
      * @return The ChangedSign
      */
     public ChangedSign getChangedSign(Block block, String[] lines, CraftBookPlayer player) {
-        if (!SignUtil.isSign(block)) return null;
+        if (!SignUtil.isSign(block))
+            return null;
         return new ChangedSign(block, lines, player);
     }
 }

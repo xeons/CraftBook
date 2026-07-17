@@ -52,11 +52,11 @@ public class HalfAdder extends AbstractIC {
         @Override
         public String[] getPinDescription(ChipState state) {
 
-            return new String[] {
-                    "Nothing",//Inputs
+            return new String[]{
+                    "Nothing", // Inputs
                     "First bit to add",
                     "Second bit to add",
-                    "Sum",//Outputs
+                    "Sum", // Outputs
                     "Carry",
                     "Carry (Same as Output 2)"
             };

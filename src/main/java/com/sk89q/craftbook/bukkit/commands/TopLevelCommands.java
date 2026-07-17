@@ -55,7 +55,8 @@ public class TopLevelCommands {
 
     }
 
-    @Command(aliases = {"comitems", "commanditems", "citems", "commanditem"}, desc = "Commands to manage Craftbook Command Items")
+    @Command(aliases = {"comitems", "commanditems", "citems",
+            "commanditem"}, desc = "Commands to manage Craftbook Command Items")
     @NestedCommand(CommandItemCommands.class)
     public void commandItems(CommandContext context, CommandSender sender) {
     }
@@ -106,7 +107,7 @@ public class TopLevelCommands {
         public void about(CommandContext context, CommandSender sender) {
 
             String ver = CraftBookPlugin.inst().getDescription().getVersion();
-            if(CraftBookPlugin.getVersion() != null) {
+            if (CraftBookPlugin.getVersion() != null) {
                 ver = CraftBookPlugin.getVersion();
             }
             sender.sendMessage(ChatColor.YELLOW + "CraftBook version " + ver);
@@ -116,20 +117,22 @@ public class TopLevelCommands {
         @Command(aliases = {"iteminfo", "itemsyntax"}, desc = "Provides item syntax for held item.")
         public void itemInfo(CommandContext context, CommandSender sender) throws CommandException {
 
-            if(!(sender instanceof Player)) {
+            if (!(sender instanceof Player)) {
                 throw new CommandException("Only players can use this command!");
             }
             if (((Player) sender).getInventory().getItemInMainHand() != null) {
-                sender.sendMessage(ChatColor.YELLOW + "Main hand: " + ItemSyntax.getStringFromItem(((Player) sender).getInventory().getItemInMainHand()));
+                sender.sendMessage(ChatColor.YELLOW + "Main hand: "
+                        + ItemSyntax.getStringFromItem(((Player) sender).getInventory().getItemInMainHand()));
             }
             if (((Player) sender).getInventory().getItemInOffHand() != null) {
-                sender.sendMessage(ChatColor.YELLOW + "Off hand: " + ItemSyntax.getStringFromItem(((Player) sender).getInventory().getItemInOffHand()));
+                sender.sendMessage(ChatColor.YELLOW + "Off hand: "
+                        + ItemSyntax.getStringFromItem(((Player) sender).getInventory().getItemInOffHand()));
             }
         }
 
         @Command(aliases = {"cbid", "craftbookid"}, desc = "Gets the players CBID.")
         public void cbid(CommandContext context, CommandSender sender) throws CommandException {
-            if(!(sender instanceof Player)) {
+            if (!(sender instanceof Player)) {
                 throw new CommandException("Only players can use this command!");
             }
             sender.sendMessage("CraftBook ID: " + CraftBookPlugin.inst().wrapPlayer((Player) sender).getCraftBookId());
@@ -142,7 +145,7 @@ public class TopLevelCommands {
             File dest = new File(CraftBookPlugin.inst().getDataFolder(), "report.txt");
             ReportWriter report = new ReportWriter(CraftBookPlugin.inst());
 
-            if(args.hasFlag('i'))
+            if (args.hasFlag('i'))
                 report.appendFlags("i");
 
             report.generate();
@@ -180,8 +183,8 @@ public class TopLevelCommands {
         @CommandPermissions({"craftbook.enable-mechanic"})
         public void enable(CommandContext args, final CommandSender sender) throws CommandPermissionsException {
 
-            if(args.argsLength() > 0) {
-                if(CraftBookPlugin.inst().enableMechanic(args.getString(0)))
+            if (args.argsLength() > 0) {
+                if (CraftBookPlugin.inst().enableMechanic(args.getString(0)))
                     sender.sendMessage(ChatColor.YELLOW + "Sucessfully enabled " + args.getString(0));
                 else
                     sender.sendMessage(ChatColor.RED + "Failed to load " + args.getString(0));
@@ -192,8 +195,8 @@ public class TopLevelCommands {
         @CommandPermissions({"craftbook.disable-mechanic"})
         public void disable(CommandContext args, final CommandSender sender) throws CommandPermissionsException {
 
-            if(args.argsLength() > 0) {
-                if(CraftBookPlugin.inst().disableMechanic(args.getString(0)))
+            if (args.argsLength() > 0) {
+                if (CraftBookPlugin.inst().disableMechanic(args.getString(0)))
                     sender.sendMessage(ChatColor.YELLOW + "Sucessfully disabled " + args.getString(0));
                 else
                     sender.sendMessage(ChatColor.RED + "Failed to remove " + args.getString(0));

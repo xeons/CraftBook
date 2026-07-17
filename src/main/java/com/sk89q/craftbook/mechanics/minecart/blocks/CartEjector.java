@@ -19,11 +19,14 @@ public class CartEjector extends CartBlockMechanism {
     public void onVehicleImpact(CartBlockImpactEvent event) {
 
         // care?
-        if (!event.getBlocks().matches(getMaterial())) return;
-        if (event.getMinecart().isEmpty()) return;
+        if (!event.getBlocks().matches(getMaterial()))
+            return;
+        if (event.getMinecart().isEmpty())
+            return;
 
         // enabled?
-        if (Power.OFF == isActive(event.getBlocks())) return;
+        if (Power.OFF == isActive(event.getBlocks()))
+            return;
 
         // go
         Block ejectTarget;
@@ -58,11 +61,11 @@ public class CartEjector extends CartBlockMechanism {
     @Override
     public String[] getApplicableSigns() {
 
-        return new String[] {"Eject"};
+        return new String[]{"Eject"};
     }
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadConfiguration(YAMLProcessor config, String path) {
 
         config.setComment(path + "block", "Sets the block that is the base of the ejector mechanic.");
         material = BlockSyntax.getBlock(config.getString(path + "block", BlockTypes.IRON_BLOCK.id()), true);

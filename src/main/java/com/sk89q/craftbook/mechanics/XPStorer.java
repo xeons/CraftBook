@@ -44,13 +44,17 @@ public class XPStorer extends AbstractCraftBookMechanic {
     @EventHandler
     public void onRightClick(PlayerInteractEvent event) {
 
-        if(event.getAction() != Action.RIGHT_CLICK_BLOCK && event.getAction() != Action.RIGHT_CLICK_AIR) return;
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK && event.getAction() != Action.RIGHT_CLICK_AIR)
+            return;
 
-        if(block.getBlockType() != BlockTypes.AIR && event.getAction() == Action.RIGHT_CLICK_AIR) return;
-        else if(block.getBlockType() != BlockTypes.AIR)
-            if(!block.equalsFuzzy(BukkitAdapter.adapt(event.getClickedBlock().getBlockData()))) return;
+        if (block.getBlockType() != BlockTypes.AIR && event.getAction() == Action.RIGHT_CLICK_AIR)
+            return;
+        else if (block.getBlockType() != BlockTypes.AIR)
+            if (!block.equalsFuzzy(BukkitAdapter.adapt(event.getClickedBlock().getBlockData())))
+                return;
 
-        if (!EventUtil.passesFilter(event) || event.getHand() != EquipmentSlot.HAND) return;
+        if (!EventUtil.passesFilter(event) || event.getHand() != EquipmentSlot.HAND)
+            return;
 
         CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
@@ -59,8 +63,9 @@ public class XPStorer extends AbstractCraftBookMechanic {
 
         int max = Integer.MAX_VALUE;
 
-        if(requireBottle) {
-            if(player.getItemInHand(HandSide.MAIN_HAND).getType() != ItemTypes.GLASS_BOTTLE && block.getBlockType() != BlockTypes.AIR) {
+        if (requireBottle) {
+            if (player.getItemInHand(HandSide.MAIN_HAND).getType() != ItemTypes.GLASS_BOTTLE
+                    && block.getBlockType() != BlockTypes.AIR) {
                 player.printError("mech.xp-storer.bottle");
                 return;
             }
@@ -68,14 +73,15 @@ public class XPStorer extends AbstractCraftBookMechanic {
             max = event.getPlayer().getInventory().getItemInMainHand().getAmount();
         }
 
-        if(!player.hasPermission("craftbook.mech.xpstore.use")) {
-            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+        if (!player.hasPermission("craftbook.mech.xpstore.use")) {
+            if (CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
                 player.printError("mech.use-permission");
             return;
         }
 
-        if(event.getClickedBlock() != null && !ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
-            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+        if (event.getClickedBlock() != null && !ProtectionUtil.canUse(event.getPlayer(),
+                event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
+            if (CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
                 player.printError("area.use-permissions");
             return;
         }
@@ -87,7 +93,7 @@ public class XPStorer extends AbstractCraftBookMechanic {
         CraftBookPlugin.logDebugMessage("Percent: " + pcnt + ". Level: " + level, "xpstorer");
 
         event.getPlayer().setExp(0);
-        xp += (int)(event.getPlayer().getExpToLevel()*pcnt);
+        xp += (int) (event.getPlayer().getExpToLevel() * pcnt);
 
         CraftBookPlugin.logDebugMessage("XP: " + xp, "xpstorer");
 
@@ -109,13 +115,13 @@ public class XPStorer extends AbstractCraftBookMechanic {
 
         CraftBookPlugin.logDebugMessage("Bottles: " + bottleCount, "xpstorer");
 
-        if(requireBottle) {
+        if (requireBottle) {
             event.getPlayer().getInventory().removeItem(new ItemStack(Material.GLASS_BOTTLE, bottleCount));
         }
 
         int tempBottles = bottleCount;
 
-        while(tempBottles > 0) {
+        while (tempBottles > 0) {
             ItemStack bottles = new ItemStack(Material.EXPERIENCE_BOTTLE, Math.min(tempBottles, 64));
             if (event.getClickedBlock() == null)
                 for (ItemStack leftOver : event.getPlayer().getInventory().addItem(bottles).values())
@@ -131,17 +137,17 @@ public class XPStorer extends AbstractCraftBookMechanic {
 
         float levelPercentage;
 
-        int remainingXP = xp - bottleCount*xpPerBottle;
+        int remainingXP = xp - bottleCount * xpPerBottle;
 
         CraftBookPlugin.logDebugMessage("Leftover XP: " + remainingXP, "xpstorer");
 
         do {
-            levelPercentage = (float)remainingXP / event.getPlayer().getExpToLevel();
+            levelPercentage = (float) remainingXP / event.getPlayer().getExpToLevel();
 
-            if(levelPercentage > 1) {
+            if (levelPercentage > 1) {
                 remainingXP -= event.getPlayer().getExpToLevel();
                 event.getPlayer().setLevel(event.getPlayer().getLevel() + 1);
-            } else if(levelPercentage == 1) {
+            } else if (levelPercentage == 1) {
                 event.getPlayer().setLevel(event.getPlayer().getLevel() + 1);
                 event.getPlayer().setExp(0f);
                 remainingXP = 0;
@@ -149,7 +155,7 @@ public class XPStorer extends AbstractCraftBookMechanic {
                 event.getPlayer().setExp(levelPercentage);
                 remainingXP = 0;
             }
-        } while(levelPercentage > 1);
+        } while (levelPercentage > 1);
 
         player.print("mech.xp-storer.success");
 
@@ -159,15 +165,19 @@ public class XPStorer extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onSignChange(SignChangeEvent event) {
 
-        if (!autonomousMode) return;
-        if(!EventUtil.passesFilter(event)) return;
+        if (!autonomousMode)
+            return;
+        if (!EventUtil.passesFilter(event))
+            return;
 
-        if (!event.getLine(1).equalsIgnoreCase("[XP]") || !block.equalsFuzzy(BukkitAdapter.adapt(SignUtil.getBackBlock(event.getBlock()).getBlockData()))) return;
+        if (!event.getLine(1).equalsIgnoreCase("[XP]")
+                || !block.equalsFuzzy(BukkitAdapter.adapt(SignUtil.getBackBlock(event.getBlock()).getBlockData())))
+            return;
 
         CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
         if (!player.hasPermission("craftbook.mech.xpstore")) {
-            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+            if (CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
                 player.printError("mech.create-permission");
             SignUtil.cancelSign(event);
             return;
@@ -189,14 +199,19 @@ public class XPStorer extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onPing(SelfTriggerPingEvent event) {
 
-        if (!autonomousMode) return;
-        if(!EventUtil.passesFilter(event)) return;
+        if (!autonomousMode)
+            return;
+        if (!EventUtil.passesFilter(event))
+            return;
 
-        if(!SignUtil.isSign(event.getBlock()) || !block.equalsFuzzy(BukkitAdapter.adapt(SignUtil.getBackBlock(event.getBlock()).getBlockData()))) return;
+        if (!SignUtil.isSign(event.getBlock())
+                || !block.equalsFuzzy(BukkitAdapter.adapt(SignUtil.getBackBlock(event.getBlock()).getBlockData())))
+            return;
 
         ChangedSign sign = CraftBookBukkitUtil.toChangedSign(event.getBlock());
 
-        if(!sign.getLine(1).equals("[XP]")) return;
+        if (!sign.getLine(1).equals("[XP]"))
+            return;
 
         CraftBookPlugin.inst().getSelfTriggerManager().registerSelfTrigger(event.getBlock().getLocation());
     }
@@ -204,13 +219,16 @@ public class XPStorer extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onThink(SelfTriggerThinkEvent event) {
 
-        if (!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event))
+            return;
 
-        if (!SignUtil.isSign(event.getBlock())) return;
+        if (!SignUtil.isSign(event.getBlock()))
+            return;
 
         ChangedSign sign = CraftBookBukkitUtil.toChangedSign(event.getBlock());
 
-        if (!sign.getLine(1).equals("[XP]")) return;
+        if (!sign.getLine(1).equals("[XP]"))
+            return;
 
         event.setHandled(true);
 
@@ -224,7 +242,8 @@ public class XPStorer extends AbstractCraftBookMechanic {
 
         List<ExperienceOrb> orbs = new ArrayList<>();
 
-        for (Entity entity : LocationUtil.getNearbyEntities(SignUtil.getBackBlock(event.getBlock()).getLocation(), Vector3.at(signRadius, signRadius, signRadius))) {
+        for (Entity entity : LocationUtil.getNearbyEntities(SignUtil.getBackBlock(event.getBlock()).getLocation(),
+                Vector3.at(signRadius, signRadius, signRadius))) {
             if (entity instanceof ExperienceOrb && entity.getTicksLived() > 20) {
                 xp += ((ExperienceOrb) entity).getExperience();
                 orbs.add((ExperienceOrb) entity);
@@ -235,7 +254,8 @@ public class XPStorer extends AbstractCraftBookMechanic {
         Inventory inventory = null;
 
         if (InventoryUtil.doesBlockHaveInventory(SignUtil.getBackBlock(event.getBlock()).getRelative(BlockFace.UP))) {
-            inventory = ((InventoryHolder) SignUtil.getBackBlock(event.getBlock()).getRelative(BlockFace.UP).getState()).getInventory();
+            inventory = ((InventoryHolder) SignUtil.getBackBlock(event.getBlock()).getRelative(BlockFace.UP).getState())
+                    .getInventory();
             if (requireBottle) {
                 max = 0;
                 for (ItemStack stack : inventory.getContents()) {
@@ -252,20 +272,22 @@ public class XPStorer extends AbstractCraftBookMechanic {
 
         int tempBottles = bottleCount;
 
-        while(tempBottles > 0) {
+        while (tempBottles > 0) {
             ItemStack bottles = new ItemStack(Material.EXPERIENCE_BOTTLE, Math.min(tempBottles, 64));
             if (inventory != null) {
                 for (ItemStack leftover : inventory.addItem(bottles).values()) {
-                    event.getBlock().getWorld().dropItemNaturally(LocationUtil.getCenterOfBlock(SignUtil.getBackBlock(event.getBlock())), leftover);
+                    event.getBlock().getWorld().dropItemNaturally(
+                            LocationUtil.getCenterOfBlock(SignUtil.getBackBlock(event.getBlock())), leftover);
                 }
             } else {
-                event.getBlock().getWorld().dropItemNaturally(LocationUtil.getCenterOfBlock(SignUtil.getBackBlock(event.getBlock())), bottles);
+                event.getBlock().getWorld().dropItemNaturally(
+                        LocationUtil.getCenterOfBlock(SignUtil.getBackBlock(event.getBlock())), bottles);
             }
 
             tempBottles -= 64;
         }
 
-        if(requireBottle && inventory != null) {
+        if (requireBottle && inventory != null) {
             inventory.removeItem(new ItemStack(Material.GLASS_BOTTLE, bottleCount));
         }
 
@@ -299,7 +321,8 @@ public class XPStorer extends AbstractCraftBookMechanic {
         config.setComment(path + "block", "The block that is an XP Storer.");
         block = BlockSyntax.getBlock(config.getString(path + "block", BlockTypes.SPAWNER.id()), true);
 
-        config.setComment(path + "require-sneaking-state", "Sets how the player must be sneaking in order to use the XP Storer.");
+        config.setComment(path + "require-sneaking-state",
+                "Sets how the player must be sneaking in order to use the XP Storer.");
         sneakingState = TernaryState.getFromString(config.getString(path + "require-sneaking-state", "no"));
 
         config.setComment(path + "radius-mode", "Allows XP Storer mechanics with a sign attached to work in a radius.");

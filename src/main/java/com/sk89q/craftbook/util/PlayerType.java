@@ -21,31 +21,36 @@ public enum PlayerType {
     public static PlayerType getFromChar(char c) {
 
         c = Character.toLowerCase(c);
-        for (PlayerType t : values()) { if (t.prefix == c) return t; }
+        for (PlayerType t : values()) {
+            if (t.prefix == c)
+                return t;
+        }
         return PlayerType.NAME;
     }
 
     public boolean doesPlayerPass(Player player, String line) {
 
-        switch(this) {
-            case GROUP:
+        switch (this) {
+            case GROUP :
                 return CraftBookPlugin.inst().inGroup(player, line);
-            case CBID:
+            case CBID :
                 return CraftBookPlugin.inst().getUUIDMappings().getCBID(player.getUniqueId()).equals(line);
-            case NAME:
+            case NAME :
                 return player.getName().toLowerCase(Locale.ENGLISH).startsWith(line.toLowerCase(Locale.ENGLISH));
-            case UUID:
-                return player.getUniqueId().toString().toUpperCase(Locale.ENGLISH).startsWith(line.toUpperCase(Locale.ENGLISH));
-            case PERMISSION_NODE:
+            case UUID :
+                return player.getUniqueId().toString().toUpperCase(Locale.ENGLISH)
+                        .startsWith(line.toUpperCase(Locale.ENGLISH));
+            case PERMISSION_NODE :
                 return player.hasPermission(line);
-            case TEAM:
+            case TEAM :
                 try {
                     return Bukkit.getScoreboardManager().getMainScoreboard().getTeam(line).hasEntry(player.getName());
-                } catch(Exception e) {}
+                } catch (Exception e) {
+                }
                 break;
-            case ALL:
+            case ALL :
                 return true;
-            default:
+            default :
                 return false;
         }
 

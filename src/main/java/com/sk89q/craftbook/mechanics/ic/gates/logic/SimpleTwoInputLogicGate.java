@@ -35,7 +35,8 @@ public abstract class SimpleTwoInputLogicGate extends AbstractIC {
             }
         }
 
-        if (a == null || b == null) return;
+        if (a == null || b == null)
+            return;
 
         chip.setOutput(0, getResult(a, b));
     }

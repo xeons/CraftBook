@@ -59,18 +59,22 @@ public class Pump extends AbstractSelfTriggeredIC {
     public boolean scan() {
 
         Block pump = getBackBlock();
-        if (!InventoryUtil.doesBlockHaveInventory(pump.getRelative(0, 1, 0))) return false;
+        if (!InventoryUtil.doesBlockHaveInventory(pump.getRelative(0, 1, 0)))
+            return false;
         InventoryHolder c = (InventoryHolder) pump.getRelative(0, 1, 0).getState();
         for (int y = -1; y > -11; y--) {
             Block liquid = pump.getRelative(0, y, 0);
-            if (check(c, liquid, 0)) return true;
+            if (check(c, liquid, 0))
+                return true;
         }
         return false;
     }
 
     public boolean searchNear(InventoryHolder c, Block block, int depth) {
 
-        return depth <= 5 && (check(c, block.getRelative(0, 0, 1), depth) || check(c, block.getRelative(0, 0, -1), depth) || check(c, block.getRelative(1, 0, 0), depth) || check(c, block.getRelative(-1, 0, 0), depth));
+        return depth <= 5
+                && (check(c, block.getRelative(0, 0, 1), depth) || check(c, block.getRelative(0, 0, -1), depth)
+                        || check(c, block.getRelative(1, 0, 0), depth) || check(c, block.getRelative(-1, 0, 0), depth));
     }
 
     public boolean check(InventoryHolder c, Block liquid, int depth) {
@@ -82,7 +86,8 @@ public class Pump extends AbstractSelfTriggeredIC {
                 liquid.setType(Material.AIR);
                 return true;
             }
-        } else return searchNear(c, liquid, depth + 1);
+        } else
+            return searchNear(c, liquid, depth + 1);
         return false;
     }
 
@@ -95,12 +100,15 @@ public class Pump extends AbstractSelfTriggeredIC {
                 c.getInventory().addItem(new ItemStack(Material.BUCKET));
                 return false;
             }
-        } else return false;
+        } else
+            return false;
     }
 
     public static Material parse(Material mat) {
-        if (mat == Material.WATER) return Material.WATER_BUCKET;
-        if (mat == Material.LAVA) return Material.LAVA_BUCKET;
+        if (mat == Material.WATER)
+            return Material.WATER_BUCKET;
+        if (mat == Material.LAVA)
+            return Material.LAVA_BUCKET;
         return Material.AIR;
     }
 
@@ -126,7 +134,7 @@ public class Pump extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {null, null}; //TODO allow offsets.
+            return new String[]{null, null}; // TODO allow offsets.
         }
     }
 }

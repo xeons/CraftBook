@@ -16,21 +16,24 @@ public class MobBlocker extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onVehicleEnter(VehicleEnterEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event))
+            return;
 
-        if(!event.getVehicle().getWorld().isChunkLoaded(event.getVehicle().getLocation().getBlockX() >> 4, event.getVehicle().getLocation().getBlockZ() >> 4))
+        if (!event.getVehicle().getWorld().isChunkLoaded(event.getVehicle().getLocation().getBlockX() >> 4,
+                event.getVehicle().getLocation().getBlockZ() >> 4))
             return;
 
         Vehicle vehicle = event.getVehicle();
 
-        if (!(vehicle instanceof Minecart)) return;
+        if (!(vehicle instanceof Minecart))
+            return;
 
-        if(!(event.getEntered() instanceof Player))
+        if (!(event.getEntered() instanceof Player))
             event.setCancelled(true);
     }
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadConfiguration(YAMLProcessor config, String path) {
 
     }
 }

@@ -20,10 +20,14 @@ public class CartLift extends CartBlockMechanism {
     public void onVehicleImpact(CartBlockImpactEvent event) {
 
         // validate
-        if (!event.getBlocks().matches(getMaterial())) return;
-        if (!event.getBlocks().hasSign()) return;
-        if (event.isMinor()) return;
-        if (!(event.getBlocks().matches("cartlift up") || event.getBlocks().matches("cartlift down"))) return;
+        if (!event.getBlocks().matches(getMaterial()))
+            return;
+        if (!event.getBlocks().hasSign())
+            return;
+        if (event.isMinor())
+            return;
+        if (!(event.getBlocks().matches("cartlift up") || event.getBlocks().matches("cartlift down")))
+            return;
 
         Minecart cart = (Minecart) event.getVehicle();
 
@@ -32,31 +36,36 @@ public class CartLift extends CartBlockMechanism {
         Block destination = event.getBlocks().sign;
 
         BlockFace face;
-        if (up) face = BlockFace.UP;
-        else face = BlockFace.DOWN;
+        if (up)
+            face = BlockFace.UP;
+        else
+            face = BlockFace.DOWN;
 
         while (true) {
 
-            if(destination.getLocation().getBlockY() <= 0 && !up)
+            if (destination.getLocation().getBlockY() <= 0 && !up)
                 return;
-            if(destination.getLocation().getBlockY() >= destination.getWorld().getMaxHeight()-1 && up)
+            if (destination.getLocation().getBlockY() >= destination.getWorld().getMaxHeight() - 1 && up)
                 return;
 
             destination = destination.getRelative(face);
 
-            if (SignUtil.isSign(destination) && event.getBlocks().base.getType() == destination.getRelative(BlockFace.UP, 1).getType()) {
+            if (SignUtil.isSign(destination)
+                    && event.getBlocks().base.getType() == destination.getRelative(BlockFace.UP, 1).getType()) {
 
                 ChangedSign state = CraftBookBukkitUtil.toChangedSign(destination);
                 String testLine = state.getLine(1);
 
-                if (testLine.equalsIgnoreCase("[CartLift Up]") || testLine.equalsIgnoreCase("[CartLift Down]") || testLine.equalsIgnoreCase("[CartLift]")) {
+                if (testLine.equalsIgnoreCase("[CartLift Up]") || testLine.equalsIgnoreCase("[CartLift Down]")
+                        || testLine.equalsIgnoreCase("[CartLift]")) {
                     destination = destination.getRelative(BlockFace.UP, 2);
                     break;
                 }
             }
         }
 
-        CartUtil.teleport(cart, new Location(destination.getWorld(), destination.getX(), destination.getY(), destination.getZ(), cart.getLocation().getYaw(), cart.getLocation().getPitch()));
+        CartUtil.teleport(cart, new Location(destination.getWorld(), destination.getX(), destination.getY(),
+                destination.getZ(), cart.getLocation().getYaw(), cart.getLocation().getPitch()));
     }
 
     @Override
@@ -68,11 +77,11 @@ public class CartLift extends CartBlockMechanism {
     @Override
     public String[] getApplicableSigns() {
 
-        return new String[] {"CartLift Up", "CartLift Down", "CartLift"};
+        return new String[]{"CartLift Up", "CartLift Down", "CartLift"};
     }
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadConfiguration(YAMLProcessor config, String path) {
 
         config.setComment(path + "block", "Sets the block that is the base of the elevator mechanic.");
         material = BlockSyntax.getBlock(config.getString(path + "block", BlockTypes.NETHER_BRICKS.id()), true);

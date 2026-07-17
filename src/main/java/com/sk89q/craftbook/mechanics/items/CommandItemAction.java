@@ -31,16 +31,12 @@ public class CommandItemAction {
      */
     enum ActionType {
 
-        SETVAR,
-        MATHVAR,
-        ISVAR,
-        GREATERVAR,
-        LESSVAR
+        SETVAR, MATHVAR, ISVAR, GREATERVAR, LESSVAR
     }
 
     /**
-     * Defines when this {@link CommandItemAction} should run.
-     * BEFORE should generally be for checks, whereas AFTER should generally be for changing things.
+     * Defines when this {@link CommandItemAction} should run. BEFORE should generally be for checks, whereas AFTER
+     * should generally be for changing things.
      */
     enum ActionRunStage {
 
@@ -49,34 +45,36 @@ public class CommandItemAction {
 
     /**
      * Runs the action defined by this {@link CommandItemAction}
-     * 
+     *
      * @param definition The {@link CommandItemDefinition} that is calling this action.
      * @param event The {@link Event} that the {@link CommandItemDefinition} was triggered by.
      * @param player The {@link Player} that the {@link CommandItemDefinition} was triggered by.
-     * 
-     * @return If this is a 'BEFORE' {@link ActionRunStage}, returning false causes the {@link CommandItemDefinition} to not run.
+     *
+     * @return If this is a 'BEFORE' {@link ActionRunStage}, returning false causes the {@link CommandItemDefinition} to
+     *         not run.
      */
     public boolean runAction(CommandItemDefinition definition, Event event, Player player) {
 
         String newVal = CommandItems.parseLine(value, event, player);
 
-        switch(type) {
-            case SETVAR:
-                String[] svarParts = RegexUtil.EQUALS_PATTERN.split(newVal,2);
+        switch (type) {
+            case SETVAR :
+                String[] svarParts = RegexUtil.EQUALS_PATTERN.split(newVal, 2);
                 String snamespace = VariableManager.getNamespace(svarParts[0]);
                 String svar = VariableManager.getVariableName(svarParts[0]);
                 VariableManager.instance.setVariable(svar, snamespace, svarParts[1]);
                 return true;
-            case MATHVAR:
-                String[] mvarParts = RegexUtil.EQUALS_PATTERN.split(newVal,2);
+            case MATHVAR :
+                String[] mvarParts = RegexUtil.EQUALS_PATTERN.split(newVal, 2);
                 String mnamespace = VariableManager.getNamespace(mvarParts[0]);
                 String mvar = VariableManager.getVariableName(mvarParts[0]);
 
                 String[] mathFunctionParts = RegexUtil.COLON_PATTERN.split(mvarParts[1], 2);
                 MathFunction func = MathFunction.parseFunction(mathFunctionParts[0]);
 
-                String cur = VariableManager.instance.getVariable(mvar,mnamespace);
-                if(cur == null || cur.isEmpty()) cur = "0";
+                String cur = VariableManager.instance.getVariable(mvar, mnamespace);
+                if (cur == null || cur.isEmpty())
+                    cur = "0";
 
                 double currentValue = Double.parseDouble(cur);
                 double amount = Double.parseDouble(mathFunctionParts[1]);
@@ -89,13 +87,13 @@ public class CommandItemAction {
 
                 VariableManager.instance.setVariable(mvar, mnamespace, val);
                 return true;
-            case ISVAR: {
+            case ISVAR : {
                 String[] isparts = RegexUtil.EQUALS_PATTERN.split(newVal, 2);
                 String isnamespace = VariableManager.getNamespace(isparts[0]);
                 String isvar = VariableManager.getVariableName(isparts[0]);
                 return VariableManager.instance.getVariable(isvar, isnamespace).equals(isparts[1]);
             }
-            case GREATERVAR: {
+            case GREATERVAR : {
                 String[] isparts = RegexUtil.GREATER_THAN_PATTERN.split(newVal, 2);
                 String isnamespace = VariableManager.getNamespace(isparts[0]);
                 String isvar = VariableManager.getVariableName(isparts[0]);
@@ -104,12 +102,12 @@ public class CommandItemAction {
                 try {
                     variable = Double.parseDouble(VariableManager.instance.getVariable(isvar, isnamespace));
                     test = Double.parseDouble(isparts[1]);
-                } catch(NumberFormatException e) {
+                } catch (NumberFormatException e) {
                     CraftBookPlugin.logger().warning("Variable " + isparts[0] + " is not a number!");
                 }
                 return variable > test;
             }
-            case LESSVAR: {
+            case LESSVAR : {
                 String[] isparts = RegexUtil.LESS_THAN_PATTERN.split(newVal, 2);
                 String isnamespace = VariableManager.getNamespace(isparts[0]);
                 String isvar = VariableManager.getVariableName(isparts[0]);
@@ -118,12 +116,12 @@ public class CommandItemAction {
                 try {
                     variable = Double.parseDouble(VariableManager.instance.getVariable(isvar, isnamespace));
                     test = Double.parseDouble(isparts[1]);
-                } catch(NumberFormatException e) {
+                } catch (NumberFormatException e) {
                     CraftBookPlugin.logger().warning("Variable " + isparts[0] + " is not a number!");
                 }
                 return variable < test;
             }
-            default:
+            default :
                 return true;
         }
     }

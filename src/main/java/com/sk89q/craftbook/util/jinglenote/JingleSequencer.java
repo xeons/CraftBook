@@ -7,7 +7,6 @@ package com.sk89q.craftbook.util.jinglenote;
 
 import java.util.Set;
 
-
 /**
  * Interface for a sequencer.
  *

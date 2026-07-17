@@ -89,7 +89,7 @@ public class PowerSensor extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"x:y:z offset", null};
+            return new String[]{"x:y:z offset", null};
         }
     }
 }

@@ -15,17 +15,17 @@ public class BaseTestCase {
 
     public void setup() {
 
-        if(config == null)
+        if (config == null)
             config = mock(BukkitConfiguration.class);
 
-        if(CraftBookPlugin.inst() == null) {
+        if (CraftBookPlugin.inst() == null) {
             CraftBookPlugin plugin = mock(CraftBookPlugin.class);
             when(plugin.getConfiguration()).thenReturn(getConfig());
             when(plugin.wrapPlayer(Matchers.any())).thenCallRealMethod();
             CraftBookPlugin.setInstance(plugin);
         }
 
-        if(CraftBookPlugin.inst().getLanguageManager() == null) {
+        if (CraftBookPlugin.inst().getLanguageManager() == null) {
             LanguageManager manager = mock(LanguageManager.class);
             when(manager.getString(Matchers.anyString(), Matchers.anyString())).thenAnswer(invocation -> {
                 Object[] args = invocation.getArguments();

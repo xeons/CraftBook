@@ -44,20 +44,21 @@ public class PaintingSwitch extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event))
+            return;
 
         if (event.getHand() == EquipmentSlot.HAND && event.getRightClicked() instanceof Painting) {
             CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
             Painting paint = (Painting) event.getRightClicked();
 
-            if(!player.hasPermission("craftbook.mech.paintingswitch.use")) {
-                if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+            if (!player.hasPermission("craftbook.mech.paintingswitch.use")) {
+                if (CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
                     player.printError("mech.use-permissions");
                 return;
             }
 
-            if(!ProtectionUtil.canBuild(event.getPlayer(), paint.getLocation(), true)) {
-                if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+            if (!ProtectionUtil.canBuild(event.getPlayer(), paint.getLocation(), true)) {
+                if (CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
                     player.printError("area.use-permissions");
                 return;
             }
@@ -82,21 +83,24 @@ public class PaintingSwitch extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onHeldItemChange(PlayerItemHeldEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event))
+            return;
 
         CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
         if (players.get(player.getUniqueId()) == null)
             return;
 
-        if (!player.hasPermission("craftbook.mech.paintingswitch.use")) return;
+        if (!player.hasPermission("craftbook.mech.paintingswitch.use"))
+            return;
 
         boolean isForwards;
         if (event.getNewSlot() > event.getPreviousSlot()) {
             isForwards = true;
         } else if (event.getNewSlot() < event.getPreviousSlot()) {
             isForwards = false;
-        } else return;
+        } else
+            return;
         if (event.getPreviousSlot() == 0 && event.getNewSlot() == 8) {
             isForwards = false;
         } else if (event.getPreviousSlot() == 8 && event.getNewSlot() == 0) {
@@ -104,7 +108,7 @@ public class PaintingSwitch extends AbstractCraftBookMechanic {
         }
         Art[] art = Art.values().clone();
         Painting paint = players.get(player.getUniqueId());
-        if(!LocationUtil.isWithinSphericalRadius(paint.getLocation(), event.getPlayer().getLocation(), 5)) {
+        if (!LocationUtil.isWithinSphericalRadius(paint.getLocation(), event.getPlayer().getLocation(), 5)) {
             player.printError("mech.painting.range");
             Painting p = players.remove(event.getPlayer().getUniqueId());
             if (p != null) {
@@ -143,10 +147,10 @@ public class PaintingSwitch extends AbstractCraftBookMechanic {
     @EventHandler
     public void onHangingEntityDestroy(HangingBreakByEntityEvent event) {
 
-        if(event.getEntity() instanceof Painting) {
+        if (event.getEntity() instanceof Painting) {
             UUID uuid = paintings.remove(event.getEntity());
 
-            if(uuid != null) {
+            if (uuid != null) {
                 CraftBookPlugin.inst().wrapPlayer(Bukkit.getPlayer(uuid)).print("mech.painting.stop");
                 players.remove(uuid);
             }
@@ -154,13 +158,13 @@ public class PaintingSwitch extends AbstractCraftBookMechanic {
     }
 
     @Override
-    public void disable () {
+    public void disable() {
         paintings.clear();
         players.clear();
     }
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadConfiguration(YAMLProcessor config, String path) {
 
     }
 }

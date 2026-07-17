@@ -1,7 +1,6 @@
 package com.sk89q.craftbook.mechanics.ic.gates.world.blocks;
 
 import com.sk89q.craftbook.util.BlockSyntax;
-import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -128,10 +127,12 @@ public class SetDoor extends AbstractIC {
                 boolean isSource = block.equals(getBackBlock());
 
                 if (open) {
-                    if (isSource && BlockUtil.isBlockReplacable(onBlock.getMaterial())) continue;
+                    if (isSource && BlockUtil.isBlockReplacable(onBlock.getMaterial()))
+                        continue;
                     block.setBlockData(onBlock);
                 } else {
-                    if (isSource && BlockUtil.isBlockReplacable(offBlock.getMaterial())) continue;
+                    if (isSource && BlockUtil.isBlockReplacable(offBlock.getMaterial()))
+                        continue;
                     block.setBlockData(offBlock);
                 }
             }
@@ -160,7 +161,7 @@ public class SetDoor extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"onID{:onData-offID:offData}", "offset x,y,z:width,height"};
+            return new String[]{"onID{:onData-offID:offData}", "offset x,y,z:width,height"};
         }
     }
 }

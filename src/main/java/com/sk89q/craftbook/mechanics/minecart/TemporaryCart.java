@@ -35,7 +35,7 @@ public class TemporaryCart extends AbstractCraftBookMechanic {
     @Override
     public void disable() {
 
-        for(RideableMinecart minecart : minecarts) {
+        for (RideableMinecart minecart : minecarts) {
             minecart.remove();
         }
     }
@@ -43,28 +43,31 @@ public class TemporaryCart extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerInteract(PlayerInteractEvent event) {
 
-        if(event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getHand() != EquipmentSlot.HAND) return;
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK || event.getHand() != EquipmentSlot.HAND)
+            return;
 
-        if(!RailUtil.isTrack(event.getClickedBlock().getType()))
+        if (!RailUtil.isTrack(event.getClickedBlock().getType()))
             return;
 
         CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
-        if(player.isHoldingBlock() || player.isInsideVehicle() || player.isSneaking()) return;
-        if(CartUtil.isMinecart(BukkitAdapter.adapt(player.getItemInHand(HandSide.MAIN_HAND).getType()))) {
+        if (player.isHoldingBlock() || player.isInsideVehicle() || player.isSneaking())
+            return;
+        if (CartUtil.isMinecart(BukkitAdapter.adapt(player.getItemInHand(HandSide.MAIN_HAND).getType()))) {
             return;
         }
 
-        if(!EventUtil.passesFilter(event))
+        if (!EventUtil.passesFilter(event))
             return;
 
-        if(!player.hasPermission("craftbook.vehicles.temporary-cart.use")) {
-            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+        if (!player.hasPermission("craftbook.vehicles.temporary-cart.use")) {
+            if (CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
                 player.printError("mech.create-permission");
             return;
         }
 
-        RideableMinecart cart = event.getClickedBlock().getWorld().spawn(BlockUtil.getBlockCentre(event.getClickedBlock()), RideableMinecart.class);
+        RideableMinecart cart = event.getClickedBlock().getWorld()
+                .spawn(BlockUtil.getBlockCentre(event.getClickedBlock()), RideableMinecart.class);
         minecarts.add(cart);
         cart.addPassenger(event.getPlayer());
     }
@@ -72,21 +75,24 @@ public class TemporaryCart extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerDismount(final VehicleExitEvent event) {
 
-        if(!(event.getVehicle() instanceof RideableMinecart)) return;
-
-        if(!EventUtil.passesFilter(event))
+        if (!(event.getVehicle() instanceof RideableMinecart))
             return;
 
-        if(!minecarts.contains(event.getVehicle())) return;
+        if (!EventUtil.passesFilter(event))
+            return;
+
+        if (!minecarts.contains(event.getVehicle()))
+            return;
 
         Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), event.getVehicle()::remove, 2L);
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onVehicleDestroy(final VehicleDestroyEvent event) {
-        if(!(event.getVehicle() instanceof RideableMinecart)) return;
+        if (!(event.getVehicle() instanceof RideableMinecart))
+            return;
 
-        if(!EventUtil.passesFilter(event))
+        if (!EventUtil.passesFilter(event))
             return;
 
         if (minecarts.contains(event.getVehicle())) {
@@ -96,7 +102,7 @@ public class TemporaryCart extends AbstractCraftBookMechanic {
     }
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadConfiguration(YAMLProcessor config, String path) {
 
     }
 }

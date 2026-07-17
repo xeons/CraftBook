@@ -33,7 +33,7 @@ public class FlameThrower extends AbstractIC {
     public void load() {
 
         try {
-            distance = Math.min(((Factory)getFactory()).maxRange, Integer.parseInt(getLine(2)));
+            distance = Math.min(((Factory) getFactory()).maxRange, Integer.parseInt(getLine(2)));
         } catch (Exception ignored) {
             distance = 10;
         }
@@ -68,7 +68,7 @@ public class FlameThrower extends AbstractIC {
         final Block block = CraftBookBukkitUtil.toSign(getSign()).getBlock();
         final BlockFace direction = SignUtil.getBack(block);
 
-        if(delay <= 0) {
+        if (delay <= 0) {
 
             Block fire = block.getRelative(direction, 2);
             for (int i = 0; i < distance; i++) {
@@ -88,7 +88,7 @@ public class FlameThrower extends AbstractIC {
                 final int fi = i;
                 CraftBookPlugin.inst().getServer().getScheduler().runTaskLater(CraftBookPlugin.inst(), () -> {
 
-                    Block fire = block.getRelative(direction, 2+fi);
+                    Block fire = block.getRelative(direction, 2 + fi);
                     if (make) {
                         if (fire.getType() == Material.AIR || fire.getType() == Material.SHORT_GRASS) {
                             fire.setType(Material.FIRE);
@@ -96,7 +96,7 @@ public class FlameThrower extends AbstractIC {
                     } else if (fire.getType() == Material.FIRE) {
                         fire.setType(Material.AIR);
                     }
-                }, delay*fi);
+                }, delay * fi);
             }
         }
     }
@@ -122,8 +122,9 @@ public class FlameThrower extends AbstractIC {
             return "Makes a line of fire.";
         }
 
-        @Override public String[] getLongDescription() {
-            return new String[] {
+        @Override
+        public String[] getLongDescription() {
+            return new String[]{
                     "The '''MC1252''' sets a certain length of blocks in fron of the IC block on fire (putting fire Block on top of them)."
             };
         }
@@ -133,7 +134,8 @@ public class FlameThrower extends AbstractIC {
 
             try {
                 int distance = Integer.parseInt(sign.getLine(2));
-                if (distance > maxRange) throw new ICVerificationException("Distance too great!");
+                if (distance > maxRange)
+                    throw new ICVerificationException("Distance too great!");
 
             } catch (Exception ignored) {
                 throw new ICVerificationException("Invalid distance!");
@@ -143,7 +145,7 @@ public class FlameThrower extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"distance", "delay"};
+            return new String[]{"distance", "delay"};
         }
 
         @Override

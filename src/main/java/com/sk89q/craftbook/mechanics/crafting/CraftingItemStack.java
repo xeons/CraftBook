@@ -16,7 +16,7 @@ public class CraftingItemStack implements Comparable<CraftingItemStack> {
 
     private ItemStack item;
 
-    //Advanced data
+    // Advanced data
     private HashMap<String, Object> advancedData = new HashMap<>();
 
     public boolean hasAdvancedData() {
@@ -32,13 +32,14 @@ public class CraftingItemStack implements Comparable<CraftingItemStack> {
     }
 
     public void addAdvancedData(String key, Object data) {
-        CraftBookPlugin.logDebugMessage("Adding advanced data of type: " + key + " to an ItemStack!", "advanced-data.init");
+        CraftBookPlugin.logDebugMessage("Adding advanced data of type: " + key + " to an ItemStack!",
+                "advanced-data.init");
         advancedData.put(key, data);
     }
 
     public CraftingItemStack(ItemStack item) {
         this.item = item;
-        if(item != null && item.hasItemMeta()) //We have some advanced data to set.
+        if (item != null && item.hasItemMeta()) // We have some advanced data to set.
             addAdvancedData("item-meta", true);
     }
 
@@ -76,13 +77,14 @@ public class CraftingItemStack implements Comparable<CraftingItemStack> {
     public boolean equals(Object obj) {
         if (obj instanceof CraftingItemStack) {
             CraftingItemStack stack = (CraftingItemStack) obj;
-            if(stack.advancedData.size() != advancedData.size()) {
+            if (stack.advancedData.size() != advancedData.size()) {
                 return false;
             }
-            for(Map.Entry<String, Object> advancedDataEntries : advancedData.entrySet()) {
+            for (Map.Entry<String, Object> advancedDataEntries : advancedData.entrySet()) {
                 if (!stack.hasAdvancedData(advancedDataEntries.getKey())) {
                     return false;
-                } else if (!advancedDataEntries.getValue().equals(stack.getAdvancedData(advancedDataEntries.getKey()))){
+                } else if (!advancedDataEntries.getValue()
+                        .equals(stack.getAdvancedData(advancedDataEntries.getKey()))) {
                     return false;
                 }
             }
@@ -94,7 +96,7 @@ public class CraftingItemStack implements Comparable<CraftingItemStack> {
     @Override
     public String toString() {
         String it = ItemSyntax.getStringFromItem(item);
-        if(hasAdvancedData("chance"))
+        if (hasAdvancedData("chance"))
             it = it + '%' + getAdvancedData("chance");
         return it;
     }

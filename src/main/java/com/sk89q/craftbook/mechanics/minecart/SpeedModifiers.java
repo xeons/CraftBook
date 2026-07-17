@@ -15,13 +15,15 @@ public class SpeedModifiers extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onVehicleCreate(VehicleCreateEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event))
+            return;
 
-        if (!(event.getVehicle() instanceof Minecart)) return;
+        if (!(event.getVehicle() instanceof Minecart))
+            return;
 
         if (offRail > 0)
             ((Minecart) event.getVehicle()).setDerailedVelocityMod(new Vector(offRail, offRail, offRail));
-        if(maxSpeed != 1)
+        if (maxSpeed != 1)
             ((Minecart) event.getVehicle()).setMaxSpeed(((Minecart) event.getVehicle()).getMaxSpeed() * maxSpeed);
     }
 
@@ -29,7 +31,7 @@ public class SpeedModifiers extends AbstractCraftBookMechanic {
     private double offRail;
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadConfiguration(YAMLProcessor config, String path) {
 
         config.setComment(path + "max-speed", "Sets the max speed modifier of carts. Normal max speed speed is 0.4D");
         maxSpeed = config.getDouble(path + "max-speed", 1);

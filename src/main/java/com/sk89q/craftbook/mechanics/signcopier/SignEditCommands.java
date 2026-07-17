@@ -18,16 +18,16 @@ public class SignEditCommands {
     @Command(aliases = {"edit"}, desc = "Edits the copied sign.", usage = "<Line> <Text>", min = 1, max = 2)
     public void editSign(CommandContext context, CommandSender sender) throws CommandException {
 
-        if(SignCopier.signs == null)
+        if (SignCopier.signs == null)
             throw new FastCommandException("SignCopier mechanic is not enabled!");
 
-        if(!(sender instanceof Player))
+        if (!(sender instanceof Player))
             throw new FastCommandException("This command can only be performed by a player!");
 
-        if(!sender.hasPermission("craftbook.mech.signcopy.edit"))
+        if (!sender.hasPermission("craftbook.mech.signcopy.edit"))
             throw new CommandPermissionsException();
 
-        if(!SignCopier.signs.containsKey(sender.getName()))
+        if (!SignCopier.signs.containsKey(sender.getName()))
             throw new FastCommandException("You haven't copied a sign!");
 
         int line = context.getInteger(0, 1);

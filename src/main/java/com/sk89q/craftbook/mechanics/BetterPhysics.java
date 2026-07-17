@@ -38,7 +38,8 @@ public class BetterPhysics extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onBlockPlace(BlockPlaceEvent event) {
 
-        if (!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event))
+            return;
 
         checkForPhysics(event.getBlock());
     }
@@ -53,7 +54,7 @@ public class BetterPhysics extends AbstractCraftBookMechanic {
     }
 
     private static void checkForPhysics(Block block) {
-        if(FallingLadders.isValid(block)) {
+        if (FallingLadders.isValid(block)) {
             Bukkit.getScheduler().runTask(CraftBookPlugin.inst(), new FallingLadders(block));
         }
     }
@@ -66,12 +67,14 @@ public class BetterPhysics extends AbstractCraftBookMechanic {
         }
 
         public static boolean isValid(Block block) {
-            return block.getType() == Material.LADDER && instance.ladders && block.getRelative(0, -1, 0).getType().isAir();
+            return block.getType() == Material.LADDER && instance.ladders
+                    && block.getRelative(0, -1, 0).getType().isAir();
         }
 
         @Override
-        public void run () {
-            if(!isValid(ladder)) return;
+        public void run() {
+            if (!isValid(ladder))
+                return;
             ladder.getWorld().spawnFallingBlock(ladder.getLocation().add(0.5, 0, 0.5), ladder.getBlockData());
             ladder.setType(Material.AIR, false);
 
@@ -82,7 +85,7 @@ public class BetterPhysics extends AbstractCraftBookMechanic {
     private boolean ladders;
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadConfiguration(YAMLProcessor config, String path) {
 
         config.setComment(path + "falling-ladders", "Enables BetterPhysics Falling Ladders.");
         ladders = config.getBoolean(path + "falling-ladders", true);

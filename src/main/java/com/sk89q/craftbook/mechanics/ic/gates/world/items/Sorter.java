@@ -71,7 +71,8 @@ public class Sorter extends AbstractSelfTriggeredIC implements PipeInputIC {
     @Override
     public void trigger(ChipState chip) {
 
-        if (chip.getInput(0)) chip.setOutput(0, sort());
+        if (chip.getInput(0))
+            chip.setOutput(0, sort());
     }
 
     @Override
@@ -85,7 +86,7 @@ public class Sorter extends AbstractSelfTriggeredIC implements PipeInputIC {
         boolean returnValue = false;
 
         for (Item item : ItemUtil.getItemsAtBlock(CraftBookBukkitUtil.toSign(getSign()).getBlock())) {
-            if(sortItemStack(item.getItemStack())) {
+            if (sortItemStack(item.getItemStack())) {
                 item.remove();
                 returnValue = true;
             }
@@ -103,10 +104,11 @@ public class Sorter extends AbstractSelfTriggeredIC implements PipeInputIC {
         else
             b = SignUtil.getLeftBlock(CraftBookBukkitUtil.toSign(getSign()).getBlock()).getRelative(back);
 
-        PipeRequestEvent event = new PipeRequestEvent(b, new ArrayList<>(Collections.singletonList(item)), getBackBlock());
+        PipeRequestEvent event = new PipeRequestEvent(b, new ArrayList<>(Collections.singletonList(item)),
+                getBackBlock());
         Bukkit.getPluginManager().callEvent(event);
 
-        for(ItemStack it : event.getItems())
+        for (ItemStack it : event.getItems())
             b.getWorld().dropItemNaturally(b.getLocation().add(0.5, 0.5, 0.5), it);
 
         return true;
@@ -115,7 +117,9 @@ public class Sorter extends AbstractSelfTriggeredIC implements PipeInputIC {
     public boolean isInAboveContainer(ItemStack item) {
         ItemStack itemClone = item.clone();
         itemClone.setAmount(1);
-        return InventoryUtil.doesBlockHaveInventory(chestBlock) && InventoryUtil.doesInventoryContain(((InventoryHolder) chestBlock.getState()).getInventory(), true, ignoreDurability, ignoreMeta, ignoreEnchants, itemClone);
+        return InventoryUtil.doesBlockHaveInventory(chestBlock)
+                && InventoryUtil.doesInventoryContain(((InventoryHolder) chestBlock.getState()).getInventory(), true,
+                        ignoreDurability, ignoreMeta, ignoreEnchants, itemClone);
     }
 
     public static class Factory extends AbstractICFactory {
@@ -140,7 +144,7 @@ public class Sorter extends AbstractSelfTriggeredIC implements PipeInputIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"invert - to invert output sides", null};
+            return new String[]{"invert - to invert output sides", null};
         }
     }
 
@@ -151,7 +155,7 @@ public class Sorter extends AbstractSelfTriggeredIC implements PipeInputIC {
 
         for (ItemStack item : event.getItems())
             if (ItemUtil.isStackValid(item))
-                if(!sortItemStack(item))
+                if (!sortItemStack(item))
                     leftovers.add(item);
 
         event.setItems(leftovers);

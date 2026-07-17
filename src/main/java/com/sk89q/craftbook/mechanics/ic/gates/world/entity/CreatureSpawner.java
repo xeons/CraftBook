@@ -1,15 +1,15 @@
 // $Id$
 /*
  * Copyright (C) 2010, 2011 sk89q <http://www.sk89q.com>
- * 
+ *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
  * License as published by the Free
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
  * warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with this program. If not,
  * see <http://www.gnu.org/licenses/>.
  */
@@ -56,7 +56,7 @@ public class CreatureSpawner extends AbstractIC {
         type = EntityType.fromName(getSign().getLine(2).trim().toLowerCase(Locale.ENGLISH));
         if (type == null) {
             type = EntityType.valueOf(getSign().getLine(2).trim().toUpperCase(Locale.ENGLISH));
-            if(type == null)
+            if (type == null)
                 type = EntityType.PIG;
         }
         String line = getSign().getLine(3).trim();
@@ -88,25 +88,26 @@ public class CreatureSpawner extends AbstractIC {
 
         Block center = getBackBlock();
 
-        if(!center.getChunk().isLoaded())
+        if (!center.getChunk().isLoaded())
             return;
 
-        if (chip.getInput(0)) if (center.getRelative(0, 1, 0).getType() == Material.SPAWNER) {
+        if (chip.getInput(0))
+            if (center.getRelative(0, 1, 0).getType() == Material.SPAWNER) {
 
-            org.bukkit.block.CreatureSpawner sp = (org.bukkit.block.CreatureSpawner) center.getRelative(0, 1,
-                    0).getState();
-            sp.setSpawnedType(type);
-            sp.update();
-        } else {
-            Location loc = LocationUtil.getCenterOfBlock(LocationUtil.getNextFreeSpace(center, BlockFace.UP));
-            // spawn amount of mobs
-            for (int i = 0; i < amount; i++) {
-                Entity entity = loc.getWorld().spawn(loc, type.getEntityClass());
-                if(entity instanceof Skeleton)
-                    ((Skeleton) entity).getEquipment().setItemInMainHand(new ItemStack(Material.BOW, 1));
-                EntityUtil.setEntityData(entity, data);
+                org.bukkit.block.CreatureSpawner sp = (org.bukkit.block.CreatureSpawner) center.getRelative(0, 1,
+                        0).getState();
+                sp.setSpawnedType(type);
+                sp.update();
+            } else {
+                Location loc = LocationUtil.getCenterOfBlock(LocationUtil.getNextFreeSpace(center, BlockFace.UP));
+                // spawn amount of mobs
+                for (int i = 0; i < amount; i++) {
+                    Entity entity = loc.getWorld().spawn(loc, type.getEntityClass());
+                    if (entity instanceof Skeleton)
+                        ((Skeleton) entity).getEquipment().setItemInMainHand(new ItemStack(Material.BOW, 1));
+                    EntityUtil.setEntityData(entity, data);
+                }
             }
-        }
     }
 
     public static class Factory extends AbstractICFactory implements RestrictedIC {
@@ -131,14 +132,14 @@ public class CreatureSpawner extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"entitytype", "+odata*amount"};
+            return new String[]{"entitytype", "+odata*amount"};
         }
 
         @Override
         public void verify(ChangedSign sign) throws ICVerificationException {
 
             EntityType type = EntityType.fromName(sign.getLine(2).trim().toLowerCase(Locale.ENGLISH));
-            if(type == null)
+            if (type == null)
                 type = EntityType.valueOf(sign.getLine(2).trim().toUpperCase(Locale.ENGLISH));
             if (type == null)
                 throw new ICVerificationException("Invalid Entity! See bukkit EntityType list!");

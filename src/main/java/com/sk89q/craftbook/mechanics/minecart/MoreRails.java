@@ -15,7 +15,6 @@ import com.sk89q.craftbook.AbstractCraftBookMechanic;
 import com.sk89q.craftbook.util.EventUtil;
 import com.sk89q.util.yaml.YAMLProcessor;
 
-
 public class MoreRails extends AbstractCraftBookMechanic {
 
     public static MoreRails instance;
@@ -30,9 +29,11 @@ public class MoreRails extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onVehicleMove(VehicleMoveEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event))
+            return;
 
-        if (!(event.getVehicle() instanceof Minecart)) return;
+        if (!(event.getVehicle() instanceof Minecart))
+            return;
 
         if (pressurePlate)
             if (event.getTo().getBlock().getType() == Material.STONE_PRESSURE_PLATE
@@ -82,7 +83,7 @@ public class MoreRails extends AbstractCraftBookMechanic {
     public boolean pressurePlate;
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadConfiguration(YAMLProcessor config, String path) {
 
         config.setComment(path + "pressure-plate-intersection", "Enables the pressure plate as an intersection.");
         pressurePlate = config.getBoolean(path + "pressure-plate-intersection", false);
@@ -90,7 +91,8 @@ public class MoreRails extends AbstractCraftBookMechanic {
         config.setComment(path + "ladder-vertical-rail", "Enables the ladder as a vertical rail.");
         ladder = config.getBoolean(path + "ladder-vertical-rail", false);
 
-        config.setComment(path + "ladder-vertical-rail-velocity", "Sets the velocity applied to the minecart on vertical rails.");
+        config.setComment(path + "ladder-vertical-rail-velocity",
+                "Sets the velocity applied to the minecart on vertical rails.");
         ladderVerticalVelocity = config.getDouble(path + "ladder-vertical-rail-velocity", 0.5D);
     }
 }

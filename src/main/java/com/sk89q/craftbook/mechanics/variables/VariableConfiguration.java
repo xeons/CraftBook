@@ -38,16 +38,18 @@ public class VariableConfiguration {
 
         boolean shouldSave = false;
 
-        if(config.getKeys("variables") == null) return;
-        for(String key : config.getKeys("variables")) {
+        if (config.getKeys("variables") == null)
+            return;
+        for (String key : config.getKeys("variables")) {
 
             String[] keys = RegexUtil.PIPE_PATTERN.split(key, 2);
-            if(keys.length == 1) {
+            if (keys.length == 1) {
                 keys = new String[]{"global", key};
             } else if (CraftBookPlugin.inst().getConfiguration().convertNamesToCBID) {
-                if(CraftBookPlugin.inst().getUUIDMappings().getUUID(keys[0]) != null) continue;
+                if (CraftBookPlugin.inst().getUUIDMappings().getUUID(keys[0]) != null)
+                    continue;
                 OfflinePlayer player = Bukkit.getOfflinePlayer(keys[0]);
-                if(player.hasPlayedBefore()) {
+                if (player.hasPlayedBefore()) {
                     try {
                         ProfileService resolver = HttpRepositoryService.forMinecraft();
                         Profile profile = resolver.findByName(player.getName()); // May be null
@@ -63,12 +65,13 @@ public class VariableConfiguration {
 
             String value = String.valueOf(config.getProperty("variables." + key));
 
-            if(RegexUtil.VARIABLE_KEY_PATTERN.matcher(keys[1]).find() && RegexUtil.VARIABLE_VALUE_PATTERN.matcher(value).find()) {
+            if (RegexUtil.VARIABLE_KEY_PATTERN.matcher(keys[1]).find()
+                    && RegexUtil.VARIABLE_VALUE_PATTERN.matcher(value).find()) {
                 VariableManager.instance.setVariable(keys[1], keys[0], value);
             }
         }
 
-        if(shouldSave)
+        if (shouldSave)
             save();
     }
 
@@ -76,9 +79,10 @@ public class VariableConfiguration {
 
         config.clear();
 
-        for(Entry<Tuple2<String, String>, String> var : VariableManager.instance.getVariableStore().entrySet()) {
+        for (Entry<Tuple2<String, String>, String> var : VariableManager.instance.getVariableStore().entrySet()) {
 
-            if(RegexUtil.VARIABLE_KEY_PATTERN.matcher(var.getKey().a).find() && RegexUtil.VARIABLE_VALUE_PATTERN.matcher(var.getValue()).find())
+            if (RegexUtil.VARIABLE_KEY_PATTERN.matcher(var.getKey().a).find()
+                    && RegexUtil.VARIABLE_VALUE_PATTERN.matcher(var.getValue()).find())
                 config.setProperty("variables." + var.getKey().b + '|' + var.getKey().a, var.getValue());
         }
         config.save();

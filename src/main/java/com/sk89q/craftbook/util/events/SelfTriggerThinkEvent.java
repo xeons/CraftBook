@@ -6,7 +6,7 @@ import org.bukkit.event.block.BlockEvent;
 
 public class SelfTriggerThinkEvent extends BlockEvent {
 
-    public SelfTriggerThinkEvent (Block theBlock) {
+    public SelfTriggerThinkEvent(Block theBlock) {
         super(theBlock);
     }
 

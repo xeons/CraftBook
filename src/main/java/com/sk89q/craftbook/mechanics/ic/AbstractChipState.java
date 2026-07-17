@@ -38,7 +38,8 @@ public abstract class AbstractChipState implements ChipState {
     @Override
     public boolean get(int pin) {
         Block block = getBlock(pin);
-        if(block == null) return false;
+        if (block == null)
+            return false;
         BlockData data = block.getBlockData();
         if (data instanceof AnaloguePowerable) {
             return ((AnaloguePowerable) data).getPower() > 0;

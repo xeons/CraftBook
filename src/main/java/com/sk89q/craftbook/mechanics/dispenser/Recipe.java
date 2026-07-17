@@ -4,7 +4,6 @@ import java.util.Arrays;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.Dispenser;
 import org.bukkit.event.block.BlockDispenseEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
@@ -24,10 +23,10 @@ public abstract class Recipe {
     /**
      * Does the recipe action.
      *
-     * @param block    the dispenser firing the item
-     * @param item     the original item to be fired
+     * @param block the dispenser firing the item
+     * @param item the original item to be fired
      * @param velocity the velocity the item is to be fired at
-     * @param event    the BlockDispenseEvent
+     * @param event the BlockDispenseEvent
      *
      * @return true if event needs to be cancelled.
      */

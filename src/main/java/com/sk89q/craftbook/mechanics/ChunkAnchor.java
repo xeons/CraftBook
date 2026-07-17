@@ -23,22 +23,24 @@ public class ChunkAnchor extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onSignChange(SignChangeEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event))
+            return;
 
-        if(!event.getLine(1).equalsIgnoreCase("[chunk]")) return;
+        if (!event.getLine(1).equalsIgnoreCase("[chunk]"))
+            return;
         CraftBookPlayer lplayer = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
-        if(!lplayer.hasPermission("craftbook.mech.chunk")) {
-            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+        if (!lplayer.hasPermission("craftbook.mech.chunk")) {
+            if (CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
                 lplayer.printError("mech.create-permission");
             SignUtil.cancelSign(event);
             return;
         }
 
-        if(checkChunks) {
-            for(BlockState state : event.getBlock().getChunk().getTileEntities()) {
-                if(state instanceof Sign) {
+        if (checkChunks) {
+            for (BlockState state : event.getBlock().getChunk().getTileEntities()) {
+                if (state instanceof Sign) {
                     Sign s = (Sign) state;
-                    if(s.getLine(1).equalsIgnoreCase("[Chunk]")) {
+                    if (s.getLine(1).equalsIgnoreCase("[Chunk]")) {
                         lplayer.printError("mech.anchor.already-anchored");
                         SignUtil.cancelSign(event);
                         return;
@@ -53,7 +55,8 @@ public class ChunkAnchor extends AbstractCraftBookMechanic {
 
     @EventHandler
     public void onChunkLoad(ChunkLoadEvent event) {
-        if (!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event))
+            return;
 
         updateChunkTicket(event.getChunk());
     }
@@ -61,14 +64,17 @@ public class ChunkAnchor extends AbstractCraftBookMechanic {
     @EventHandler
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event))
+            return;
 
-        if(!allowRedstone) return;
+        if (!allowRedstone)
+            return;
         Block block = event.getBlock();
         if (SignUtil.isSign(block)) {
             ChangedSign sign = CraftBookBukkitUtil.toChangedSign(block);
 
-            if(!sign.getLine(1).equals("[Chunk]")) return;
+            if (!sign.getLine(1).equals("[Chunk]"))
+                return;
 
             sign.setLine(3, event.getNewCurrent() > event.getOldCurrent() ? "on" : "off");
             sign.update(false);
@@ -80,10 +86,11 @@ public class ChunkAnchor extends AbstractCraftBookMechanic {
     private void updateChunkTicket(Chunk chunk) {
         boolean shouldAnchor = false;
 
-        for(BlockState state : chunk.getTileEntities()) {
-            if(state == null) continue;
-            if(state instanceof Sign) {
-                if(((Sign) state).getLine(1).equals("[Chunk]")) {
+        for (BlockState state : chunk.getTileEntities()) {
+            if (state == null)
+                continue;
+            if (state instanceof Sign) {
+                if (((Sign) state).getLine(1).equals("[Chunk]")) {
                     if (!allowRedstone || !((Sign) state).getLine(3).equalsIgnoreCase("off")) {
                         shouldAnchor = true;
                         break;
@@ -103,7 +110,7 @@ public class ChunkAnchor extends AbstractCraftBookMechanic {
     private boolean checkChunks;
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadConfiguration(YAMLProcessor config, String path) {
 
         config.setComment(path + "enable-redstone", "Enable toggling with redstone.");
         allowRedstone = config.getBoolean(path + "enable-redstone", true);

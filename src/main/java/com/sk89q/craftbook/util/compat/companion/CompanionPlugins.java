@@ -35,7 +35,7 @@ public class CompanionPlugins {
             worldEditPlugin = (WorldEditPlugin) checkPlugin;
         } else {
             try {
-                //noinspection UnusedDeclaration
+                // noinspection UnusedDeclaration
                 @SuppressWarnings("unused")
                 String s = WorldEditPlugin.CUI_PLUGIN_CHANNEL;
             } catch (Throwable t) {
@@ -50,8 +50,9 @@ public class CompanionPlugins {
             checkPlugin = plugin.getServer().getPluginManager().getPlugin("ProtocolLib");
             if (checkPlugin != null && checkPlugin.isEnabled()) {
                 protocolLib = checkPlugin;
-            } else protocolLib = null;
-        } catch(Throwable e){
+            } else
+                protocolLib = null;
+        } catch (Throwable e) {
             protocolLib = null;
             plugin.getLogger().severe("You have a corrupt version of ProtocolLib! Please redownload it!");
             CraftBookBukkitUtil.printStacktrace(e);
@@ -61,13 +62,17 @@ public class CompanionPlugins {
         checkPlugin = plugin.getServer().getPluginManager().getPlugin("WorldGuard");
         if (checkPlugin != null && checkPlugin instanceof WorldGuardPlugin) {
             worldGuardPlugin = (WorldGuardPlugin) checkPlugin;
-        } else worldGuardPlugin = null;
+        } else
+            worldGuardPlugin = null;
 
         // Resolve Vault
         try {
-            RegisteredServiceProvider<Economy> economyProvider = plugin.getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
-            if (economyProvider != null) economy = economyProvider.getProvider();
-            else economy = null;
+            RegisteredServiceProvider<Economy> economyProvider = plugin.getServer().getServicesManager()
+                    .getRegistration(net.milkbowl.vault.economy.Economy.class);
+            if (economyProvider != null)
+                economy = economyProvider.getProvider();
+            else
+                economy = null;
         } catch (Throwable e) {
             economy = null;
         }
@@ -86,8 +91,7 @@ public class CompanionPlugins {
     }
 
     /**
-     * This method is used to determine whether ProtocolLib is
-     * enabled on the server.
+     * This method is used to determine whether ProtocolLib is enabled on the server.
      *
      * @return True if ProtocolLib was found
      */

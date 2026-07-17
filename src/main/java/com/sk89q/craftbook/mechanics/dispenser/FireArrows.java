@@ -22,10 +22,10 @@ public class FireArrows extends Recipe {
 
     public FireArrows() {
 
-        super(new Material[] {
-                Material.AIR,            Material.FIRE_CHARGE,     Material.AIR,
-                Material.FIRE_CHARGE,     Material.ARROW,           Material.FIRE_CHARGE,
-                Material.AIR,            Material.FIRE_CHARGE,     Material.AIR
+        super(new Material[]{
+                Material.AIR, Material.FIRE_CHARGE, Material.AIR,
+                Material.FIRE_CHARGE, Material.ARROW, Material.FIRE_CHARGE,
+                Material.AIR, Material.FIRE_CHARGE, Material.AIR
         });
     }
 

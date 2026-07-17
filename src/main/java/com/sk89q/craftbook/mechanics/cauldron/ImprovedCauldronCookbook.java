@@ -35,12 +35,14 @@ public class ImprovedCauldronCookbook {
 
         recipes = new ArrayList<>();
 
-        if (config == null) return; // If the config is null, it can't continue.
+        if (config == null)
+            return; // If the config is null, it can't continue.
 
         try {
             config.load();
         } catch (IOException e) {
-            CraftBookPlugin.logger().severe("Corrupt Cauldron cauldron-recipes.yml File! Make sure that the correct syntax has been used, and that there are no tabs!");
+            CraftBookPlugin.logger().severe(
+                    "Corrupt Cauldron cauldron-recipes.yml File! Make sure that the correct syntax has been used, and that there are no tabs!");
             e.printStackTrace();
         }
 
@@ -56,7 +58,10 @@ public class ImprovedCauldronCookbook {
 
     public Recipe getRecipe(Collection<CauldronItemStack> items) throws UnknownRecipeException {
 
-        for (Recipe recipe : recipes) { if (recipe.checkIngredients(items)) return recipe; }
+        for (Recipe recipe : recipes) {
+            if (recipe.checkIngredients(items))
+                return recipe;
+        }
         throw new UnknownRecipeException("Are you sure you have the right ingredients?");
     }
 
@@ -108,7 +113,8 @@ public class ImprovedCauldronCookbook {
                     }
                 }
             } catch (Exception e) {
-                CraftBookPlugin.inst().getLogger().severe("An error occured generating ingredients for cauldron recipe: " + id);
+                CraftBookPlugin.inst().getLogger()
+                        .severe("An error occured generating ingredients for cauldron recipe: " + id);
                 CraftBookBukkitUtil.printStacktrace(e);
             }
             return items;
@@ -143,10 +149,12 @@ public class ImprovedCauldronCookbook {
          */
         public boolean checkIngredients(Collection<CauldronItemStack> items) {
 
-            if (items.size() <= 0) return false;
+            if (items.size() <= 0)
+                return false;
             int count = 0;
             for (CauldronItemStack item : items) {
-                if (!ingredients.contains(item)) return false;
+                if (!ingredients.contains(item))
+                    return false;
                 count++;
             }
             return count == ingredients.size();

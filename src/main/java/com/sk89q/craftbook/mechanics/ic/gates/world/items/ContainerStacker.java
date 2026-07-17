@@ -24,34 +24,34 @@ import com.sk89q.util.yaml.YAMLProcessor;
 
 public class ContainerStacker extends AbstractSelfTriggeredIC {
 
-    public ContainerStacker (Server server, ChangedSign sign, ICFactory factory) {
+    public ContainerStacker(Server server, ChangedSign sign, ICFactory factory) {
         super(server, sign, factory);
     }
 
     @Override
-    public String getTitle () {
+    public String getTitle() {
         return "Container Stacker";
     }
 
     @Override
-    public String getSignTitle () {
+    public String getSignTitle() {
         return "CONTAINER STACKER";
     }
 
     @Override
-    public void trigger (ChipState chip) {
+    public void trigger(ChipState chip) {
 
-        if(chip.getInput(0))
+        if (chip.getInput(0))
             stack();
     }
 
     @Override
-    public boolean isActive () {
+    public boolean isActive() {
         return true;
     }
 
     @Override
-    public void think (ChipState chip) {
+    public void think(ChipState chip) {
 
         stack();
     }
@@ -140,7 +140,8 @@ public class ContainerStacker extends AbstractSelfTriggeredIC {
 
         @Override
         public void addConfiguration(YAMLProcessor config, String path) {
-            blacklist.addAll(ItemInfo.parseListFromString(config.getStringList(path + "blacklist", ItemInfo.toStringList(blacklist))));
+            blacklist.addAll(ItemInfo
+                    .parseListFromString(config.getStringList(path + "blacklist", ItemInfo.toStringList(blacklist))));
         }
     }
 }

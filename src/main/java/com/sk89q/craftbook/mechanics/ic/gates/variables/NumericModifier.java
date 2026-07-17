@@ -19,17 +19,17 @@ import com.sk89q.craftbook.util.RegexUtil;
 
 public class NumericModifier extends AbstractIC {
 
-    public NumericModifier (Server server, ChangedSign sign, ICFactory factory) {
+    public NumericModifier(Server server, ChangedSign sign, ICFactory factory) {
         super(server, sign, factory);
     }
 
     @Override
-    public String getTitle () {
+    public String getTitle() {
         return "Variable Modifier";
     }
 
     @Override
-    public String getSignTitle () {
+    public String getSignTitle() {
         return "VAR MODIFIER";
     }
 
@@ -44,24 +44,25 @@ public class NumericModifier extends AbstractIC {
             variable = getLine(2);
             function = MathFunction.parseFunction(getLine(3).split(":")[0]);
             amount = Double.parseDouble(getLine(3).split(":")[1]);
-        } catch(Exception ignored) {}
+        } catch (Exception ignored) {
+        }
     }
 
     @Override
-    public void trigger (ChipState chip) {
+    public void trigger(ChipState chip) {
 
-        if(chip.getInput(0)) {
-            if(function == null) {
+        if (chip.getInput(0)) {
+            if (function == null) {
                 chip.setOutput(0, false);
                 return;
             }
 
             try {
-                String var,key;
+                String var, key;
                 var = VariableManager.getVariableName(variable);
                 key = VariableManager.getNamespace(variable);
 
-                double currentValue = Double.parseDouble(VariableManager.instance.getVariable(var,key));
+                double currentValue = Double.parseDouble(VariableManager.instance.getVariable(var, key));
 
                 currentValue = function.parseNumber(currentValue, amount);
 
@@ -72,7 +73,8 @@ public class NumericModifier extends AbstractIC {
                 VariableManager.instance.setVariable(var, key, val);
                 chip.setOutput(0, true);
                 return;
-            } catch(NumberFormatException ignored){}
+            } catch (NumberFormatException ignored) {
+            }
         }
 
         chip.setOutput(0, false);
@@ -80,21 +82,21 @@ public class NumericModifier extends AbstractIC {
 
     public enum MathFunction {
 
-        ADD("+"),SUBTRACT("-"),MULTIPLY("*","x"),DIVIDE("/"),MOD("%");
+        ADD("+"), SUBTRACT("-"), MULTIPLY("*", "x"), DIVIDE("/"), MOD("%");
 
         String[] mini;
 
-        MathFunction(String ... mini) {
+        MathFunction(String... mini) {
             this.mini = mini;
         }
 
         public static MathFunction parseFunction(String text) {
 
-            for(MathFunction func : values()) {
-                if(func.name().equalsIgnoreCase(text))
+            for (MathFunction func : values()) {
+                if (func.name().equalsIgnoreCase(text))
                     return func;
-                for(String min : func.mini)
-                    if(min.equalsIgnoreCase(text))
+                for (String min : func.mini)
+                    if (min.equalsIgnoreCase(text))
                         return func;
             }
 
@@ -102,26 +104,26 @@ public class NumericModifier extends AbstractIC {
         }
 
         public double parseNumber(double initial, double amount) {
-            switch(this) {
-                case ADD:
+            switch (this) {
+                case ADD :
                     initial += amount;
                     break;
-                case DIVIDE:
-                    if(amount == 0) {
+                case DIVIDE :
+                    if (amount == 0) {
                         return initial;
                     }
                     initial /= amount;
                     break;
-                case MULTIPLY:
+                case MULTIPLY :
                     initial *= amount;
                     break;
-                case SUBTRACT:
+                case SUBTRACT :
                     initial -= amount;
                     break;
-                case MOD:
+                case MOD :
                     initial %= amount;
                     break;
-                default:
+                default :
                     break;
             }
 
@@ -154,7 +156,7 @@ public class NumericModifier extends AbstractIC {
             return new String[]{
                     "The '''VAR100''' IC allows for the modification of numerical variables using common binary operations (Known an Functions).",
                     "",
-                    "== Functions ==" ,
+                    "== Functions ==",
                     "{| class=\"wiki-table sortable\"",
                     "! Name",
                     "! Symbol",
@@ -176,48 +178,51 @@ public class NumericModifier extends AbstractIC {
         @Override
         public String[] getPinDescription(ChipState state) {
 
-            return new String[] {
-                    "Trigger IC",//Inputs
-                    "High on success"//Outputs
+            return new String[]{
+                    "Trigger IC", // Inputs
+                    "High on success"// Outputs
             };
         }
 
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"Variable Name", "Function:Amount"};
+            return new String[]{"Variable Name", "Function:Amount"};
         }
 
         @Override
         public void checkPlayer(ChangedSign sign, CraftBookPlayer player) throws ICVerificationException {
 
             String[] parts = RegexUtil.PIPE_PATTERN.split(sign.getLine(2));
-            if(parts.length == 1) {
-                if(!VariableCommands.hasVariablePermission(((BukkitCraftBookPlayer) player).getPlayer(), "global", parts[0], "use"))
-                    throw new ICVerificationException("You do not have permissions to use the global variable namespace!");
-            } else
-                if(!VariableCommands.hasVariablePermission(((BukkitCraftBookPlayer) player).getPlayer(), parts[0], parts[1], "use"))
-                    throw new ICVerificationException("You do not have permissions to use the " + parts[0] + " variable namespace!");
+            if (parts.length == 1) {
+                if (!VariableCommands.hasVariablePermission(((BukkitCraftBookPlayer) player).getPlayer(), "global",
+                        parts[0], "use"))
+                    throw new ICVerificationException(
+                            "You do not have permissions to use the global variable namespace!");
+            } else if (!VariableCommands.hasVariablePermission(((BukkitCraftBookPlayer) player).getPlayer(), parts[0],
+                    parts[1], "use"))
+                throw new ICVerificationException(
+                        "You do not have permissions to use the " + parts[0] + " variable namespace!");
         }
 
         @Override
         public void verify(ChangedSign sign) throws ICVerificationException {
             try {
                 String[] parts = RegexUtil.PIPE_PATTERN.split(sign.getLine(2));
-                if(parts.length == 1) {
-                    if(!VariableManager.instance.hasVariable(sign.getLine(2), "global"))
+                if (parts.length == 1) {
+                    if (!VariableManager.instance.hasVariable(sign.getLine(2), "global"))
                         throw new ICVerificationException("Unknown Variable!");
-                } else
-                    if(!VariableManager.instance.hasVariable(parts[1], parts[0]))
-                        throw new ICVerificationException("Unknown Variable!");
+                } else if (!VariableManager.instance.hasVariable(parts[1], parts[0]))
+                    throw new ICVerificationException("Unknown Variable!");
                 Validate.notNull(MathFunction.parseFunction(sign.getLine(3).split(":")[0]));
                 Double.parseDouble(sign.getLine(3).split(":")[1]);
-            } catch(NumberFormatException e) {
+            } catch (NumberFormatException e) {
                 throw new ICVerificationException("Amount must be a number!");
-            } catch(IllegalArgumentException e) {
+            } catch (IllegalArgumentException e) {
                 throw new ICVerificationException("Invalid Function!");
-            } catch(ArrayIndexOutOfBoundsException e) {
-                throw new ICVerificationException("Both Function and Amount must be entered, seperated by a colon (:)!");
+            } catch (ArrayIndexOutOfBoundsException e) {
+                throw new ICVerificationException(
+                        "Both Function and Amount must be entered, seperated by a colon (:)!");
             }
         }
     }

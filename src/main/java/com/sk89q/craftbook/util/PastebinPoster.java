@@ -82,7 +82,7 @@ public final class PastebinPoster {
                 out.flush();
                 out.close();
 
-                if (conn.getResponseCode() == 200) {//Get Response
+                if (conn.getResponseCode() == 200) {// Get Response
                     in = conn.getInputStream();
                     BufferedReader reader = new BufferedReader(new InputStreamReader(in, "utf-8"));
                     String line;
@@ -98,7 +98,7 @@ public final class PastebinPoster {
                     if (result.matches("^https?://.*")) {
                         callback.handleSuccess(result.trim());
                     } else {
-                        String err =result.trim();
+                        String err = result.trim();
                         if (err.length() > 100) {
                             err = err.substring(0, 100);
                         }

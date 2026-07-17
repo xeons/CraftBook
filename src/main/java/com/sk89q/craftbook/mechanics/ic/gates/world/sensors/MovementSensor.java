@@ -53,7 +53,7 @@ public class MovementSensor extends AbstractSelfTriggeredIC {
         // radius=x:y:z or radius, e.g. 1=-2:5:11
         radius = ICUtil.parseRadius(getSign());
         String radiusString = radius.x() + "," + radius.y() + "," + radius.z();
-        if(radius.x() == radius.y() && radius.y() == radius.z())
+        if (radius.x() == radius.y() && radius.y() == radius.z())
             radiusString = String.valueOf(radius.x());
         if (getSign().getLine(2).contains("=")) {
             getSign().setLine(2, radiusString + "=" + RegexUtil.EQUALS_PATTERN.split(getSign().getLine(2))[1]);
@@ -80,7 +80,8 @@ public class MovementSensor extends AbstractSelfTriggeredIC {
     @Override
     public void trigger(ChipState chip) {
 
-        if (chip.getInput(0)) chip.setOutput(0, check());
+        if (chip.getInput(0))
+            chip.setOutput(0, check());
     }
 
     @Override
@@ -96,7 +97,8 @@ public class MovementSensor extends AbstractSelfTriggeredIC {
                 for (EntityType type : types) { // Check Type
                     if (type.is(entity)) { // Check Radius
                         if (LocationUtil.isWithinRadius(center.getLocation(), entity.getLocation(), radius)) {
-                            if (entity.getVelocity().lengthSquared() >= 0.01) return true;
+                            if (entity.getVelocity().lengthSquared() >= 0.01)
+                                return true;
                         }
                         break;
                     }
@@ -128,7 +130,7 @@ public class MovementSensor extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"radius=x:y:z offset", "entity type"};
+            return new String[]{"radius=x:y:z offset", "entity type"};
         }
     }
 }

@@ -21,19 +21,20 @@ public class ICCommands {
 
     }
 
-    @Command (aliases = {"ic","circuit"}, desc = "Information for a specific IC", usage = "<ic> (Further arguments depend on IC)", min = 1)
+    @Command(aliases = {"ic",
+            "circuit"}, desc = "Information for a specific IC", usage = "<ic> (Further arguments depend on IC)", min = 1)
     public void icCmd(CommandContext args, CommandSender sender) throws CommandException {
 
-        if(ICManager.inst() == null)
+        if (ICManager.inst() == null)
             throw new CommandException("ICs are not enabled!");
-        if(args.getString(0).equalsIgnoreCase("list")) {
+        if (args.getString(0).equalsIgnoreCase("list")) {
 
             String list = "";
 
-            for(RegisteredICFactory factory : ICManager.inst().registered.values()) {
-                if(factory.getFactory() instanceof CommandIC) {
+            for (RegisteredICFactory factory : ICManager.inst().registered.values()) {
+                if (factory.getFactory() instanceof CommandIC) {
 
-                    if(list.isEmpty())
+                    if (list.isEmpty())
                         list = factory.getId();
                     else
                         list = list + ", " + factory.getId();
@@ -45,32 +46,32 @@ public class ICCommands {
 
             RegisteredICFactory factory = ICManager.inst().registered.get(args.getString(0));
 
-            if(factory != null && factory.getFactory() instanceof CommandIC) {
-                if(((CommandIC) factory.getFactory()).getMinCommandArgs()+1 > args.argsLength())
+            if (factory != null && factory.getFactory() instanceof CommandIC) {
+                if (((CommandIC) factory.getFactory()).getMinCommandArgs() + 1 > args.argsLength())
                     throw new CommandException();
                 ((CommandIC) factory.getFactory()).onICCommand(args, sender);
             }
         }
     }
 
-    @Command(aliases = {"docs"}, desc = "Documentation on CraftBook IC's",
-            usage = "<ic>", min = 1, max = 1)
+    @Command(aliases = {"docs"}, desc = "Documentation on CraftBook IC's", usage = "<ic>", min = 1, max = 1)
     public void docsCmd(CommandContext args, CommandSender sender) throws CommandException {
 
-        if(ICManager.inst() == null)
+        if (ICManager.inst() == null)
             throw new CommandException("ICs are not enabled!");
-        if (!(sender instanceof Player)) return;
+        if (!(sender instanceof Player))
+            return;
         Player player = (Player) sender;
         ICDocsParser.generateICDocs(player, args.getString(0));
     }
 
-    @Command(aliases = {"list"}, desc = "List available IC's",
-            flags = "p:", usage = "[-p page]", min = 0, max = 0)
+    @Command(aliases = {"list"}, desc = "List available IC's", flags = "p:", usage = "[-p page]", min = 0, max = 0)
     public void listCmd(CommandContext args, CommandSender sender) throws CommandException {
 
-        if(ICManager.inst() == null)
+        if (ICManager.inst() == null)
             throw new CommandException("ICs are not enabled!");
-        if (!(sender instanceof Player)) return;
+        if (!(sender instanceof Player))
+            return;
         Player player = (Player) sender;
         char[] ar = null;
         try {
@@ -100,13 +101,14 @@ public class ICCommands {
         }
     }
 
-    @Command(aliases = {"search"}, desc = "Search available IC's with names",
-            flags = "p:", usage = "[-p page] <name>", min = 1, max = 1)
+    @Command(aliases = {
+            "search"}, desc = "Search available IC's with names", flags = "p:", usage = "[-p page] <name>", min = 1, max = 1)
     public void searchCmd(CommandContext args, CommandSender sender) throws CommandException {
 
-        if(ICManager.inst() == null)
+        if (ICManager.inst() == null)
             throw new CommandException("ICs are not enabled!");
-        if (!(sender instanceof Player)) return;
+        if (!(sender instanceof Player))
+            return;
         Player player = (Player) sender;
         char[] ar = null;
         try {
@@ -137,13 +139,14 @@ public class ICCommands {
         }
     }
 
-    @Command(aliases = {"midis"}, desc = "List MIDI's available for Melody IC",
-            flags = "p:", usage = "[-p page]", min = 0, max = 0)
+    @Command(aliases = {
+            "midis"}, desc = "List MIDI's available for Melody IC", flags = "p:", usage = "[-p page]", min = 0, max = 0)
     public void midiListCmd(CommandContext args, CommandSender sender) throws CommandException {
 
-        if(ICManager.inst() == null)
+        if (ICManager.inst() == null)
             throw new CommandException("ICs are not enabled!");
-        if (!(sender instanceof Player)) return;
+        if (!(sender instanceof Player))
+            return;
         Player player = (Player) sender;
         List<String> lines = new ArrayList<>();
 
@@ -174,13 +177,14 @@ public class ICCommands {
         }
     }
 
-    @Command(aliases = {"fireworks"}, desc = "List Fireworks available for PFD IC",
-            flags = "p:", usage = "[-p page]", min = 0, max = 0)
+    @Command(aliases = {
+            "fireworks"}, desc = "List Fireworks available for PFD IC", flags = "p:", usage = "[-p page]", min = 0, max = 0)
     public void fireworkListCmd(CommandContext args, CommandSender sender) throws CommandException {
 
-        if(ICManager.inst() == null)
+        if (ICManager.inst() == null)
             throw new CommandException("ICs are not enabled!");
-        if (!(sender instanceof Player)) return;
+        if (!(sender instanceof Player))
+            return;
         Player player = (Player) sender;
         List<String> lines = new ArrayList<>();
 
@@ -204,7 +208,8 @@ public class ICCommands {
         }
 
         player.sendMessage(ChatColor.BLUE + "  ");
-        player.sendMessage(ChatColor.BLUE + "CraftBook Firework Displays (Page " + (accessedPage + 1) + " of " + pages + "):");
+        player.sendMessage(
+                ChatColor.BLUE + "CraftBook Firework Displays (Page " + (accessedPage + 1) + " of " + pages + "):");
 
         for (int i = accessedPage * 9; i < lines.size() && i < (accessedPage + 1) * 9; i++) {
             player.sendMessage(ChatColor.GREEN + lines.get(i));

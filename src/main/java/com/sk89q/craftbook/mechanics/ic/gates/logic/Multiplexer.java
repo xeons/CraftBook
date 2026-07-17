@@ -48,11 +48,11 @@ public class Multiplexer extends AbstractIC {
         @Override
         public String[] getPinDescription(ChipState state) {
 
-            return new String[] {
-                    "Value to Carry if Input 3 High",//Inputs
+            return new String[]{
+                    "Value to Carry if Input 3 High", // Inputs
                     "Value to Carry if Input 3 Low",
                     "Swaps between Input 1 and 2",
-                    "Carried Value"//Outputs
+                    "Carried Value"// Outputs
             };
         }
 

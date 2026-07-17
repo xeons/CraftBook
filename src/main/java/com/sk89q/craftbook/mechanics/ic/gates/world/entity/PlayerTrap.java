@@ -18,17 +18,17 @@ import com.sk89q.craftbook.util.SearchArea;
 
 public class PlayerTrap extends AbstractSelfTriggeredIC {
 
-    public PlayerTrap (Server server, ChangedSign sign, ICFactory factory) {
+    public PlayerTrap(Server server, ChangedSign sign, ICFactory factory) {
         super(server, sign, factory);
     }
 
     @Override
-    public String getTitle () {
+    public String getTitle() {
         return "Player Trap";
     }
 
     @Override
-    public String getSignTitle () {
+    public String getSignTitle() {
         return "PLAYER TRAP";
     }
 
@@ -41,12 +41,13 @@ public class PlayerTrap extends AbstractSelfTriggeredIC {
     @Override
     public void load() {
 
-        if(getSign().getLine(2).contains("&")) {
+        if (getSign().getLine(2).contains("&")) {
             getSign().setLine(2, StringUtils.replace(getSign().getLine(2), "&", "="));
             getSign().update(false);
         }
 
-        area = SearchArea.createArea(CraftBookBukkitUtil.toSign(getSign()).getBlock(), RegexUtil.EQUALS_PATTERN.split(getSign().getLine(2))[0]);
+        area = SearchArea.createArea(CraftBookBukkitUtil.toSign(getSign()).getBlock(),
+                RegexUtil.EQUALS_PATTERN.split(getSign().getLine(2))[0]);
 
         try {
             damage = Integer.parseInt(RegexUtil.EQUALS_PATTERN.split(getSign().getLine(2))[1]);
@@ -59,12 +60,13 @@ public class PlayerTrap extends AbstractSelfTriggeredIC {
         else
             type = PlayerType.ALL;
 
-        nameLine = getLine(3).replace("g:", "").replace("p:", "").replace("n:", "").replace("t:", "").replace("a:", "").trim();
+        nameLine = getLine(3).replace("g:", "").replace("p:", "").replace("n:", "").replace("t:", "").replace("a:", "")
+                .trim();
     }
 
     @Override
-    public void trigger (ChipState chip) {
-        if(chip.getInput(0))
+    public void trigger(ChipState chip) {
+        if (chip.getInput(0))
             chip.setOutput(0, hurt());
     }
 
@@ -72,8 +74,9 @@ public class PlayerTrap extends AbstractSelfTriggeredIC {
 
         boolean hasHurt = false;
 
-        for(Player p : area.getPlayersInArea()) {
-            if(!type.doesPlayerPass(p, nameLine)) continue;
+        for (Player p : area.getPlayersInArea()) {
+            if (!type.doesPlayerPass(p, nameLine))
+                continue;
             p.damage(damage);
             hasHurt = true;
         }
@@ -103,7 +106,7 @@ public class PlayerTrap extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"SearchArea=damage", "PlayerType"};
+            return new String[]{"SearchArea=damage", "PlayerType"};
         }
     }
 }

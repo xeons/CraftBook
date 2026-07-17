@@ -48,15 +48,17 @@ public class CombineHarvester extends AbstractSelfTriggeredIC {
     @Override
     public void trigger(ChipState chip) {
 
-        if (chip.getInput(0)) chip.setOutput(0, harvest());
+        if (chip.getInput(0))
+            chip.setOutput(0, harvest());
     }
 
     @Override
     public void think(ChipState chip) {
 
-        if(chip.getInput(0)) return;
+        if (chip.getInput(0))
+            return;
 
-        for(int i = 0; i < 10; i++)
+        for (int i = 0; i < 10; i++)
             chip.setOutput(0, harvest());
     }
 
@@ -64,7 +66,8 @@ public class CombineHarvester extends AbstractSelfTriggeredIC {
 
         Block b = area.getRandomBlockInArea();
 
-        if(b == null) return false;
+        if (b == null)
+            return false;
 
         if (harvestable(b)) {
             ICUtil.collectItem(this, BlockVector3.at(0, 1, 0), BlockUtil.getBlockDrops(b, null));
@@ -78,28 +81,28 @@ public class CombineHarvester extends AbstractSelfTriggeredIC {
         Material above = block.getRelative(0, 1, 0).getType();
         Material below = block.getRelative(0, -1, 0).getType();
         switch (block.getType()) {
-            case WHEAT:
-            case CARROTS:
-            case POTATOES:
-            case BEETROOTS:
-            case NETHER_WART:
-            case COCOA:
+            case WHEAT :
+            case CARROTS :
+            case POTATOES :
+            case BEETROOTS :
+            case NETHER_WART :
+            case COCOA :
                 Ageable ageable = (Ageable) block.getBlockData();
                 return ageable.getAge() == ageable.getMaximumAge();
-            case CACTUS_FLOWER:
+            case CACTUS_FLOWER :
                 return below == Material.CACTUS;
-            case CACTUS:
+            case CACTUS :
                 return below == Material.CACTUS && above != Material.CACTUS;
-            case SUGAR_CANE:
+            case SUGAR_CANE :
                 return below == Material.SUGAR_CANE && above != Material.SUGAR_CANE;
-            case VINE:
+            case VINE :
                 return above == Material.VINE && below != Material.VINE;
-            case MELON:
-            case PUMPKIN:
+            case MELON :
+            case PUMPKIN :
                 return true;
-            case BAMBOO:
+            case BAMBOO :
                 return below == Material.BAMBOO;
-            default:
+            default :
                 return Tag.LOGS.isTagged(block.getType());
         }
     }
@@ -126,12 +129,12 @@ public class CombineHarvester extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"SearchArea", null};
+            return new String[]{"SearchArea", null};
         }
 
         @Override
         public void verify(ChangedSign sign) throws ICVerificationException {
-            if(!SearchArea.isValidArea(CraftBookBukkitUtil.toSign(sign).getBlock(), sign.getLine(2)))
+            if (!SearchArea.isValidArea(CraftBookBukkitUtil.toSign(sign).getBlock(), sign.getLine(2)))
                 throw new ICVerificationException("Invalid SearchArea on 3rd line!");
         }
     }

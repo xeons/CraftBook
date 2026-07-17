@@ -20,11 +20,14 @@ public class ExitRemover extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onVehicleExit(VehicleExitEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event))
+            return;
 
-        if (!(event.getVehicle() instanceof Boat)) return;
+        if (!(event.getVehicle() instanceof Boat))
+            return;
 
-        Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new BoatRemover(event.getExited(), (Boat) event.getVehicle()), 2L);
+        Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(),
+                new BoatRemover(event.getExited(), (Boat) event.getVehicle()), 2L);
     }
 
     class BoatRemover implements Runnable {
@@ -38,17 +41,18 @@ public class ExitRemover extends AbstractCraftBookMechanic {
         }
 
         @Override
-        public void run () {
+        public void run() {
 
-            if(!boat.isValid() || boat.isDead() || !boat.isEmpty()) return;
+            if (!boat.isValid() || boat.isDead() || !boat.isEmpty())
+                return;
 
-            if(giveItem) {
+            if (giveItem) {
                 ItemStack stack = new ItemStack(ItemUtil.getBoatFromTree(boat.getWoodType()), 1);
 
-                if(player instanceof Player) {
-                    if(!((Player) player).getInventory().addItem(stack).isEmpty())
+                if (player instanceof Player) {
+                    if (!((Player) player).getInventory().addItem(stack).isEmpty())
                         player.getLocation().getWorld().dropItemNaturally(player.getLocation(), stack);
-                } else if(player != null)
+                } else if (player != null)
                     player.getLocation().getWorld().dropItemNaturally(player.getLocation(), stack);
                 else
                     boat.getLocation().getWorld().dropItemNaturally(boat.getLocation(), stack);
@@ -60,7 +64,7 @@ public class ExitRemover extends AbstractCraftBookMechanic {
     boolean giveItem;
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadConfiguration(YAMLProcessor config, String path) {
 
         config.setComment(path + "give-item", "Sets whether to give the player the item back or not.");
         giveItem = config.getBoolean(path + "give-item", false);

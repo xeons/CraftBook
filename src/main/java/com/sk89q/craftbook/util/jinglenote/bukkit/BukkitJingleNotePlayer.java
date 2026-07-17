@@ -13,18 +13,20 @@ import com.sk89q.craftbook.util.jinglenote.JingleSequencer.Note;
 
 public class BukkitJingleNotePlayer extends JingleNotePlayer {
 
-    public BukkitJingleNotePlayer (String player, JingleSequencer seq, SearchArea area) {
+    public BukkitJingleNotePlayer(String player, JingleSequencer seq, SearchArea area) {
         super(player, seq, area);
     }
 
     private Player p = null;
 
     @Override
-    public void play (Note note)  {
+    public void play(Note note) {
 
-        if(!isPlaying()) return;
+        if (!isPlaying())
+            return;
 
-        p.playSound(p.getLocation(), toSound(note.getInstrument()), SoundCategory.RECORDS, note.getVelocity(), note.getNote());
+        p.playSound(p.getLocation(), toSound(note.getInstrument()), SoundCategory.RECORDS, note.getVelocity(),
+                note.getNote());
     }
 
     @Override
@@ -33,7 +35,8 @@ public class BukkitJingleNotePlayer extends JingleNotePlayer {
         if (p == null || !p.isOnline()) {
             p = Bukkit.getPlayerExact(player);
         }
-        return !(p == null || !p.isOnline() || area != null && !area.isWithinArea(p.getLocation())) && super.isPlaying();
+        return !(p == null || !p.isOnline() || area != null && !area.isWithinArea(p.getLocation()))
+                && super.isPlaying();
 
     }
 

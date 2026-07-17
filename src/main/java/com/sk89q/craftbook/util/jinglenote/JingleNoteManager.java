@@ -31,13 +31,10 @@ public class JingleNoteManager {
 
     public boolean isPlaying() {
 
-        /*if(instances.isEmpty()) return false;
-        Iterator<String> iter = instances.keySet().iterator();
-        while(iter.hasNext()) {
-            String ent = iter.next();
-            if(!isPlaying(ent))
-                stop(ent);
-        }*/
+        /*
+         * if(instances.isEmpty()) return false; Iterator<String> iter = instances.keySet().iterator();
+         * while(iter.hasNext()) { String ent = iter.next(); if(!isPlaying(ent)) stop(ent); }
+         */
         return !instances.isEmpty();
     }
 

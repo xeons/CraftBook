@@ -51,7 +51,7 @@ public class MemoryAccess extends AbstractIC {
     public void load() {
 
         f = new File(ICManager.inst().getRomFolder(), getSign().getLine(2) + ".dat");
-        if (!f.exists())  {
+        if (!f.exists()) {
             try {
                 f.createNewFile();
             } catch (IOException e) {
@@ -66,7 +66,7 @@ public class MemoryAccess extends AbstractIC {
             BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(f), "UTF-8"));
             String line = br.readLine();
             for (int i = 0; i < chip.getOutputCount(); i++) {
-                if(line == null || line.length() < i+1)
+                if (line == null || line.length() < i + 1)
                     chip.setOutput(i, false);
                 else
                     chip.setOutput(i, line.charAt(i) == '1');
@@ -89,7 +89,7 @@ public class MemoryAccess extends AbstractIC {
         @Override
         public String[] getLongDescription() {
 
-            return new String[] {
+            return new String[]{
                     "The '''MC3301''' gets memory that can be set by the ([[../MC3301/]]) set to access the same file.",
                     "",
                     "This IC reads from a file in the filesystem stored in /plugins/CraftBook/rom/fileName.dat.",
@@ -100,9 +100,9 @@ public class MemoryAccess extends AbstractIC {
         @Override
         public String[] getPinDescription(ChipState state) {
 
-            return new String[] {
-                    "Trigger IC",//Inputs
-                    "Bit 1 State",//Outputs
+            return new String[]{
+                    "Trigger IC", // Inputs
+                    "Bit 1 State", // Outputs
                     "Bit 2 State",
                     "Bit 3 State"
             };

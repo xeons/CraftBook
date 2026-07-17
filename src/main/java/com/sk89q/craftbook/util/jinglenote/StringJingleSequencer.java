@@ -32,7 +32,7 @@ public class StringJingleSequencer implements JingleSequencer {
     public void run() throws InterruptedException {
 
         position = 0;
-        if(song == null)
+        if (song == null)
             return;
 
         isPlaying = true;
@@ -45,7 +45,7 @@ public class StringJingleSequencer implements JingleSequencer {
                 isPlaying = false;
                 return;
             }
-            for(JingleNotePlayer player : players)
+            for (JingleNotePlayer player : players)
                 player.play(song.get(position));
             position++;
         }, delay, delay);
@@ -53,7 +53,8 @@ public class StringJingleSequencer implements JingleSequencer {
 
     private static ArrayList<Note> parseTune(String tune) {
 
-        if (tune == null) return null;
+        if (tune == null)
+            return null;
 
         ArrayList<Note> musicKeys = new ArrayList<>();
 
@@ -65,17 +66,18 @@ public class StringJingleSequencer implements JingleSequencer {
                 instrument = getTypeFromChar(first);
             } else if (i + 1 < tune.length()) {
                 // note?
-                if (instrument == -1) return null;
+                if (instrument == -1)
+                    return null;
 
                 int pitch = getPitchFromChar(first);
                 boolean skip = false;
                 if (pitch == -1) {
                     switch (first) {
-                        case '-':
-                        case ' ':
+                        case '-' :
+                        case ' ' :
                             skip = true;
                             break;
-                        default:
+                        default :
                             return null;
                     }
                 }
@@ -90,12 +92,15 @@ public class StringJingleSequencer implements JingleSequencer {
                 if (skip) {
                     musicKeys.add(new Note(Instrument.HARP, (byte) 0, 0));
                 } else {
-                    if (octave < 2) octave = 2;
+                    if (octave < 2)
+                        octave = 2;
 
                     pitch += (octave - 2) * 12;
 
-                    if (pitch < 0) pitch = 0;
-                    else if (pitch > 24) pitch = 24;
+                    if (pitch < 0)
+                        pitch = 0;
+                    else if (pitch > 24)
+                        pitch = 24;
 
                     musicKeys.add(new Note(Instrument.toMCSound(instrument), (byte) pitch, 60F));
                 }
@@ -104,7 +109,8 @@ public class StringJingleSequencer implements JingleSequencer {
             }
         }
 
-        if (musicKeys.size() == 0) return null;
+        if (musicKeys.size() == 0)
+            return null;
 
         return musicKeys;
     }
@@ -113,28 +119,28 @@ public class StringJingleSequencer implements JingleSequencer {
 
         byte instrument = -1;
         switch (type) {
-            case '9':
-            case '8':
-            case '7':
-            case '0':
+            case '9' :
+            case '8' :
+            case '7' :
+            case '0' :
                 instrument = 0;
                 break;
-            case '1':
+            case '1' :
                 instrument = 1;
                 break;
-            case '2':
+            case '2' :
                 instrument = 2;
                 break;
-            case '3':
+            case '3' :
                 instrument = 3;
                 break;
-            case '4':
+            case '4' :
                 instrument = 4;
                 break;
-            case '5':
+            case '5' :
                 instrument = 5;
                 break;
-            case '6':
+            case '6' :
                 instrument = 6;
                 break;
         }
@@ -146,31 +152,31 @@ public class StringJingleSequencer implements JingleSequencer {
 
         int pitch = 0;
         switch (charPitch) {
-            case 'f':
+            case 'f' :
                 pitch++;
-            case 'e':
+            case 'e' :
                 pitch++;
-            case 'D':
+            case 'D' :
                 pitch++;
-            case 'd':
+            case 'd' :
                 pitch++;
-            case 'C':
+            case 'C' :
                 pitch++;
-            case 'c':
+            case 'c' :
                 pitch++;
-            case 'b':
+            case 'b' :
                 pitch++;
-            case 'A':
+            case 'A' :
                 pitch++;
-            case 'a':
+            case 'a' :
                 pitch++;
-            case 'G':
+            case 'G' :
                 pitch++;
-            case 'g':
+            case 'g' :
                 pitch++;
-            case 'F':
+            case 'F' :
                 break;
-            default:
+            default :
                 pitch = -1;
                 break;
         }
@@ -184,24 +190,24 @@ public class StringJingleSequencer implements JingleSequencer {
     }
 
     @Override
-    public boolean isPlaying () {
+    public boolean isPlaying() {
         return isPlaying;
     }
 
     @Override
-    public boolean hasPlayedBefore () {
+    public boolean hasPlayedBefore() {
         return playedBefore;
     }
 
     @Override
-    public void stop (JingleNotePlayer player) {
+    public void stop(JingleNotePlayer player) {
         players.remove(player);
     }
 
     @Override
-    public void play (JingleNotePlayer player) {
+    public void play(JingleNotePlayer player) {
         players.add(player);
-        if(!playedBefore)
+        if (!playedBefore)
             try {
                 run();
             } catch (InterruptedException e) {
@@ -215,7 +221,7 @@ public class StringJingleSequencer implements JingleSequencer {
     }
 
     @Override
-    public Set<JingleNotePlayer> getPlayers () {
+    public Set<JingleNotePlayer> getPlayers() {
         return players;
     }
 }

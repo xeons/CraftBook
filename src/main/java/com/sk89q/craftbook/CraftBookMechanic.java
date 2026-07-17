@@ -12,7 +12,7 @@ public interface CraftBookMechanic extends Listener {
 
     /**
      * Called when a mechanic should be initialized. This includes creating of any maps, lists or singleton instances.
-     * 
+     *
      * @return if it enabled properly. Note: returning false will cause the mechanic to be disabled.
      */
     boolean enable();
@@ -24,7 +24,7 @@ public interface CraftBookMechanic extends Listener {
 
     /**
      * Loads the configuration for this mechanic.
-     * 
+     *
      * @param config The YAMLProcessor for this config.
      * @param path The path of the parent element.
      */

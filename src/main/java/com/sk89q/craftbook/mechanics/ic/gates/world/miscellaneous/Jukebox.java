@@ -25,13 +25,13 @@ public class Jukebox extends AbstractSelfTriggeredIC {
 
     SearchArea area;
 
-    public Jukebox (Server server, ChangedSign sign, ICFactory factory) {
+    public Jukebox(Server server, ChangedSign sign, ICFactory factory) {
         super(server, sign, factory);
     }
 
     @Override
     public void unload() {
-        if(playlists.containsKey(getBackBlock().getLocation())) {
+        if (playlists.containsKey(getBackBlock().getLocation())) {
             playlists.remove(getBackBlock().getLocation()).stopPlaylist();
         }
     }
@@ -45,43 +45,45 @@ public class Jukebox extends AbstractSelfTriggeredIC {
     public void load() {
 
         String plist = getLine(2);
-        if (!getLine(3).isEmpty()) area = SearchArea.createArea(getLocation().getBlock(), getLine(3));
+        if (!getLine(3).isEmpty())
+            area = SearchArea.createArea(getLocation().getBlock(), getLine(3));
 
-        if(!playlists.containsKey(getBackBlock().getLocation()))
+        if (!playlists.containsKey(getBackBlock().getLocation()))
             playlists.put(getBackBlock().getLocation(), new Playlist(plist));
 
         players = new HashMap<>();
     }
 
     @Override
-    public String getTitle () {
+    public String getTitle() {
         return "Jukebox";
     }
 
     @Override
-    public String getSignTitle () {
+    public String getSignTitle() {
         return "JUKEBOX";
     }
 
     @Override
-    public void trigger (ChipState chip) {
+    public void trigger(ChipState chip) {
 
         Playlist playlist = playlists.get(getBackBlock().getLocation());
 
-        if(playlist == null) return; //Heh?
+        if (playlist == null)
+            return; // Heh?
 
         if (chip.getInput(0) && !playlist.isPlaying())
             playlist.startPlaylist();
-        else if(!chip.getInput(0) && playlist.isPlaying())
+        else if (!chip.getInput(0) && playlist.isPlaying())
             playlist.stopPlaylist();
 
-        if(chip.getInput(0)) {
+        if (chip.getInput(0)) {
 
             boolean hasChanged = false;
 
-            for(Player p : Bukkit.getServer().getOnlinePlayers()) {
-                if(area != null && !area.isWithinArea(p.getLocation())) {
-                    if(players.containsKey(p.getName())) {
+            for (Player p : Bukkit.getServer().getOnlinePlayers()) {
+                if (area != null && !area.isWithinArea(p.getLocation())) {
+                    if (players.containsKey(p.getName())) {
                         players.remove(p.getName());
                         hasChanged = true;
                     }
@@ -91,7 +93,7 @@ public class Jukebox extends AbstractSelfTriggeredIC {
                 }
             }
 
-            if(hasChanged)
+            if (hasChanged)
                 playlist.getPlaylistInterpreter().setPlayers(players);
         }
 
@@ -121,7 +123,7 @@ public class Jukebox extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"Playlist Name", "Radius"};
+            return new String[]{"Playlist Name", "Radius"};
         }
     }
 }

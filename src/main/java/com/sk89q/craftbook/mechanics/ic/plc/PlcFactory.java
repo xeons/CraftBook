@@ -1,15 +1,15 @@
 // $Id$
 /*
  * Copyright (C) 2012 Lymia Aluysia <lymiahugs@gmail.com>
- * 
+ *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
  * License as published by the Free
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
  * warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with this program. If not,
  * see <http://www.gnu.org/licenses/>.
  */
@@ -67,7 +67,8 @@ public class PlcFactory<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> 
         // Do nothing
     }
 
-    public static <StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> PlcFactory<StateT, CodeT, Lang> fromLang(Server s, Lang lang, boolean selfTriggered, String id) {
+    public static <StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> PlcFactory<StateT, CodeT, Lang> fromLang(
+            Server s, Lang lang, boolean selfTriggered, String id) {
 
         return new PlcFactory<>(s, lang, selfTriggered, id);
     }
@@ -81,15 +82,15 @@ public class PlcFactory<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> 
     @Override
     public String[] getLineHelp() {
 
-        return new String[] {"PLC ID", "Shared Access ID"};
+        return new String[]{"PLC ID", "Shared Access ID"};
     }
 
     @Override
-    public String[] getLongDescription () {
+    public String[] getLongDescription() {
 
-        //TODO MC5001
-        if(id.equalsIgnoreCase("MC5000")) {
-            return new String[] {
+        // TODO MC5001
+        if (id.equalsIgnoreCase("MC5000")) {
+            return new String[]{
                     "The '''MC5000''' is a [[../Perlstone/]]-powered programmable logic chip. Because it is of the VIVO family, it has a variable number of inputs and outputs, giving you the choice of either 3-1 or 1-3 for the number of inputs and outputs, respectively.",
                     "",
                     "== Construction ==",
@@ -117,18 +118,18 @@ public class PlcFactory<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> 
 
         String[] pins = new String[state.getInputCount() + state.getOutputCount()];
 
-        for(int i = 0; i < pins.length; i++)
+        for (int i = 0; i < pins.length; i++)
             pins[i] = "Programmable Pin";
 
         return pins;
     }
 
     @Override
-    public void unload () {
+    public void unload() {
     }
 
     @Override
-    public void load () {
+    public void load() {
 
     }
 }

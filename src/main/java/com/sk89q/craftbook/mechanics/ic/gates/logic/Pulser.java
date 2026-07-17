@@ -41,8 +41,10 @@ public class Pulser extends AbstractIC {
         if (!(line2 == null) && !line2.isEmpty()) {
             String[] split = RegexUtil.COLON_PATTERN.split(line2, 2);
             pulseLength = Integer.parseInt(split[0]);
-            if (split.length > 1) startDelay = Integer.parseInt(split[1]);
-            else startDelay = 1;
+            if (split.length > 1)
+                startDelay = Integer.parseInt(split[1]);
+            else
+                startDelay = 1;
         } else {
             pulseLength = 5;
             startDelay = 1;
@@ -50,8 +52,10 @@ public class Pulser extends AbstractIC {
         if (!(line3 == null) && !line3.isEmpty()) {
             String[] split = RegexUtil.COLON_PATTERN.split(line3, 2);
             pulseCount = Math.max(1, Integer.parseInt(split[0]));
-            if (split.length > 1) pauseLength = Math.max(1, Integer.parseInt(split[1]));
-            else pauseLength = 5;
+            if (split.length > 1)
+                pauseLength = Math.max(1, Integer.parseInt(split[1]));
+            else
+                pauseLength = 5;
         } else {
             pulseCount = 1;
             pauseLength = 5;
@@ -83,7 +87,8 @@ public class Pulser extends AbstractIC {
 
     private void startThread(ChipState chip) {
 
-        if (running) return;
+        if (running)
+            return;
         // start a pulse task and run it every tick after the given delay
         // save the given task id
         taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(CraftBookPlugin.inst(), new PulseTask(chip,
@@ -100,13 +105,14 @@ public class Pulser extends AbstractIC {
 
     protected boolean getInput(ChipState chip) {
 
-        //Concurrency issue? idk.
+        // Concurrency issue? idk.
         return chip != null && chip.getInput(0);
     }
 
     protected void setOutput(ChipState chip, boolean on) {
 
-        if(chip == null) return; //Concurrency issue? idk.
+        if (chip == null)
+            return; // Concurrency issue? idk.
         chip.setOutput(0, on);
     }
 
@@ -156,9 +162,9 @@ public class Pulser extends AbstractIC {
                     increasePulse();
                 }
             } else // start the next pulse if the pause is over
-                if (currentTick % pauseLength == 0) {
-                    startPulse();
-                }
+            if (currentTick % pauseLength == 0) {
+                startPulse();
+            }
             // if all pulses were sent stop the thread
             if (!on && currentPulseCount % pulseCount == 0) {
                 stopThread();
@@ -208,7 +214,8 @@ public class Pulser extends AbstractIC {
                 try {
                     String[] split = RegexUtil.COLON_PATTERN.split(line2, 2);
                     Integer.parseInt(split[0]);
-                    if (split.length > 1) Integer.parseInt(split[1]);
+                    if (split.length > 1)
+                        Integer.parseInt(split[1]);
                 } catch (Exception e) {
                     throw new ICVerificationException("You can only write numbers in line 3. See /icdocs for help");
                 }
@@ -217,7 +224,8 @@ public class Pulser extends AbstractIC {
                 try {
                     String[] split = RegexUtil.COLON_PATTERN.split(line3, 2);
                     Integer.parseInt(split[0]);
-                    if (split.length > 1) Integer.parseInt(split[1]);
+                    if (split.length > 1)
+                        Integer.parseInt(split[1]);
                 } catch (Exception e) {
                     throw new ICVerificationException("You can only write numbers in line 4. See /icdocs for help");
                 }
@@ -234,16 +242,16 @@ public class Pulser extends AbstractIC {
         @Override
         public String[] getPinDescription(ChipState state) {
 
-            return new String[] {
-                    "Trigger IC",//Inputs
-                    "Pulse Output",//Outputs
+            return new String[]{
+                    "Trigger IC", // Inputs
+                    "Pulse Output",// Outputs
             };
         }
 
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"[pulselength[:startdelay]]", "[pulsecount[:pauselength in serverticks]]"};
+            return new String[]{"[pulselength[:startdelay]]", "[pulsecount[:pauselength in serverticks]]"};
         }
     }
 }

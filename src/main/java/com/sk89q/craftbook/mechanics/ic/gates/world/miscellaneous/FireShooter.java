@@ -96,18 +96,19 @@ public class FireShooter extends AbstractIC {
         double x = targetDir.getX() - signBlock.getX();
         double z = targetDir.getZ() - signBlock.getZ();
         Location shootLoc = new Location(
-                CraftBookBukkitUtil.toSign(getSign()).getWorld(), targetDir.getX() + 0.5,targetDir.getY() + 0.5,targetDir.getZ() + 0.5);
+                CraftBookBukkitUtil.toSign(getSign()).getWorld(), targetDir.getX() + 0.5, targetDir.getY() + 0.5,
+                targetDir.getZ() + 0.5);
 
-        if(!shootLoc.getChunk().isLoaded())
+        if (!shootLoc.getChunk().isLoaded())
             return;
 
         for (short i = 0; i < n; i++) {
 
             double f2 = Math.sqrt(x * x + vert * vert + z * z);
 
-            double nx = x/f2;
-            double ny = vert/f2;
-            double nz = z/f2;
+            double nx = x / f2;
+            double ny = vert / f2;
+            double nz = z / f2;
             nx += CraftBookPlugin.inst().getRandom().nextGaussian() * 0.007499999832361937D * spread;
             ny += CraftBookPlugin.inst().getRandom().nextGaussian() * 0.007499999832361937D * spread;
             nz += CraftBookPlugin.inst().getRandom().nextGaussian() * 0.007499999832361937D * spread;
@@ -117,7 +118,7 @@ public class FireShooter extends AbstractIC {
             float f3 = (float) Math.sqrt(nx * nx + nz * nz);
 
             SmallFireball f = CraftBookBukkitUtil.toSign(getSign()).getWorld().spawn(shootLoc, SmallFireball.class);
-            f.setVelocity(new Vector(nx,ny,nz));
+            f.setVelocity(new Vector(nx, ny, nz));
             f.getLocation().setYaw((float) (Math.atan2(nx, nz) * 180.0D / 3.1415927410125732D));
             f.getLocation().setPitch((float) (Math.atan2(ny, f3) * 180.0D / 3.1415927410125732D));
         }
@@ -145,7 +146,7 @@ public class FireShooter extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"speed:spread", "vertical gain"};
+            return new String[]{"speed:spread", "vertical gain"};
         }
     }
 }

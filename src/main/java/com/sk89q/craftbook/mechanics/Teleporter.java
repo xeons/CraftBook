@@ -38,14 +38,16 @@ public class Teleporter extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onSignChange(SignChangeEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event))
+            return;
 
-        if (!event.getLine(1).equalsIgnoreCase("[Teleporter]")) return;
+        if (!event.getLine(1).equalsIgnoreCase("[Teleporter]"))
+            return;
 
         CraftBookPlayer localPlayer = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
-        if(!localPlayer.hasPermission("craftbook.mech.teleporter")) {
-            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+        if (!localPlayer.hasPermission("craftbook.mech.teleporter")) {
+            if (CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
                 localPlayer.printError("mech.create-permission");
             SignUtil.cancelSign(event);
             return;
@@ -65,8 +67,10 @@ public class Teleporter extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onRightClick(PlayerInteractEvent event) {
 
-        if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
-        if(SignUtil.isSign(event.getClickedBlock())) return;
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK)
+            return;
+        if (SignUtil.isSign(event.getClickedBlock()))
+            return;
 
         onCommonClick(event);
     }
@@ -74,7 +78,8 @@ public class Teleporter extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onRightClick(SignClickEvent event) {
 
-        if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK)
+            return;
         onCommonClick(event);
     }
 
@@ -89,7 +94,8 @@ public class Teleporter extends AbstractCraftBookMechanic {
 
         if (SignUtil.isSign(event.getClickedBlock())) {
             ChangedSign s = CraftBookBukkitUtil.toChangedSign(event.getClickedBlock());
-            if (!s.getLine(1).equals("[Teleporter]")) return;
+            if (!s.getLine(1).equals("[Teleporter]"))
+                return;
             String[] pos = RegexUtil.COLON_PATTERN.split(s.getLine(2));
             if (pos.length <= 2) {
                 localPlayer.printError("mech.teleport.invalidcoords");
@@ -98,11 +104,13 @@ public class Teleporter extends AbstractCraftBookMechanic {
             trigger = event.getClickedBlock();
         } else if (Tag.BUTTONS.isTagged(event.getClickedBlock().getType())) {
             Directional b = (Directional) event.getClickedBlock().getBlockData();
-            if(b == null || b.getFacing() == null) return;
+            if (b == null || b.getFacing() == null)
+                return;
             Block sign = event.getClickedBlock().getRelative(b.getFacing().getOppositeFace(), 2);
             if (SignUtil.isSign(sign)) {
                 ChangedSign s = CraftBookBukkitUtil.toChangedSign(sign);
-                if (!s.getLine(1).equals("[Teleporter]")) return;
+                if (!s.getLine(1).equals("[Teleporter]"))
+                    return;
                 String[] pos = RegexUtil.COLON_PATTERN.split(s.getLine(2));
                 if (pos.length <= 2) {
                     localPlayer.printError("mech.teleport.invalidcoords");
@@ -113,16 +121,18 @@ public class Teleporter extends AbstractCraftBookMechanic {
         } else
             return;
 
-        if(trigger == null) return;
+        if (trigger == null)
+            return;
 
         if (!localPlayer.hasPermission("craftbook.mech.teleporter.use")) {
-            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+            if (CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
                 localPlayer.printError("mech.use-permission");
             return;
         }
 
-        if(!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
-            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+        if (!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(),
+                event.getAction())) {
+            if (CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
                 localPlayer.printError("area.use-permissions");
             return;
         }
@@ -191,7 +201,8 @@ public class Teleporter extends AbstractCraftBookMechanic {
                 foundFree++;
             else
                 break;
-            if (floor.getY() == floor.getWorld().getMinHeight()) break;
+            if (floor.getY() == floor.getWorld().getMinHeight())
+                break;
             floor = floor.getRelative(BlockFace.DOWN);
         }
         if (foundFree < 2) {
@@ -245,12 +256,13 @@ public class Teleporter extends AbstractCraftBookMechanic {
     private int maxRange;
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadConfiguration(YAMLProcessor config, String path) {
 
         config.setComment(path + "require-sign", "Require a sign to be at the destination of the teleportation.");
         requireSign = config.getBoolean(path + "require-sign", false);
 
-        config.setComment(path + "max-range", "The maximum distance between the start and end of a teleporter. Set to 0 for infinite.");
+        config.setComment(path + "max-range",
+                "The maximum distance between the start and end of a teleporter. Set to 0 for infinite.");
         maxRange = config.getInt(path + "max-range", 0);
     }
 }

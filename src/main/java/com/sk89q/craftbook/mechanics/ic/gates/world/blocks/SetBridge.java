@@ -126,10 +126,12 @@ public class SetBridge extends AbstractIC {
                 boolean isSource = block.equals(getBackBlock());
 
                 if (open) {
-                    if (isSource && BlockUtil.isBlockReplacable(onBlock.getMaterial())) continue;
+                    if (isSource && BlockUtil.isBlockReplacable(onBlock.getMaterial()))
+                        continue;
                     block.setBlockData(onBlock);
                 } else {
-                    if (isSource && BlockUtil.isBlockReplacable(offBlock.getMaterial())) continue;
+                    if (isSource && BlockUtil.isBlockReplacable(offBlock.getMaterial()))
+                        continue;
                     block.setBlockData(offBlock);
                 }
             }
@@ -152,7 +154,7 @@ public class SetBridge extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"onID{:onData-offID:offData}", "offset x,y,z:width,depth"};
+            return new String[]{"onID{:onData-offID:offData}", "offset x,y,z:width,depth"};
         }
 
         @Override

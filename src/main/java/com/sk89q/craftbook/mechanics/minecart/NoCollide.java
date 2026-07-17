@@ -14,11 +14,14 @@ public class NoCollide extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onCartCollision(VehicleEntityCollisionEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event))
+            return;
 
         if (event.getVehicle() instanceof Minecart) {
-            if (event.getVehicle().isEmpty() && !empty) return;
-            if (!event.getVehicle().isEmpty() && !full) return;
+            if (event.getVehicle().isEmpty() && !empty)
+                return;
+            if (!event.getVehicle().isEmpty() && !full)
+                return;
 
             event.setCollisionCancelled(true);
         }
@@ -28,7 +31,7 @@ public class NoCollide extends AbstractCraftBookMechanic {
     private boolean full;
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadConfiguration(YAMLProcessor config, String path) {
 
         config.setComment(path + "empty-carts", "Enable No Collide for empty carts.");
         empty = config.getBoolean(path + "empty-carts", true);

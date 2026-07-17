@@ -18,21 +18,27 @@ public class CartMessenger extends CartBlockMechanism {
     public void onVehicleImpact(CartBlockImpactEvent event) {
 
         // validate
-        if (event.isMinor()) return;
-        if (!event.getBlocks().matches(getMaterial())) return;
+        if (event.isMinor())
+            return;
+        if (!event.getBlocks().matches(getMaterial()))
+            return;
 
         // care?
-        if (event.getMinecart().getPassenger() == null) return;
-        if (!event.getBlocks().hasSign()) return;
+        if (event.getMinecart().getPassenger() == null)
+            return;
+        if (!event.getBlocks().hasSign())
+            return;
 
         // enabled?
-        if (Power.OFF == isActive(event.getBlocks())) return;
+        if (Power.OFF == isActive(event.getBlocks()))
+            return;
 
         // go
         if (event.getMinecart().getPassenger() instanceof Player) {
             Player p = (Player) event.getMinecart().getPassenger();
             ChangedSign s = event.getBlocks().getSign();
-            if (!s.getLine(0).equalsIgnoreCase("[print]") && !s.getLine(1).equalsIgnoreCase("[print]")) return;
+            if (!s.getLine(0).equalsIgnoreCase("[print]") && !s.getLine(1).equalsIgnoreCase("[print]"))
+                return;
 
             ArrayList<String> messages = new ArrayList<>();
 
@@ -60,7 +66,8 @@ public class CartMessenger extends CartBlockMechanism {
             }
 
             for (String mes : messages) {
-                if (stack) mes = StringUtils.replace(mes, "+", "");
+                if (stack)
+                    mes = StringUtils.replace(mes, "+", "");
                 p.sendMessage(mes);
             }
         }
@@ -75,11 +82,11 @@ public class CartMessenger extends CartBlockMechanism {
     @Override
     public String[] getApplicableSigns() {
 
-        return new String[] {"Print"};
+        return new String[]{"Print"};
     }
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadConfiguration(YAMLProcessor config, String path) {
 
         config.setComment(path + "block", "Sets the block that is the base of the messager mechanic.");
         material = BlockSyntax.getBlock(config.getString(path + "block", BlockTypes.END_STONE.id()), true);

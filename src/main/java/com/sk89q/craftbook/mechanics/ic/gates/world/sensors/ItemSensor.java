@@ -104,7 +104,7 @@ public class ItemSensor extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"SearchArea", "id:data"};
+            return new String[]{"SearchArea", "id:data"};
         }
     }
 }

@@ -1,15 +1,15 @@
 // $Id$
 /*
  * CraftBook Copyright (C) 2010, 2011 sk89q <http://www.sk89q.com>
- * 
+ *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
  * License as published by the Free
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
  * warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with this program. If not,
  * see <http://www.gnu.org/licenses/>.
  */
@@ -38,7 +38,6 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.AnaloguePowerable;
 import org.bukkit.block.data.Directional;
 import org.bukkit.block.data.Powerable;
-import org.bukkit.block.data.type.RedstoneWire;
 import org.bukkit.entity.Minecart;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -74,34 +73,37 @@ final class MechanicListenerAdapter implements Listener {
 
         Block block = null;
         Action action = null;
-        if(event.getAction() == Action.RIGHT_CLICK_AIR) {
+        if (event.getAction() == Action.RIGHT_CLICK_AIR) {
             try {
                 block = event.getPlayer().getTargetBlock(null, 5);
-                if(block != null && block.getType() != Material.AIR)
+                if (block != null && block.getType() != Material.AIR)
                     action = Action.RIGHT_CLICK_BLOCK;
                 else
                     action = Action.RIGHT_CLICK_AIR;
-            } catch(Exception e) {
-                //Bukkit randomly errors. Catch the error.
+            } catch (Exception e) {
+                // Bukkit randomly errors. Catch the error.
             }
         } else {
             block = event.getClickedBlock();
             action = event.getAction();
         }
 
-        if(block != null && SignUtil.isSign(block) && event.getHand() == EquipmentSlot.HAND) {
-            if(CraftBookPlugin.inst().getConfiguration().signClickTimeout > 0) {
-                if(signClickTimer.contains(event.getPlayer().getName())) {
+        if (block != null && SignUtil.isSign(block) && event.getHand() == EquipmentSlot.HAND) {
+            if (CraftBookPlugin.inst().getConfiguration().signClickTimeout > 0) {
+                if (signClickTimer.contains(event.getPlayer().getName())) {
                     event.setCancelled(true);
                     return;
                 } else {
                     signClickTimer.add(event.getPlayer().getName());
-                    Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), () -> signClickTimer.remove(event.getPlayer().getName()), CraftBookPlugin.inst().getConfiguration().signClickTimeout);
+                    Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(),
+                            () -> signClickTimer.remove(event.getPlayer().getName()),
+                            CraftBookPlugin.inst().getConfiguration().signClickTimeout);
                 }
             }
-            SignClickEvent ev = new SignClickEvent(event.getPlayer(), action, event.getItem(), block, event.getBlockFace());
+            SignClickEvent ev = new SignClickEvent(event.getPlayer(), action, event.getItem(), block,
+                    event.getBlockFace());
             CraftBookPlugin.inst().getServer().getPluginManager().callEvent(ev);
-            if(ev.isCancelled()) {
+            if (ev.isCancelled()) {
                 event.setCancelled(true);
             }
         }
@@ -113,7 +115,7 @@ final class MechanicListenerAdapter implements Listener {
         if (!EventUtil.passesFilter(event))
             return;
 
-        if(!(CraftBookPlugin.inst().getConfiguration().advancedBlockChecks && event.isCancelled())) {
+        if (!(CraftBookPlugin.inst().getConfiguration().advancedBlockChecks && event.isCancelled())) {
             checkBlockChange(event.getPlayer(), event.getBlock(), false);
         }
     }
@@ -124,55 +126,59 @@ final class MechanicListenerAdapter implements Listener {
         if (!EventUtil.passesFilter(event))
             return;
 
-        if(!(CraftBookPlugin.inst().getConfiguration().advancedBlockChecks && event.isCancelled())) {
+        if (!(CraftBookPlugin.inst().getConfiguration().advancedBlockChecks && event.isCancelled())) {
             checkBlockChange(event.getPlayer(), event.getBlock(), true);
         }
     }
 
     private static void checkBlockChange(Player player, Block block, boolean build) {
-        switch(block.getType()) {
-            case REDSTONE_TORCH:
-            case REDSTONE_WALL_TORCH:
-            case REDSTONE_BLOCK:
-                if(CraftBookPlugin.inst().getConfiguration().pedanticBlockChecks && !ProtectionUtil.canBuild(player, block.getLocation(), build))
+        switch (block.getType()) {
+            case REDSTONE_TORCH :
+            case REDSTONE_WALL_TORCH :
+            case REDSTONE_BLOCK :
+                if (CraftBookPlugin.inst().getConfiguration().pedanticBlockChecks
+                        && !ProtectionUtil.canBuild(player, block.getLocation(), build))
                     break;
                 handleRedstoneForBlock(block, build ? 0 : 15, build ? 15 : 0);
                 break;
-            case ACACIA_BUTTON:
-            case BIRCH_BUTTON:
-            case DARK_OAK_BUTTON:
-            case JUNGLE_BUTTON:
-            case OAK_BUTTON:
-            case SPRUCE_BUTTON:
-            case STONE_BUTTON:
-            case LEVER:
-            case DETECTOR_RAIL:
-            case STONE_PRESSURE_PLATE:
-            case ACACIA_PRESSURE_PLATE:
-            case BIRCH_PRESSURE_PLATE:
-            case DARK_OAK_PRESSURE_PLATE:
-            case JUNGLE_PRESSURE_PLATE:
-            case OAK_PRESSURE_PLATE:
-            case SPRUCE_PRESSURE_PLATE:
-            case COMPARATOR:
-            case REPEATER:
-                if(CraftBookPlugin.inst().getConfiguration().pedanticBlockChecks && !ProtectionUtil.canBuild(player, block.getLocation(), build))
+            case ACACIA_BUTTON :
+            case BIRCH_BUTTON :
+            case DARK_OAK_BUTTON :
+            case JUNGLE_BUTTON :
+            case OAK_BUTTON :
+            case SPRUCE_BUTTON :
+            case STONE_BUTTON :
+            case LEVER :
+            case DETECTOR_RAIL :
+            case STONE_PRESSURE_PLATE :
+            case ACACIA_PRESSURE_PLATE :
+            case BIRCH_PRESSURE_PLATE :
+            case DARK_OAK_PRESSURE_PLATE :
+            case JUNGLE_PRESSURE_PLATE :
+            case OAK_PRESSURE_PLATE :
+            case SPRUCE_PRESSURE_PLATE :
+            case COMPARATOR :
+            case REPEATER :
+                if (CraftBookPlugin.inst().getConfiguration().pedanticBlockChecks
+                        && !ProtectionUtil.canBuild(player, block.getLocation(), build))
                     break;
                 Powerable powerable = (Powerable) block.getBlockData();
-                if(powerable.isPowered())
+                if (powerable.isPowered())
                     handleRedstoneForBlock(block, build ? 0 : 15, build ? 15 : 0);
                 break;
-            case HEAVY_WEIGHTED_PRESSURE_PLATE:
-            case LIGHT_WEIGHTED_PRESSURE_PLATE:
-            case REDSTONE_WIRE:
-                if(CraftBookPlugin.inst().getConfiguration().pedanticBlockChecks && !ProtectionUtil.canBuild(player, block.getLocation(), build))
+            case HEAVY_WEIGHTED_PRESSURE_PLATE :
+            case LIGHT_WEIGHTED_PRESSURE_PLATE :
+            case REDSTONE_WIRE :
+                if (CraftBookPlugin.inst().getConfiguration().pedanticBlockChecks
+                        && !ProtectionUtil.canBuild(player, block.getLocation(), build))
                     break;
                 AnaloguePowerable analoguePowerable = (AnaloguePowerable) block.getBlockData();
-                if(analoguePowerable.getPower() > 0) {
-                    handleRedstoneForBlock(block, build ? 0 : analoguePowerable.getPower(), build ? analoguePowerable.getPower() : 0);
+                if (analoguePowerable.getPower() > 0) {
+                    handleRedstoneForBlock(block, build ? 0 : analoguePowerable.getPower(),
+                            build ? analoguePowerable.getPower() : 0);
                 }
                 break;
-            default:
+            default :
                 break;
         }
     }
@@ -197,7 +203,8 @@ final class MechanicListenerAdapter implements Listener {
 
         // For efficiency reasons, we're only going to consider changes between
         // off and on state, and ignore simple current changes (i.e. 15->13)
-        if (!wasChange) return;
+        if (!wasChange)
+            return;
 
         int x = block.getX();
         int y = block.getY();
@@ -207,8 +214,8 @@ final class MechanicListenerAdapter implements Listener {
         // yet been updated, so we're going to do this very ugly thing of
         // faking the value with the new one whenever the data value of this
         // block is requested -- it is quite ugly
-        switch(block.getType()) {
-            case REDSTONE_WIRE:
+        switch (block.getType()) {
+            case REDSTONE_WIRE :
                 if (CraftBookPlugin.inst().getConfiguration().indirectRedstone) {
 
                     // power all blocks around the redstone wire on the same y level
@@ -244,8 +251,10 @@ final class MechanicListenerAdapter implements Listener {
 
                     // Make sure that the wire points to only this block
                     if (!CraftBookBukkitUtil.isRedstoneBlock(westSide) && !CraftBookBukkitUtil.isRedstoneBlock(eastSide)
-                            && (!CraftBookBukkitUtil.isRedstoneBlock(westSideAbove) || westSide == Material.AIR || above != Material.AIR)
-                            && (!CraftBookBukkitUtil.isRedstoneBlock(eastSideAbove) || eastSide == Material.AIR || above != Material.AIR)
+                            && (!CraftBookBukkitUtil.isRedstoneBlock(westSideAbove) || westSide == Material.AIR
+                                    || above != Material.AIR)
+                            && (!CraftBookBukkitUtil.isRedstoneBlock(eastSideAbove) || eastSide == Material.AIR
+                                    || above != Material.AIR)
                             && (!CraftBookBukkitUtil.isRedstoneBlock(westSideBelow) || westSide != Material.AIR)
                             && (!CraftBookBukkitUtil.isRedstoneBlock(eastSideBelow) || eastSide != Material.AIR)) {
                         // Possible blocks north / south
@@ -255,9 +264,12 @@ final class MechanicListenerAdapter implements Listener {
                         handleDirectWireInput(x + 1, y - 1, z, block, oldLevel, newLevel);
                     }
 
-                    if (!CraftBookBukkitUtil.isRedstoneBlock(northSide) && !CraftBookBukkitUtil.isRedstoneBlock(southSide)
-                            && (!CraftBookBukkitUtil.isRedstoneBlock(northSideAbove) || northSide == Material.AIR || above != Material.AIR)
-                            && (!CraftBookBukkitUtil.isRedstoneBlock(southSideAbove) || southSide == Material.AIR || above != Material.AIR)
+                    if (!CraftBookBukkitUtil.isRedstoneBlock(northSide)
+                            && !CraftBookBukkitUtil.isRedstoneBlock(southSide)
+                            && (!CraftBookBukkitUtil.isRedstoneBlock(northSideAbove) || northSide == Material.AIR
+                                    || above != Material.AIR)
+                            && (!CraftBookBukkitUtil.isRedstoneBlock(southSideAbove) || southSide == Material.AIR
+                                    || above != Material.AIR)
                             && (!CraftBookBukkitUtil.isRedstoneBlock(northSideBelow) || northSide != Material.AIR)
                             && (!CraftBookBukkitUtil.isRedstoneBlock(southSideBelow) || southSide != Material.AIR)) {
                         // Possible blocks west / east
@@ -274,12 +286,12 @@ final class MechanicListenerAdapter implements Listener {
                     handleDirectWireInput(x, y - 1, z, block, oldLevel, newLevel);
                 }
                 return;
-            case REPEATER:
-            case COMPARATOR:
+            case REPEATER :
+            case COMPARATOR :
                 Directional diode = (Directional) block.getBlockData();
                 BlockFace f = diode.getFacing();
                 handleDirectWireInput(x + f.getModX(), y, z + f.getModZ(), block, oldLevel, newLevel);
-                if(block.getRelative(f).getType() != Material.AIR) {
+                if (block.getRelative(f).getType() != Material.AIR) {
                     handleDirectWireInput(x + f.getModX(), y - 1, z + f.getModZ(), block, oldLevel, newLevel);
                     handleDirectWireInput(x + f.getModX(), y + 1, z + f.getModZ(), block, oldLevel, newLevel);
                     handleDirectWireInput(x + f.getModX() + 1, y - 1, z + f.getModZ(), block, oldLevel, newLevel);
@@ -288,23 +300,24 @@ final class MechanicListenerAdapter implements Listener {
                     handleDirectWireInput(x + f.getModX() - 1, y - 1, z + f.getModZ() - 1, block, oldLevel, newLevel);
                 }
                 return;
-            case ACACIA_BUTTON:
-            case BIRCH_BUTTON:
-            case DARK_OAK_BUTTON:
-            case JUNGLE_BUTTON:
-            case OAK_BUTTON:
-            case SPRUCE_BUTTON:
-            case STONE_BUTTON:
-            case LEVER:
+            case ACACIA_BUTTON :
+            case BIRCH_BUTTON :
+            case DARK_OAK_BUTTON :
+            case JUNGLE_BUTTON :
+            case OAK_BUTTON :
+            case SPRUCE_BUTTON :
+            case STONE_BUTTON :
+            case LEVER :
                 Directional button = (Directional) block.getBlockData();
-                if(button != null) {
+                if (button != null) {
                     BlockFace face = button.getFacing().getOppositeFace();
-                    if(face != null)
-                        handleDirectWireInput(x + face.getModX()*2, y + face.getModY()*2, z + face.getModZ()*2, block, oldLevel, newLevel);
+                    if (face != null)
+                        handleDirectWireInput(x + face.getModX() * 2, y + face.getModY() * 2, z + face.getModZ() * 2,
+                                block, oldLevel, newLevel);
                 }
                 break;
-            case POWERED_RAIL:
-            case ACTIVATOR_RAIL:
+            case POWERED_RAIL :
+            case ACTIVATOR_RAIL :
                 return;
         }
 
@@ -340,17 +353,18 @@ final class MechanicListenerAdapter implements Listener {
     private static void handleDirectWireInput(int x, int y, int z, Block sourceBlock, int oldLevel, int newLevel) {
 
         Block block = sourceBlock.getWorld().getBlockAt(x, y, z);
-        if(CraftBookBukkitUtil.equals(sourceBlock.getLocation(), block.getLocation())) //The same block, don't run.
+        if (CraftBookBukkitUtil.equals(sourceBlock.getLocation(), block.getLocation())) // The same block, don't run.
             return;
         final SourcedBlockRedstoneEvent event = new SourcedBlockRedstoneEvent(sourceBlock, block, oldLevel, newLevel);
 
         CraftBookPlugin.inst().getServer().getPluginManager().callEvent(event);
 
-        if(CraftBookPlugin.inst().useLegacyCartSystem) {
+        if (CraftBookPlugin.inst().useLegacyCartSystem) {
             CraftBookPlugin.server().getScheduler().runTask(CraftBookPlugin.inst(), () -> {
                 try {
                     CartMechanismBlocks cmb = CartMechanismBlocks.find(event.getBlock());
-                    CartBlockRedstoneEvent ev = new CartBlockRedstoneEvent(event.getBlock(), event.getSource(), event.getOldCurrent(), event.getNewCurrent(), cmb, CartBlockMechanism.getCart(cmb.rail));
+                    CartBlockRedstoneEvent ev = new CartBlockRedstoneEvent(event.getBlock(), event.getSource(),
+                            event.getOldCurrent(), event.getNewCurrent(), cmb, CartBlockMechanism.getCart(cmb.rail));
                     CraftBookPlugin.inst().getServer().getPluginManager().callEvent(ev);
                 } catch (InvalidMechanismException ignored) {
                 }
@@ -364,7 +378,7 @@ final class MechanicListenerAdapter implements Listener {
         if (!EventUtil.passesFilter(event))
             return;
 
-        if(CraftBookPlugin.inst().useLegacyCartSystem) {
+        if (CraftBookPlugin.inst().useLegacyCartSystem) {
             if (event.getVehicle() instanceof Minecart) {
                 try {
                     Minecart cart = (Minecart) event.getVehicle();
@@ -372,9 +386,10 @@ final class MechanicListenerAdapter implements Listener {
                     cmb.setFromBlock(event.getFrom().getBlock());
                     Location from = event.getFrom();
                     Location to = event.getTo();
-                    if (LocationUtil.getDistanceSquared(from, to) > 2 * 2) //Further than max distance
+                    if (LocationUtil.getDistanceSquared(from, to) > 2 * 2) // Further than max distance
                         return;
-                    boolean minor = from.getBlockX() == to.getBlockX() && from.getBlockY() == to.getBlockY() && from.getBlockZ() == to.getBlockZ();
+                    boolean minor = from.getBlockX() == to.getBlockX() && from.getBlockY() == to.getBlockY()
+                            && from.getBlockZ() == to.getBlockZ();
                     CartBlockImpactEvent ev = new CartBlockImpactEvent(cart, from, to, cmb, minor);
                     CraftBookPlugin.inst().getServer().getPluginManager().callEvent(ev);
                 } catch (InvalidMechanismException ignored) {
@@ -389,10 +404,11 @@ final class MechanicListenerAdapter implements Listener {
         if (!EventUtil.passesFilter(event))
             return;
 
-        if(!event.getVehicle().getWorld().isChunkLoaded(event.getVehicle().getLocation().getBlockX() >> 4, event.getVehicle().getLocation().getBlockZ() >> 4))
+        if (!event.getVehicle().getWorld().isChunkLoaded(event.getVehicle().getLocation().getBlockX() >> 4,
+                event.getVehicle().getLocation().getBlockZ() >> 4))
             return;
 
-        if(CraftBookPlugin.inst().useLegacyCartSystem) {
+        if (CraftBookPlugin.inst().useLegacyCartSystem) {
             if (event.getVehicle() instanceof Minecart) {
                 try {
                     Minecart cart = (Minecart) event.getVehicle();

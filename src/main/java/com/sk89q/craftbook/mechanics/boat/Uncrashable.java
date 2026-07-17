@@ -15,9 +15,11 @@ public class Uncrashable extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onVehicleDestroy(VehicleDestroyEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event))
+            return;
 
-        if (!(event.getVehicle() instanceof Boat)) return;
+        if (!(event.getVehicle() instanceof Boat))
+            return;
 
         if (event.getAttacker() == null) {
             event.getVehicle().setVelocity(new Vector(0, 0, 0));
@@ -26,7 +28,7 @@ public class Uncrashable extends AbstractCraftBookMechanic {
     }
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadConfiguration(YAMLProcessor config, String path) {
 
     }
 }

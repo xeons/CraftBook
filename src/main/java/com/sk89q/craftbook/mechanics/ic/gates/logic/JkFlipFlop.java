@@ -10,8 +10,8 @@ import com.sk89q.craftbook.mechanics.ic.IC;
 import com.sk89q.craftbook.mechanics.ic.ICFactory;
 
 /**
- * A JK flip flop. A JK Flip Flop is like a SR Latch (S = J, R = K), but if both J and K is high, it toggles,
- * and it has a clock.
+ * A JK flip flop. A JK Flip Flop is like a SR Latch (S = J, R = K), but if both J and K is high, it toggles, and it has
+ * a clock.
  *
  * @author sindreij
  */
@@ -60,11 +60,11 @@ public class JkFlipFlop extends AbstractIC {
         @Override
         public String[] getPinDescription(ChipState state) {
 
-            return new String[] {
-                    "Trigger IC",//Inputs
+            return new String[]{
+                    "Trigger IC", // Inputs
                     "Set",
                     "Reset",
-                    "Output = Same if J and K = 0, 1 if J = 1, 0 if K = 1, and continuously toggling states if J and K = 1",//Outputs
+                    "Output = Same if J and K = 0, 1 if J = 1, 0 if K = 1, and continuously toggling states if J and K = 1",// Outputs
             };
         }
 

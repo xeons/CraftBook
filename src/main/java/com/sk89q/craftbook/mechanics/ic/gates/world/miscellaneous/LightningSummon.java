@@ -1,15 +1,15 @@
 // $Id$
 /*
  * Copyright (C) 2010, 2011 sk89q <http://www.sk89q.com>
- * 
+ *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
  * License as published by the Free
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
  * warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with this program. If not,
  * see <http://www.gnu.org/licenses/>.
  */
@@ -48,19 +48,19 @@ public class LightningSummon extends AbstractIC {
 
         if (!getLine(2).isEmpty()) {
             radius = ICUtil.parseRadius(getSign()).toBlockPoint();
-            if(getLine(2).contains("="))
+            if (getLine(2).contains("="))
                 center = ICUtil.parseBlockLocation(getSign()).getLocation();
             else
                 center = getBackBlock().getLocation();
         } else {
             center = getBackBlock().getLocation();
-            radius = BlockVector3.at(1,1,1);
+            radius = BlockVector3.at(1, 1, 1);
         }
 
-        if(!getLine(3).isEmpty()) {
+        if (!getLine(3).isEmpty()) {
             try {
                 chance = Math.min(Integer.parseInt(getLine(3)), 100);
-            } catch(Exception e){
+            } catch (Exception e) {
                 chance = 100;
             }
         } else {
@@ -93,7 +93,7 @@ public class LightningSummon extends AbstractIC {
                         int rz = center.getBlockZ() - z;
                         Block b = CraftBookBukkitUtil.toSign(getSign()).getWorld().getBlockAt(rx, ry, rz);
 
-                        if(b.getType() != Material.AIR && CraftBookPlugin.inst().getRandom().nextInt(100) <= chance)
+                        if (b.getType() != Material.AIR && CraftBookPlugin.inst().getRandom().nextInt(100) <= chance)
                             b.getWorld().strikeLightning(b.getLocation());
                     }
                 }
@@ -123,7 +123,7 @@ public class LightningSummon extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"+oradius=x:y:z block offset", "+ochance"};
+            return new String[]{"+oradius=x:y:z block offset", "+ochance"};
         }
     }
 }

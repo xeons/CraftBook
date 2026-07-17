@@ -24,18 +24,19 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 /**
- * Class for utilities that include adding items to a furnace based on if it is a fuel or not, and adding items to a chest. Also will include methdos for checking contents and removing.
+ * Class for utilities that include adding items to a furnace based on if it is a fuel or not, and adding items to a
+ * chest. Also will include methdos for checking contents and removing.
  */
 public class InventoryUtil {
 
     /**
      * Adds items to an inventory, returning the leftovers.
-     * 
+     *
      * @param container The InventoryHolder to add the items to.
      * @param stacks The stacks to add to the inventory.
      * @return The stacks that could not be added.
      */
-    public static List<ItemStack> addItemsToInventory(InventoryHolder container, ItemStack ... stacks) {
+    public static List<ItemStack> addItemsToInventory(InventoryHolder container, ItemStack... stacks) {
         return addItemsToInventory(container, true, stacks);
     }
 
@@ -46,47 +47,48 @@ public class InventoryUtil {
      * @param stacks The stacks to add to the inventory.
      * @return The stacks that could not be added.
      */
-    public static List<ItemStack> addItemsToInventory(InventoryHolder container, boolean update, ItemStack ... stacks) {
+    public static List<ItemStack> addItemsToInventory(InventoryHolder container, boolean update, ItemStack... stacks) {
 
-        if(container instanceof Furnace) {
+        if (container instanceof Furnace) {
             return addItemsToFurnace((Furnace) container, stacks);
-        } else if(container instanceof BrewingStand) {
+        } else if (container instanceof BrewingStand) {
             return addItemsToBrewingStand((BrewingStand) container, stacks);
-        } else if(container instanceof Crafter) {
+        } else if (container instanceof Crafter) {
             return addItemsToCrafter((Crafter) container, stacks);
-        } else if(container instanceof ChiseledBookshelf) {
+        } else if (container instanceof ChiseledBookshelf) {
             return addItemsToChiseledBookshelf((ChiseledBookshelf) container, stacks);
-        } else { //Basic inventories like chests, dispensers, storage carts, etc.
+        } else { // Basic inventories like chests, dispensers, storage carts, etc.
             List<ItemStack> leftovers = new ArrayList<>();
             if (container instanceof ShulkerBox) {
                 Arrays.stream(stacks).filter(item -> ItemUtil.isShulkerBox(item.getType())).forEach(leftovers::add);
-                stacks = Arrays.stream(stacks).filter(item -> !ItemUtil.isShulkerBox(item.getType())).toArray(ItemStack[]::new);
+                stacks = Arrays.stream(stacks).filter(item -> !ItemUtil.isShulkerBox(item.getType()))
+                        .toArray(ItemStack[]::new);
             }
             leftovers.addAll(container.getInventory().addItem(stacks).values());
             if (container.getInventory() instanceof DoubleChestInventory) {
                 ((Chest) ((DoubleChestInventory) container.getInventory()).getLeftSide().getHolder()).update(true);
                 ((Chest) ((DoubleChestInventory) container.getInventory()).getRightSide().getHolder()).update(true);
             }
-            //if(container instanceof BlockState && update)
-            //    ((BlockState) container).update();
+            // if(container instanceof BlockState && update)
+            // ((BlockState) container).update();
             return leftovers;
         }
     }
 
     /**
      * Adds items to a furnace, returning the leftovers.
-     * 
+     *
      * @param furnace The Furnace to add the items to.
      * @param stacks The stacks to add to the inventory.
      * @return The stacks that could not be added.
      */
-    public static List<ItemStack> addItemsToFurnace(Furnace furnace, ItemStack ... stacks) {
+    public static List<ItemStack> addItemsToFurnace(Furnace furnace, ItemStack... stacks) {
 
         List<ItemStack> leftovers = new ArrayList<>();
 
-        for(ItemStack stack : stacks) {
+        for (ItemStack stack : stacks) {
 
-            if(!ItemUtil.isStackValid(stack))
+            if (!ItemUtil.isStackValid(stack))
                 continue;
 
             if (ItemUtil.isFurnacable(stack) && fitsInSlot(stack, furnace.getInventory().getSmelting())) {
@@ -105,23 +107,23 @@ public class InventoryUtil {
         }
         leftovers.removeAll(Collections.singleton(null));
 
-        //furnace.update();
+        // furnace.update();
 
         return leftovers;
     }
 
     /**
      * Adds items to a BrewingStand, returning the leftovers.
-     * 
+     *
      * @param brewingStand The BrewingStand to add the items to.
      * @param stacks The stacks to add to the inventory.
      * @return The stacks that could not be added.
      */
-    public static List<ItemStack> addItemsToBrewingStand(BrewingStand brewingStand, ItemStack ... stacks) {
+    public static List<ItemStack> addItemsToBrewingStand(BrewingStand brewingStand, ItemStack... stacks) {
 
         List<ItemStack> leftovers = new ArrayList<>();
 
-        for(ItemStack stack : stacks) {
+        for (ItemStack stack : stacks) {
             BrewerInventory inv = brewingStand.getInventory();
             if (ItemUtil.isAPotionIngredient(stack) && InventoryUtil.fitsInSlot(stack, inv.getIngredient())) {
                 if (inv.getIngredient() == null) {
@@ -158,26 +160,27 @@ public class InventoryUtil {
             }
         }
 
-        //brewingStand.update();
+        // brewingStand.update();
 
         return leftovers;
     }
 
     /**
      * Adds items to a Crafter, respecting disabled slots, returning the leftovers.
-     * 
+     *
      * @param crafter The Crafter to add the items to.
      * @param stacks The stacks to add to the inventory.
      * @return The stacks that could not be added.
      */
-    public static List<ItemStack> addItemsToCrafter(Crafter crafter, ItemStack ... stacks) {
+    public static List<ItemStack> addItemsToCrafter(Crafter crafter, ItemStack... stacks) {
 
         List<ItemStack> leftovers = new ArrayList<>();
-        int[] availableSlots = IntStream.rangeClosed(0, crafter.getInventory().getSize() - 1).filter(slot -> !crafter.isSlotDisabled(slot)).toArray();
-        
-        for(ItemStack stack : stacks) {
+        int[] availableSlots = IntStream.rangeClosed(0, crafter.getInventory().getSize() - 1)
+                .filter(slot -> !crafter.isSlotDisabled(slot)).toArray();
+
+        for (ItemStack stack : stacks) {
             Inventory inv = crafter.getInventory();
-            
+
             for (int i : availableSlots) {
                 if (stack == null) {
                     break;
@@ -198,15 +201,16 @@ public class InventoryUtil {
 
     /**
      * Adds items to a chiseled bookshelf.
-     * 
+     *
      * @param chiseledBookshelf The chiseled bookshelf to add the items to.
      * @param stacks The stacks to add to the inventory.
      * @return The stacks that could not be added.
      */
-    public static List<ItemStack> addItemsToChiseledBookshelf(ChiseledBookshelf chiseledBookshelf, ItemStack ... stacks) {
+    public static List<ItemStack> addItemsToChiseledBookshelf(ChiseledBookshelf chiseledBookshelf,
+            ItemStack... stacks) {
 
         List<ItemStack> leftovers = new ArrayList<>();
-        
+
         Arrays.stream(stacks).filter(item -> !ItemUtil.isAStorableBook(item)).forEach(leftovers::add);
         stacks = Arrays.stream(stacks).filter(item -> ItemUtil.isAStorableBook(item)).toArray(ItemStack[]::new);
 
@@ -217,13 +221,13 @@ public class InventoryUtil {
 
     /**
      * Checks whether the inventory contains all the given itemstacks.
-     * 
+     *
      * @param inv The inventory to check.
      * @param exact Whether the stacks need to be the exact amount.
      * @param stacks The stacks to check.
      * @return whether the inventory contains all the items. If there are no items to check, it returns true.
      */
-    public static boolean doesInventoryContain(Inventory inv, boolean exact, ItemStack ... stacks) {
+    public static boolean doesInventoryContain(Inventory inv, boolean exact, ItemStack... stacks) {
         return doesInventoryContain(inv, !exact, false, false, false, stacks);
     }
 
@@ -238,11 +242,12 @@ public class InventoryUtil {
      * @param stacks The stacks to check.
      * @return whether the inventory contains all the items. If there are no items to check, it returns true.
      */
-    public static boolean doesInventoryContain(Inventory inv, boolean ignoreStackSize, boolean ignoreDurability, boolean ignoreMeta, boolean ignoreEnchants, ItemStack ... stacks) {
+    public static boolean doesInventoryContain(Inventory inv, boolean ignoreStackSize, boolean ignoreDurability,
+            boolean ignoreMeta, boolean ignoreEnchants, ItemStack... stacks) {
 
         ArrayList<ItemStack> itemsToFind = new ArrayList<>(Arrays.asList(stacks));
 
-        if(itemsToFind.isEmpty())
+        if (itemsToFind.isEmpty())
             return true;
 
         List<ItemStack> items = new ArrayList<>(Arrays.asList(inv.getContents()));
@@ -252,35 +257,38 @@ public class InventoryUtil {
         }
 
         for (ItemStack item : items) {
-            if(!ItemUtil.isStackValid(item))
+            if (!ItemUtil.isStackValid(item))
                 continue;
 
-            for(ItemStack base : stacks) {
-                if(!itemsToFind.contains(base))
+            for (ItemStack base : stacks) {
+                if (!itemsToFind.contains(base))
                     continue;
 
-                if(!ItemUtil.isStackValid(base)) {
+                if (!ItemUtil.isStackValid(base)) {
                     itemsToFind.remove(base);
                     continue;
                 }
 
-                if(ItemUtil.areItemsSimilar(base, item)) {
-                    if(!ignoreStackSize && base.getAmount() != item.getAmount())
+                if (ItemUtil.areItemsSimilar(base, item)) {
+                    if (!ignoreStackSize && base.getAmount() != item.getAmount())
                         continue;
 
-                    if(!ignoreDurability && (base.getType().getMaxDurability() > 0 || item.getType().getMaxDurability() > 0) && base.getDurability() != item.getDurability())
+                    if (!ignoreDurability
+                            && (base.getType().getMaxDurability() > 0 || item.getType().getMaxDurability() > 0)
+                            && base.getDurability() != item.getDurability())
                         continue;
 
-                    if(!ignoreMeta) {
-                        if(base.hasItemMeta() != item.hasItemMeta()) {
-                            if(!ignoreEnchants)
+                    if (!ignoreMeta) {
+                        if (base.hasItemMeta() != item.hasItemMeta()) {
+                            if (!ignoreEnchants)
                                 continue;
-                            if(base.hasItemMeta() && ItemUtil.hasDisplayNameOrLore(base))
+                            if (base.hasItemMeta() && ItemUtil.hasDisplayNameOrLore(base))
                                 continue;
-                            else if(item.hasItemMeta() && ItemUtil.hasDisplayNameOrLore(item))
+                            else if (item.hasItemMeta() && ItemUtil.hasDisplayNameOrLore(item))
                                 continue;
-                        } else if(base.hasItemMeta()) {
-                            if(base.hasItemMeta() && !ItemUtil.areItemMetaIdentical(base.getItemMeta(), item.getItemMeta(), !ignoreEnchants))
+                        } else if (base.hasItemMeta()) {
+                            if (base.hasItemMeta() && !ItemUtil.areItemMetaIdentical(base.getItemMeta(),
+                                    item.getItemMeta(), !ignoreEnchants))
                                 continue;
                         }
                     }
@@ -296,81 +304,82 @@ public class InventoryUtil {
 
     /**
      * Removes items from an inventory.
-     * 
+     *
      * @param inv The inventory to remove it from.
      * @param stacks The stacks to remove.
      * @return Whether the stacks were removed.
      */
-    public static boolean removeItemsFromInventory(InventoryHolder inv, ItemStack ... stacks) {
+    public static boolean removeItemsFromInventory(InventoryHolder inv, ItemStack... stacks) {
 
         List<ItemStack> leftovers = new ArrayList<>(inv.getInventory().removeItem(stacks).values());
 
-        if(!leftovers.isEmpty()) {
+        if (!leftovers.isEmpty()) {
             List<ItemStack> itemsToAdd = new ArrayList<>(Arrays.asList(stacks));
             itemsToAdd.removeAll(leftovers);
 
             inv.getInventory().addItem(itemsToAdd.toArray(new ItemStack[itemsToAdd.size()]));
         }
 
-        //if(inv instanceof BlockState)
-        //    ((BlockState) inv).update();
+        // if(inv instanceof BlockState)
+        // ((BlockState) inv).update();
 
         return leftovers.isEmpty();
     }
 
     /**
      * Checks whether the itemstack can easily stack onto the other itemstack.
-     * 
+     *
      * @param stack The stack to add.
      * @param slot The base stack.
      * @return whether it can be added or not.
      */
     public static boolean fitsInSlot(ItemStack stack, ItemStack slot) {
 
-        return slot == null || ItemUtil.areItemsIdentical(stack, slot) && stack.getAmount() + slot.getAmount() <= stack.getMaxStackSize();
+        return slot == null || ItemUtil.areItemsIdentical(stack, slot)
+                && stack.getAmount() + slot.getAmount() <= stack.getMaxStackSize();
     }
 
     /**
      * Checks whether the block has an inventory.
-     * 
+     *
      * @param block The block.
      * @return If it has an inventory.
      */
     public static boolean doesBlockHaveInventory(Block block) {
 
-        switch(block.getType()) {
-            case CHEST:
-            case TRAPPED_CHEST:
-            case DROPPER:
-            case DISPENSER:
-            case FURNACE:
-            case BREWING_STAND:
-            case HOPPER:
-            case WHITE_SHULKER_BOX:
-            case ORANGE_SHULKER_BOX:
-            case MAGENTA_SHULKER_BOX:
-            case LIGHT_BLUE_SHULKER_BOX:
-            case YELLOW_SHULKER_BOX:
-            case GREEN_SHULKER_BOX:
-            case PINK_SHULKER_BOX:
-            case GRAY_SHULKER_BOX:
-            case LIGHT_GRAY_SHULKER_BOX:
-            case BLUE_SHULKER_BOX:
-            case PURPLE_SHULKER_BOX:
-            case CYAN_SHULKER_BOX:
-            case BROWN_SHULKER_BOX:
-            case LIME_SHULKER_BOX:
-            case BLACK_SHULKER_BOX:
-            case RED_SHULKER_BOX:
-            case SHULKER_BOX:
-            case BLAST_FURNACE:
-            case SMOKER:
-            case BARREL:
-            case CHISELED_BOOKSHELF:
-            case DECORATED_POT:
-            case CRAFTER:
+        switch (block.getType()) {
+            case CHEST :
+            case TRAPPED_CHEST :
+            case DROPPER :
+            case DISPENSER :
+            case FURNACE :
+            case BREWING_STAND :
+            case HOPPER :
+            case WHITE_SHULKER_BOX :
+            case ORANGE_SHULKER_BOX :
+            case MAGENTA_SHULKER_BOX :
+            case LIGHT_BLUE_SHULKER_BOX :
+            case YELLOW_SHULKER_BOX :
+            case GREEN_SHULKER_BOX :
+            case PINK_SHULKER_BOX :
+            case GRAY_SHULKER_BOX :
+            case LIGHT_GRAY_SHULKER_BOX :
+            case BLUE_SHULKER_BOX :
+            case PURPLE_SHULKER_BOX :
+            case CYAN_SHULKER_BOX :
+            case BROWN_SHULKER_BOX :
+            case LIME_SHULKER_BOX :
+            case BLACK_SHULKER_BOX :
+            case RED_SHULKER_BOX :
+            case SHULKER_BOX :
+            case BLAST_FURNACE :
+            case SMOKER :
+            case BARREL :
+            case CHISELED_BOOKSHELF :
+            case DECORATED_POT :
+            case CRAFTER :
                 return true;
-            default:
+            default :
                 return false;
         }
     }

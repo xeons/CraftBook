@@ -50,7 +50,7 @@ public class EntityCannon extends AbstractSelfTriggeredIC {
         state.setOutput(0, shoot());
     }
 
-    double x,y,z;
+    double x, y, z;
     EntityType type;
     Location location;
 
@@ -62,7 +62,7 @@ public class EntityCannon extends AbstractSelfTriggeredIC {
         if (!getSign().getLine(3).isEmpty())
             type = EntityType.fromString(getSign().getLine(3));
 
-        if(type == null)
+        if (type == null)
             type = EntityType.MOB_HOSTILE;
 
         try {
@@ -70,8 +70,7 @@ public class EntityCannon extends AbstractSelfTriggeredIC {
             x = Double.parseDouble(split[0]);
             y = Double.parseDouble(split[1]);
             z = Double.parseDouble(split[2]);
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             x = 0;
             y = 1;
             z = 0;
@@ -87,7 +86,7 @@ public class EntityCannon extends AbstractSelfTriggeredIC {
 
         boolean resultBoolean = false;
 
-        for (Entity e : LocationUtil.getNearbyEntities(location, CraftBookBukkitUtil.toVector(new Vector(3,3,3)))) {
+        for (Entity e : LocationUtil.getNearbyEntities(location, CraftBookBukkitUtil.toVector(new Vector(3, 3, 3)))) {
 
             if (e.isDead() || !e.isValid())
                 continue;
@@ -125,7 +124,7 @@ public class EntityCannon extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"velocity x:y:z", "mob type"};
+            return new String[]{"velocity x:y:z", "mob type"};
         }
     }
 }

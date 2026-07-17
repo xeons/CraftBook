@@ -57,7 +57,8 @@ public class LiquidFlood extends AbstractSelfTriggeredIC {
                         int ry = centre.getBlockY() - y;
                         int rz = centre.getBlockZ() - z;
                         Block b = CraftBookBukkitUtil.toSign(getSign()).getWorld().getBlockAt(rx, ry, rz);
-                        if (b.getType() == Material.AIR || b.getType() == (liquid.equalsIgnoreCase("water") ? Material.WATER : Material.LAVA)) {
+                        if (b.getType() == Material.AIR
+                                || b.getType() == (liquid.equalsIgnoreCase("water") ? Material.WATER : Material.LAVA)) {
                             b.setType(liquid.equalsIgnoreCase("water") ? Material.WATER : Material.LAVA);
                         }
                     }
@@ -114,7 +115,7 @@ public class LiquidFlood extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"+owater/lava", "+oradius=x:y:z offset"};
+            return new String[]{"+owater/lava", "+oradius=x:y:z offset"};
         }
     }
 }

@@ -78,7 +78,7 @@ public class EntityTrap extends AbstractSelfTriggeredIC {
         } else
             types = Collections.singletonList(EntityType.MOB_HOSTILE);
 
-        if(types.isEmpty())
+        if (types.isEmpty())
             types.add(EntityType.ANY);
         erase = getLine(3).startsWith("!");
     }
@@ -94,7 +94,7 @@ public class EntityTrap extends AbstractSelfTriggeredIC {
 
         for (Entity e : area.getEntitiesInArea(types)) {
 
-            if(erase)
+            if (erase)
                 e.remove();
             else
                 EntityUtil.damageEntity(e, damage);
@@ -126,7 +126,7 @@ public class EntityTrap extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"radius=x:y:z=damage", "mob type"};
+            return new String[]{"radius=x:y:z=damage", "mob type"};
         }
     }
 }

@@ -61,7 +61,7 @@ public class FireBarrage extends FireShooter {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"speed:spread", "vertical gain"};
+            return new String[]{"speed:spread", "vertical gain"};
         }
     }
 }

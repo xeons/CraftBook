@@ -61,9 +61,10 @@ public class BonemealTerraformer extends AbstractSelfTriggeredIC {
     @Override
     public void think(ChipState state) {
 
-        if(state.getInput(0)) return;
+        if (state.getInput(0))
+            return;
 
-        for(int i = 0; i < 10; i++)
+        for (int i = 0; i < 10; i++)
             terraform();
     }
 
@@ -71,7 +72,8 @@ public class BonemealTerraformer extends AbstractSelfTriggeredIC {
 
         Block b = area.getRandomBlockInArea();
 
-        if(b == null) return;
+        if (b == null)
+            return;
 
         if ((b.getType() == Material.WHEAT
                 || b.getType() == Material.CARROTS
@@ -85,7 +87,7 @@ public class BonemealTerraformer extends AbstractSelfTriggeredIC {
             if (consumeBonemeal()) {
                 Ageable ageable = (Ageable) b.getBlockData();
                 int add = CraftBookPlugin.inst().getRandom().nextInt(3);
-                if(ageable.getAge() + add > ageable.getMaximumAge())
+                if (ageable.getAge() + add > ageable.getMaximumAge())
                     ageable.setAge(ageable.getMaximumAge());
                 else
                     ageable.setAge(ageable.getAge() + add);
@@ -95,8 +97,10 @@ public class BonemealTerraformer extends AbstractSelfTriggeredIC {
         }
         if (Tag.SAPLINGS.isTagged(b.getType())) {
             if (consumeBonemeal()) {
-                if (!growTree(b, CraftBookPlugin.inst().getRandom())) refundBonemeal();
-                else return;
+                if (!growTree(b, CraftBookPlugin.inst().getRandom()))
+                    refundBonemeal();
+                else
+                    return;
             }
         }
         if (b.getType() == Material.BROWN_MUSHROOM || b.getType() == Material.RED_MUSHROOM) {
@@ -106,18 +110,21 @@ public class BonemealTerraformer extends AbstractSelfTriggeredIC {
                     if (!b.getWorld().generateTree(b.getLocation(), TreeType.BROWN_MUSHROOM)) {
                         b.setType(Material.BROWN_MUSHROOM);
                         refundBonemeal();
-                    } else return;
+                    } else
+                        return;
                 }
                 if (b.getType() == Material.RED_MUSHROOM) {
                     b.setType(Material.AIR);
                     if (!b.getWorld().generateTree(b.getLocation(), TreeType.RED_MUSHROOM)) {
                         b.setType(Material.RED_MUSHROOM);
                         refundBonemeal();
-                    } else return;
+                    } else
+                        return;
                 }
             }
         }
-        if ((b.getType() == Material.SUGAR_CANE || b.getType() == Material.CACTUS) && b.getData() < 0x15 && b.getRelative(0, 1, 0).getType() == Material.AIR) {
+        if ((b.getType() == Material.SUGAR_CANE || b.getType() == Material.CACTUS) && b.getData() < 0x15
+                && b.getRelative(0, 1, 0).getType() == Material.AIR) {
             if (consumeBonemeal()) {
                 b.getRelative(0, 1, 0).setType(b.getType());
             }
@@ -129,7 +136,8 @@ public class BonemealTerraformer extends AbstractSelfTriggeredIC {
             }
             return;
         }
-        if (b.getType() == Material.GRASS_BLOCK && b.getRelative(0, 1, 0).getType() == Material.AIR && CraftBookPlugin.inst().getRandom().nextInt(15) == 0) {
+        if (b.getType() == Material.GRASS_BLOCK && b.getRelative(0, 1, 0).getType() == Material.AIR
+                && CraftBookPlugin.inst().getRandom().nextInt(15) == 0) {
             if (consumeBonemeal()) {
                 int t = CraftBookPlugin.inst().getRandom().nextInt(7);
                 if (t == 0) {
@@ -146,19 +154,22 @@ public class BonemealTerraformer extends AbstractSelfTriggeredIC {
             }
             return;
         }
-        if (b.getType() == Material.SAND && b.getRelative(0, 1, 0).getType() == Material.AIR && CraftBookPlugin.inst().getRandom().nextInt(15) == 0) {
+        if (b.getType() == Material.SAND && b.getRelative(0, 1, 0).getType() == Material.AIR
+                && CraftBookPlugin.inst().getRandom().nextInt(15) == 0) {
             if (consumeBonemeal()) {
                 b.getRelative(0, 1, 0).setType(Material.DEAD_BUSH);
             }
             return;
         }
-        if (b.getType() == Material.VINE && b.getRelative(0, -1, 0).getType() == Material.AIR && CraftBookPlugin.inst().getRandom().nextInt(15) == 0) {
+        if (b.getType() == Material.VINE && b.getRelative(0, -1, 0).getType() == Material.AIR
+                && CraftBookPlugin.inst().getRandom().nextInt(15) == 0) {
             if (consumeBonemeal()) {
                 b.getRelative(0, -1, 0).setBlockData(b.getBlockData(), true);
             }
             return;
         }
-        if (b.getType() == Material.WATER && b.getRelative(0, 1, 0).getType() == Material.AIR && CraftBookPlugin.inst().getRandom().nextInt(30) == 0) {
+        if (b.getType() == Material.WATER && b.getRelative(0, 1, 0).getType() == Material.AIR
+                && CraftBookPlugin.inst().getRandom().nextInt(30) == 0) {
             if (consumeBonemeal()) {
                 b.getRelative(0, 1, 0).setType(Material.LILY_PAD);
             }
@@ -181,15 +192,18 @@ public class BonemealTerraformer extends AbstractSelfTriggeredIC {
     public boolean consumeBonemeal() {
 
         Block chest = getBackBlock().getRelative(0, 1, 0);
-        return InventoryUtil.doesBlockHaveInventory(chest) && InventoryUtil.removeItemsFromInventory((InventoryHolder) chest.getState(),
-                new ItemStack(Material.BONE_MEAL, 1));
+        return InventoryUtil.doesBlockHaveInventory(chest)
+                && InventoryUtil.removeItemsFromInventory((InventoryHolder) chest.getState(),
+                        new ItemStack(Material.BONE_MEAL, 1));
 
     }
 
     public boolean refundBonemeal() {
 
         Block chest = getBackBlock().getRelative(0, 1, 0);
-        return InventoryUtil.doesBlockHaveInventory(chest) && InventoryUtil.addItemsToInventory((InventoryHolder) chest.getState(), new ItemStack(Material.BONE_MEAL, 1)).isEmpty();
+        return InventoryUtil.doesBlockHaveInventory(chest) && InventoryUtil
+                .addItemsToInventory((InventoryHolder) chest.getState(), new ItemStack(Material.BONE_MEAL, 1))
+                .isEmpty();
 
     }
 
@@ -294,12 +308,12 @@ public class BonemealTerraformer extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"+oradius=x:y:z", null};
+            return new String[]{"+oradius=x:y:z", null};
         }
 
         @Override
         public void verify(ChangedSign sign) throws ICVerificationException {
-            if(!SearchArea.isValidArea(CraftBookBukkitUtil.toSign(sign).getBlock(), sign.getLine(2)))
+            if (!SearchArea.isValidArea(CraftBookBukkitUtil.toSign(sign).getBlock(), sign.getLine(2)))
                 throw new ICVerificationException("Invalid SearchArea on 3rd line!");
         }
     }

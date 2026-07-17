@@ -45,7 +45,7 @@ public class RangedOutput extends AbstractSelfTriggeredIC {
         chip.setOutput(0, shouldOutput(chip));
     }
 
-    int min,max;
+    int min, max;
 
     int ticks = 0;
     int maxTicks = 0;

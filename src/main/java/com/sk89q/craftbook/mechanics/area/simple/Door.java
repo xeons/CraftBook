@@ -3,15 +3,15 @@ package com.sk89q.craftbook.mechanics.area.simple;
 // $Id$
 /*
  * CraftBook Copyright (C) 2010 sk89q <http://www.sk89q.com>
- * 
+ *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
  * License as published by the Free
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
  * warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with this program. If not,
  * see <http://www.gnu.org/licenses/>.
  */
@@ -64,14 +64,17 @@ public class Door extends CuboidToggleMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onSignChange(SignChangeEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event))
+            return;
 
-        if(!event.getLine(1).equalsIgnoreCase("[door]") && !event.getLine(1).equalsIgnoreCase("[door up]") && !event.getLine(1).equalsIgnoreCase("[door down]")) return;
+        if (!event.getLine(1).equalsIgnoreCase("[door]") && !event.getLine(1).equalsIgnoreCase("[door up]")
+                && !event.getLine(1).equalsIgnoreCase("[door down]"))
+            return;
 
         CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
-        if(!player.hasPermission("craftbook.mech.door")) {
-            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+        if (!player.hasPermission("craftbook.mech.door")) {
+            if (CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
                 player.printError("mech.create-permission");
             SignUtil.cancelSign(event);
             return;
@@ -84,31 +87,35 @@ public class Door extends CuboidToggleMechanic {
 
         player.print("mech.door.create");
 
-        if(event.getLine(1).equalsIgnoreCase("[door]"))
+        if (event.getLine(1).equalsIgnoreCase("[door]"))
             event.setLine(1, "[Door]");
-        else if(event.getLine(1).equalsIgnoreCase("[door up]"))
+        else if (event.getLine(1).equalsIgnoreCase("[door up]"))
             event.setLine(1, "[Door Up]");
-        else if(event.getLine(1).equalsIgnoreCase("[door down]"))
+        else if (event.getLine(1).equalsIgnoreCase("[door down]"))
             event.setLine(1, "[Door Down]");
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onRightClick(SignClickEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event))
+            return;
 
-        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
-        if (!isApplicableSign(CraftBookBukkitUtil.toChangedSign(event.getClickedBlock()).getLine(1))) return;
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK)
+            return;
+        if (!isApplicableSign(CraftBookBukkitUtil.toChangedSign(event.getClickedBlock()).getLine(1)))
+            return;
 
         CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
         if (!player.hasPermission("craftbook.mech.door.use")) {
-            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+            if (CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
                 player.printError("mech.use-permission");
             return;
         }
 
-        if(!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
-            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+        if (!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(),
+                event.getAction())) {
+            if (CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
                 player.printError("area.use-permissions");
             return;
         }
@@ -116,25 +123,31 @@ public class Door extends CuboidToggleMechanic {
         try {
             ChangedSign sign = event.getSign();
 
-            if (CraftBookPlugin.inst().getConfiguration().safeDestruction && sign != null && !sign.getLine(0).equalsIgnoreCase("infinite"))
+            if (CraftBookPlugin.inst().getConfiguration().safeDestruction && sign != null
+                    && !sign.getLine(0).equalsIgnoreCase("infinite"))
                 if (event.getPlayer().getInventory().getItemInMainHand().getType() != Material.AIR)
-                    if (getBlockBase(event.getClickedBlock()).getType() == event.getPlayer().getInventory().getItemInMainHand().getType() && getBlockBase(event.getClickedBlock()).getData() == event.getPlayer().getInventory().getItemInMainHand().getData().getData()) {
+                    if (getBlockBase(event.getClickedBlock()).getType() == event.getPlayer().getInventory()
+                            .getItemInMainHand().getType()
+                            && getBlockBase(event.getClickedBlock()).getData() == event.getPlayer().getInventory()
+                                    .getItemInMainHand().getData().getData()) {
 
                         if (!player.hasPermission("craftbook.mech.door.restock")) {
-                            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+                            if (CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
                                 player.printError("mech.restock-permission");
                             return;
                         }
 
                         int amount = 1;
-                        if (event.getPlayer().isSneaking() && event.getPlayer().getInventory().getItemInMainHand().getAmount() >= 5) {
+                        if (event.getPlayer().isSneaking()
+                                && event.getPlayer().getInventory().getItemInMainHand().getAmount() >= 5) {
                             amount = 5;
                         }
                         addBlocks(sign, CraftBookBukkitUtil.toChangedSign(getFarSign(event.getClickedBlock())), amount);
 
                         if (enforceType) {
                             BlockType blockType = player.getItemInHand(HandSide.MAIN_HAND).getType().getBlockType();
-                            sign.setLine(0, sign.getLine(0) + ',' + BlockSyntax.toMinifiedId(blockType.getFuzzyMatcher()));
+                            sign.setLine(0,
+                                    sign.getLine(0) + ',' + BlockSyntax.toMinifiedId(blockType.getFuzzyMatcher()));
                             sign.update(false);
                         }
 
@@ -142,7 +155,8 @@ public class Door extends CuboidToggleMechanic {
                             if (event.getPlayer().getInventory().getItemInMainHand().getAmount() <= amount)
                                 event.getPlayer().getInventory().setItemInMainHand(new ItemStack(Material.AIR, 0));
                             else
-                                event.getPlayer().getInventory().getItemInMainHand().setAmount(event.getPlayer().getInventory().getItemInMainHand().getAmount() - amount);
+                                event.getPlayer().getInventory().getItemInMainHand().setAmount(
+                                        event.getPlayer().getInventory().getItemInMainHand().getAmount() - amount);
 
                         player.print("mech.restock");
                         event.setCancelled(true);
@@ -151,10 +165,10 @@ public class Door extends CuboidToggleMechanic {
 
             event.setCancelled(true);
 
-            if(flipState(event.getClickedBlock(), player))
+            if (flipState(event.getClickedBlock(), player))
                 player.print("mech.door.toggle");
         } catch (InvalidMechanismException e) {
-            if(e.getMessage() != null)
+            if (e.getMessage() != null)
                 player.printError(e.getMessage());
         }
     }
@@ -162,13 +176,18 @@ public class Door extends CuboidToggleMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockRedstoneChange(final SourcedBlockRedstoneEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event))
+            return;
 
-        if (!allowRedstone) return;
-        if (event.isMinor()) return;
+        if (!allowRedstone)
+            return;
+        if (event.isMinor())
+            return;
 
-        if (!SignUtil.isSign(event.getBlock())) return;
-        if (!isApplicableSign(CraftBookBukkitUtil.toChangedSign(event.getBlock()).getLine(1))) return;
+        if (!SignUtil.isSign(event.getBlock()))
+            return;
+        if (!isApplicableSign(CraftBookBukkitUtil.toChangedSign(event.getBlock()).getLine(1)))
+            return;
 
         Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), () -> {
             try {
@@ -180,7 +199,8 @@ public class Door extends CuboidToggleMechanic {
 
     public boolean flipState(Block trigger, CraftBookPlayer player) throws InvalidMechanismException {
 
-        if (!SignUtil.isCardinal(trigger)) throw new InvalidMechanismException();
+        if (!SignUtil.isCardinal(trigger))
+            throw new InvalidMechanismException();
 
         ChangedSign sign = CraftBookBukkitUtil.toChangedSign(trigger);
 
@@ -196,7 +216,8 @@ public class Door extends CuboidToggleMechanic {
         // Find the other side
         Block farSide = getFarSign(trigger);
 
-        if (farSide.getType() != trigger.getType()) throw new InvalidMechanismException("mech.door.other-sign");
+        if (farSide.getType() != trigger.getType())
+            throw new InvalidMechanismException("mech.door.other-sign");
 
         // Check the other side's base blocks for matching type
         Block distalBaseCenter = null;
@@ -281,21 +302,25 @@ public class Door extends CuboidToggleMechanic {
             proximalBaseCenter = trigger.getRelative(BlockFace.UP);
         } else if (s.getLine(1).equalsIgnoreCase("[Door Down]")) {
             proximalBaseCenter = trigger.getRelative(BlockFace.DOWN);
-        } else throw new InvalidMechanismException("Sign is incorrectly made.");
+        } else
+            throw new InvalidMechanismException("Sign is incorrectly made.");
 
         if (Blocks.containsFuzzy(blocks, BukkitAdapter.adapt(proximalBaseCenter.getBlockData())))
             return proximalBaseCenter;
-        else throw new InvalidMechanismException("mech.door.unusable");
+        else
+            throw new InvalidMechanismException("mech.door.unusable");
     }
 
     @Override
-    public CuboidRegion getCuboidArea(Block trigger, Block proximalBaseCenter, Block distalBaseCenter) throws InvalidMechanismException {
+    public CuboidRegion getCuboidArea(Block trigger, Block proximalBaseCenter, Block distalBaseCenter)
+            throws InvalidMechanismException {
         double distance = proximalBaseCenter.getLocation().distanceSquared(distalBaseCenter.getLocation());
-        if (distance <= 2*2) {
+        if (distance <= 2 * 2) {
             throw new InvalidMechanismException("Door too short!");
         }
         // Select the togglable region
-        CuboidRegion toggle = new CuboidRegion(CraftBookBukkitUtil.toVector(proximalBaseCenter), CraftBookBukkitUtil.toVector(distalBaseCenter));
+        CuboidRegion toggle = new CuboidRegion(CraftBookBukkitUtil.toVector(proximalBaseCenter),
+                CraftBookBukkitUtil.toVector(distalBaseCenter));
         ChangedSign sign = CraftBookBukkitUtil.toChangedSign(trigger);
         int left, right;
         try {
@@ -311,14 +336,16 @@ public class Door extends CuboidToggleMechanic {
 
         // Expand Left
         for (int i = 0; i < left; i++) {
-            if(distalBaseCenter.getRelative(SignUtil.getLeft(trigger), i).getType() != proximalBaseCenter.getRelative(SignUtil.getLeft(trigger), i).getType())
+            if (distalBaseCenter.getRelative(SignUtil.getLeft(trigger), i).getType() != proximalBaseCenter
+                    .getRelative(SignUtil.getLeft(trigger), i).getType())
                 throw new InvalidMechanismException("mech.door.material");
             toggle.expand(CraftBookBukkitUtil.toVector(SignUtil.getLeft(trigger)), BlockVector3.ZERO);
         }
 
         // Expand Right
         for (int i = 0; i < right; i++) {
-            if(distalBaseCenter.getRelative(SignUtil.getRight(trigger), i).getType() != proximalBaseCenter.getRelative(SignUtil.getRight(trigger), i).getType())
+            if (distalBaseCenter.getRelative(SignUtil.getRight(trigger), i).getType() != proximalBaseCenter
+                    .getRelative(SignUtil.getRight(trigger), i).getType())
                 throw new InvalidMechanismException("mech.door.material");
             toggle.expand(CraftBookBukkitUtil.toVector(SignUtil.getRight(trigger)), BlockVector3.ZERO);
         }
@@ -349,7 +376,7 @@ public class Door extends CuboidToggleMechanic {
     }
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadConfiguration(YAMLProcessor config, String path) {
         super.loadConfiguration(config, path);
 
         config.setComment(path + "allow-redstone", "Allow doors to be toggled via redstone.");

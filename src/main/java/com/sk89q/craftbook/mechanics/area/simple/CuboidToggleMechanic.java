@@ -38,7 +38,8 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
 
     public abstract Block getBlockBase(Block trigger) throws InvalidMechanismException;
 
-    public abstract CuboidRegion getCuboidArea(Block trigger, Block proximalBaseCenter, Block distalBaseCenter) throws InvalidMechanismException;
+    public abstract CuboidRegion getCuboidArea(Block trigger, Block proximalBaseCenter, Block distalBaseCenter)
+            throws InvalidMechanismException;
 
     public abstract boolean isApplicableSign(String line);
 
@@ -58,7 +59,8 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
         return true;
     }
 
-    public static boolean close(Block sign, Block farSide, BlockData data, CuboidRegion toggle, CraftBookPlayer player) {
+    public static boolean close(Block sign, Block farSide, BlockData data, CuboidRegion toggle,
+            CraftBookPlayer player) {
 
         ChangedSign s = CraftBookBukkitUtil.toChangedSign(sign);
         ChangedSign other = CraftBookBukkitUtil.toChangedSign(farSide);
@@ -87,18 +89,21 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onPipeFinish(PipeFinishEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event))
+            return;
 
-        if(!SignUtil.isSign(event.getOrigin())) return;
+        if (!SignUtil.isSign(event.getOrigin()))
+            return;
         ChangedSign sign = CraftBookBukkitUtil.toChangedSign(event.getOrigin());
 
-        if(!isApplicableSign(sign.getLine(1))) return;
+        if (!isApplicableSign(sign.getLine(1)))
+            return;
 
         List<ItemStack> leftovers = new ArrayList<>();
         try {
             Block base = getBlockBase(event.getOrigin());
-            for(ItemStack stack : event.getItems()) {
-                if(stack.getType() != base.getType() || stack.getData().getData() != base.getData()) {
+            for (ItemStack stack : event.getItems()) {
+                if (stack.getType() != base.getType() || stack.getData().getData() != base.getData()) {
                     leftovers.add(stack);
                     continue;
                 }
@@ -114,18 +119,21 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onPipePut(PipePutEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event))
+            return;
 
-        if(!SignUtil.isSign(event.getPuttingBlock())) return;
+        if (!SignUtil.isSign(event.getPuttingBlock()))
+            return;
         ChangedSign sign = CraftBookBukkitUtil.toChangedSign(event.getPuttingBlock());
 
-        if(!isApplicableSign(sign.getLine(1))) return;
+        if (!isApplicableSign(sign.getLine(1)))
+            return;
 
         List<ItemStack> leftovers = new ArrayList<>();
         try {
             Block base = getBlockBase(event.getPuttingBlock());
-            for(ItemStack stack : event.getItems()) {
-                if(stack.getType() != base.getType() || stack.getData().getData() != base.getData()) {
+            for (ItemStack stack : event.getItems()) {
+                if (stack.getType() != base.getType() || stack.getData().getData() != base.getData()) {
                     leftovers.add(stack);
                     continue;
                 }
@@ -141,18 +149,21 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onPipeSuck(PipeSuckEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event))
+            return;
 
-        if(!SignUtil.isSign(event.getSuckedBlock())) return;
+        if (!SignUtil.isSign(event.getSuckedBlock()))
+            return;
         ChangedSign sign = CraftBookBukkitUtil.toChangedSign(event.getSuckedBlock());
 
-        if(!isApplicableSign(sign.getLine(1))) return;
+        if (!isApplicableSign(sign.getLine(1)))
+            return;
 
         List<ItemStack> items = event.getItems();
         try {
             Block base = getBlockBase(event.getSuckedBlock());
             int blocks = getBlocks(sign, null);
-            if(blocks > 0) {
+            if (blocks > 0) {
                 items.add(new ItemStack(base.getType(), blocks, base.getData()));
                 setBlocks(sign, 0);
             }
@@ -164,10 +175,13 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockBreak(BlockBreakEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event))
+            return;
 
-        if (!SignUtil.isSign(event.getBlock())) return;
-        if (!isApplicableSign(CraftBookBukkitUtil.toChangedSign(event.getBlock()).getLine(1))) return;
+        if (!SignUtil.isSign(event.getBlock()))
+            return;
+        if (!isApplicableSign(CraftBookBukkitUtil.toChangedSign(event.getBlock()).getLine(1)))
+            return;
 
         CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
@@ -176,7 +190,8 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
         if (SignUtil.isSign(event.getBlock()))
             sign = CraftBookBukkitUtil.toChangedSign(event.getBlock());
 
-        if (sign == null) return;
+        if (sign == null)
+            return;
 
         other = CraftBookBukkitUtil.toChangedSign(getFarSign(event.getBlock()));
 
@@ -186,13 +201,13 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
             BlockData base;
             try {
                 base = getBlockType(event.getBlock());
-                while(amount > 0) {
+                while (amount > 0) {
                     ItemStack toDrop = new ItemStack(base.getMaterial(), Math.min(amount, 64));
                     event.getBlock().getWorld().dropItemNaturally(event.getBlock().getLocation(), toDrop);
                     amount -= 64;
                 }
             } catch (InvalidMechanismException e) {
-                if(e.getMessage() != null)
+                if (e.getMessage() != null)
                     player.printError(e.getMessage());
             }
         }
@@ -200,7 +215,8 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
 
     public static boolean removeBlocks(ChangedSign s, ChangedSign other, int amount) {
 
-        if (s.getLine(0).equalsIgnoreCase("infinite")) return true;
+        if (s.getLine(0).equalsIgnoreCase("infinite"))
+            return true;
         int curBlocks = getBlocks(s, other) - amount;
         if (s.getLine(0).contains(",")) {
             s.setLine(0, String.valueOf(curBlocks) + ',' + s.getLine(0).split(",")[1]);
@@ -213,7 +229,8 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
 
     public static boolean addBlocks(ChangedSign s, ChangedSign other, int amount) {
 
-        if (s.getLine(0).equalsIgnoreCase("infinite")) return true;
+        if (s.getLine(0).equalsIgnoreCase("infinite"))
+            return true;
         int curBlocks = getBlocks(s, other) + amount;
         if (s.getLine(0).contains(",")) {
             s.setLine(0, String.valueOf(curBlocks) + ',' + s.getLine(0).split(",")[1]);
@@ -226,7 +243,8 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
 
     public static void setBlocks(ChangedSign s, int amount) {
 
-        if (s.getLine(0).split(",")[0].equalsIgnoreCase("infinite")) return;
+        if (s.getLine(0).split(",")[0].equalsIgnoreCase("infinite"))
+            return;
         if (s.getLine(0).contains(",")) {
             s.setLine(0, String.valueOf(amount) + ',' + s.getLine(0).split(",")[1]);
         } else {
@@ -237,12 +255,13 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
 
     public static int getBlocks(ChangedSign s, ChangedSign other) {
 
-        if (s.getLine(0).split(",")[0].equalsIgnoreCase("infinite") || other != null && other.getLine(0).split(",")[0].equalsIgnoreCase("infinite"))
+        if (s.getLine(0).split(",")[0].equalsIgnoreCase("infinite")
+                || other != null && other.getLine(0).split(",")[0].equalsIgnoreCase("infinite"))
             return 0;
         int curBlocks = 0;
         try {
             curBlocks = Integer.parseInt(s.getLine(0).split(",")[0]);
-            if(other != null && Objects.equals(getStoredType(other), getStoredType(s))) {
+            if (other != null && Objects.equals(getStoredType(other), getStoredType(s))) {
                 try {
                     curBlocks += Integer.parseInt(other.getLine(0).split(",")[0]);
                     setBlocks(s, curBlocks);
@@ -287,7 +306,8 @@ public abstract class CuboidToggleMechanic extends AbstractCraftBookMechanic {
             }
             if (type == null) {
                 type = this.getBlockBase(block).getBlockData();
-                sign.setLine(0, sign.getLine(0) + ',' + BlockSyntax.toMinifiedId(BukkitAdapter.adapt(type).getBlockType().getFuzzyMatcher()));
+                sign.setLine(0, sign.getLine(0) + ','
+                        + BlockSyntax.toMinifiedId(BukkitAdapter.adapt(type).getBlockType().getFuzzyMatcher()));
                 sign.update(false);
             }
             return type;

@@ -22,7 +22,7 @@ import java.util.Map.Entry;
 
 /**
  * Writes reports.
- * 
+ *
  * Based off of WorldGuard.
  */
 public class ReportWriter {
@@ -54,7 +54,7 @@ public class ReportWriter {
     }
 
     protected static String repeat(String str, int n) {
-        if(str == null) {
+        if (str == null) {
             return null;
         }
 
@@ -75,7 +75,7 @@ public class ReportWriter {
         output.append("\r\n");
     }
 
-    protected void appendln(String text, Object ... args) {
+    protected void appendln(String text, Object... args) {
         output.append(String.format(text, args));
         output.append("\r\n");
     }
@@ -111,8 +111,10 @@ public class ReportWriter {
         Class<? extends BukkitConfiguration> cls = config.getClass();
         for (Field field : cls.getFields()) {
             try {
-                if (field.getName().equalsIgnoreCase("config")) continue;
-                if (field.getName().equalsIgnoreCase("plugin")) continue;
+                if (field.getName().equalsIgnoreCase("config"))
+                    continue;
+                if (field.getName().equalsIgnoreCase("plugin"))
+                    continue;
                 Object val = field.get(config);
                 configLog.put(field.getName(), val);
             } catch (IllegalArgumentException e) {
@@ -169,7 +171,7 @@ public class ReportWriter {
         log.put("Max memory", runtime.maxMemory() / 1024 / 1024 + " MB");
         log.put("Total memory", runtime.totalMemory() / 1024 / 1024 + " MB");
         log.put("Implementation", server.getVersion());
-        //log.put("Address", server.getIp(), server.getPort());
+        // log.put("Address", server.getIp(), server.getPort());
         log.put("Player count", "%d/%d",
                 server.getOnlinePlayers().size(), server.getMaxPlayers());
 
@@ -184,7 +186,10 @@ public class ReportWriter {
 
         int i = CraftBookPlugin.inst().getMechanics().size();
         log.put("Mechanics Loaded", "%d", i);
-        log.put("ST Mechanics Loaded", "%d", plugin.getSelfTriggerManager() == null ? 0 : plugin.getSelfTriggerManager().getSelfTriggeringMechanics().size());
+        log.put("ST Mechanics Loaded", "%d",
+                plugin.getSelfTriggerManager() == null
+                        ? 0
+                        : plugin.getSelfTriggerManager().getSelfTriggeringMechanics().size());
 
         append(log);
         appendln();
@@ -193,18 +198,18 @@ public class ReportWriter {
 
         log = new LogListBlock();
 
-        for(CraftBookMechanic mech : CraftBookPlugin.inst().getMechanics())
+        for (CraftBookMechanic mech : CraftBookPlugin.inst().getMechanics())
             log.put(mech.getClass().getSimpleName(), mech.getClass().getPackage().toString());
 
         append(log);
         appendln();
 
-        if(flags.contains("i")) {
+        if (flags.contains("i")) {
 
             appendHeader("Loaded Self Triggering ICs");
 
             log = new LogListBlock();
-            for(Entry<Location, IC> mech : ICManager.getCachedICs().entrySet()) {
+            for (Entry<Location, IC> mech : ICManager.getCachedICs().entrySet()) {
                 log.put(mech.getKey().toString(), "%s", mech.getValue().getSign().toString());
             }
             append(log);
@@ -217,24 +222,24 @@ public class ReportWriter {
 
         LogListBlock log = new LogListBlock();
 
-        if(RecipeManager.INSTANCE == null) {
-            log.put("CustomCrafting is disabled!","");
+        if (RecipeManager.INSTANCE == null) {
+            log.put("CustomCrafting is disabled!", "");
             append(log);
             appendln();
             return;
         }
 
-        for(Recipe rec : RecipeManager.INSTANCE.getRecipes()) {
+        for (Recipe rec : RecipeManager.INSTANCE.getRecipes()) {
 
             log.put("Recipe ID", "%s", rec.getId());
             log.put("Recipe Type", "%s", rec.getType().name());
-            if(rec.getType() == RecipeType.SHAPED) {
+            if (rec.getType() == RecipeType.SHAPED) {
                 log.put("Recipe Shape", Arrays.toString(rec.getShape()));
-                for(Entry<CraftingItemStack, Character> bits : rec.getShapedIngredients().entrySet()) {
+                for (Entry<CraftingItemStack, Character> bits : rec.getShapedIngredients().entrySet()) {
                     log.put("Ingredient", "%s %c", bits.getKey().toString(), bits.getValue());
                 }
             } else {
-                for(CraftingItemStack bits : rec.getIngredients())
+                for (CraftingItemStack bits : rec.getIngredients())
                     log.put("Ingredient", "%s", bits.toString());
             }
             log.put("Result", "%s", rec.getResult().toString());
@@ -257,19 +262,17 @@ public class ReportWriter {
         append(log);
         appendln();
 
-        /*appendHeader("Plugin Information");
-
-            log = new LogListBlock();
-
-            for (Plugin plugin : plugins) {
-                log.putChild(plugin.getDescription().getName())
-                    .put("Data folder", plugin.getDataFolder())
-                    .put("Website", plugin.getDescription().getWebsite())
-                    .put("Entry point", plugin.getDescription().getMain());
-            }
-
-            append(log);
-            appendln();*/
+        /*
+         * appendHeader("Plugin Information");
+         *
+         * log = new LogListBlock();
+         *
+         * for (Plugin plugin : plugins) { log.putChild(plugin.getDescription().getName()) .put("Data folder",
+         * plugin.getDataFolder()) .put("Website", plugin.getDescription().getWebsite()) .put("Entry point",
+         * plugin.getDescription().getMain()); }
+         *
+         * append(log); appendln();
+         */
     }
 
     public void write(File file) throws IOException {
@@ -296,11 +299,11 @@ public class ReportWriter {
         return output.toString();
     }
 
-    public String getFlags () {
+    public String getFlags() {
         return flags;
     }
 
-    public void appendFlags (String flags) {
+    public void appendFlags(String flags) {
         this.flags = this.flags + flags;
     }
 }

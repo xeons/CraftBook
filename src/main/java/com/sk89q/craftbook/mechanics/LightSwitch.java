@@ -1,15 +1,15 @@
 // $Id$
 /*
  * CraftBook Copyright (C) 2010 sk89q <http://www.sk89q.com>
- * 
+ *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
  * License as published by the Free
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
  * warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with this program. If not,
  * see <http://www.gnu.org/licenses/>.
  */
@@ -37,9 +37,8 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
 
 /**
- * Handler for Light switches. Toggles all torches in the area from being redstone to normal torches. This is done
- * every time a sign with [|] or [I]
- * is right clicked by a player.
+ * Handler for Light switches. Toggles all torches in the area from being redstone to normal torches. This is done every
+ * time a sign with [|] or [I] is right clicked by a player.
  *
  * @author fullwall
  */
@@ -60,12 +59,14 @@ public class LightSwitch extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onSignChange(SignChangeEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event))
+            return;
 
-        if(!event.getLine(1).equalsIgnoreCase("[i]") && !event.getLine(1).equalsIgnoreCase("[|]")) return;
+        if (!event.getLine(1).equalsIgnoreCase("[i]") && !event.getLine(1).equalsIgnoreCase("[|]"))
+            return;
         CraftBookPlayer lplayer = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
-        if(!lplayer.hasPermission("craftbook.mech.light-switch")) {
-            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+        if (!lplayer.hasPermission("craftbook.mech.light-switch")) {
+            if (CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
                 lplayer.printError("You don't have permission for this.");
             SignUtil.cancelSign(event);
             return;
@@ -78,23 +79,26 @@ public class LightSwitch extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onRightClick(SignClickEvent event) {
 
-        if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK)
+            return;
 
         ChangedSign sign = event.getSign();
-        if(!sign.getLine(1).equalsIgnoreCase("[I]") && !sign.getLine(1).equalsIgnoreCase("[|]")) return;
+        if (!sign.getLine(1).equalsIgnoreCase("[I]") && !sign.getLine(1).equalsIgnoreCase("[|]"))
+            return;
 
         if (!EventUtil.passesFilter(event))
             return;
 
         CraftBookPlayer player = event.getWrappedPlayer();
         if (!player.hasPermission("craftbook.mech.light-switch.use")) {
-            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+            if (CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
                 player.printError("mech.use-permission");
             return;
         }
 
-        if(!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
-            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+        if (!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(),
+                event.getAction())) {
+            if (CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
                 player.printError("area.use-permissions");
             return;
         }
@@ -108,13 +112,14 @@ public class LightSwitch extends AbstractCraftBookMechanic {
      *
      * @param block
      *
-     * @return true if the block was recogized as a lightswitch; this may or may not mean that any lights were
-     *         actually toggled.
+     * @return true if the block was recogized as a lightswitch; this may or may not mean that any lights were actually
+     *         toggled.
      */
     private boolean toggleLights(Block block, CraftBookPlayer player) {
 
         // check if this looks at all like something we're interested in first
-        if (!SignUtil.isSign(block)) return false;
+        if (!SignUtil.isSign(block))
+            return false;
         int radius = Math.min(10, maxRange);
         int maximum = Math.min(maxLights, 20);
         ChangedSign sign = CraftBookBukkitUtil.toChangedSign(block);
@@ -152,14 +157,18 @@ public class LightSwitch extends AbstractCraftBookMechanic {
                     for (int z = -radius + wz; z <= radius + wz; z++) {
                         Block relBlock = block.getWorld().getBlockAt(x, y, z);
                         Material id = relBlock.getType();
-                        if (id == Material.TORCH || id == Material.WALL_TORCH || id == Material.REDSTONE_TORCH || id == Material.REDSTONE_WALL_TORCH) {
+                        if (id == Material.TORCH || id == Material.WALL_TORCH || id == Material.REDSTONE_TORCH
+                                || id == Material.REDSTONE_WALL_TORCH) {
                             // Limit the maximum number of changed lights
-                            if (changed >= maximum) return true;
+                            if (changed >= maximum)
+                                return true;
 
                             if (id == Material.WALL_TORCH || id == Material.REDSTONE_WALL_TORCH) {
                                 Directional currentData = (Directional) relBlock.getBlockData();
 
-                                Directional directional = (Directional) (on ? Material.WALL_TORCH : Material.REDSTONE_WALL_TORCH).createBlockData();
+                                Directional directional = (Directional) (on
+                                        ? Material.WALL_TORCH
+                                        : Material.REDSTONE_WALL_TORCH).createBlockData();
                                 directional.setFacing(currentData.getFacing());
                                 relBlock.setBlockData(directional, false);
                             } else {
@@ -179,12 +188,13 @@ public class LightSwitch extends AbstractCraftBookMechanic {
     private int maxLights;
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadConfiguration(YAMLProcessor config, String path) {
 
         config.setComment(path + "max-range", "The maximum range that the mechanic searches for lights in.");
         maxRange = config.getInt(path + "max-range", 10);
 
-        config.setComment(path + "max-lights", "The maximum amount of lights that a Light Switch can toggle per usage.");
+        config.setComment(path + "max-lights",
+                "The maximum amount of lights that a Light Switch can toggle per usage.");
         maxLights = config.getInt(path + "max-lights", 20);
     }
 }

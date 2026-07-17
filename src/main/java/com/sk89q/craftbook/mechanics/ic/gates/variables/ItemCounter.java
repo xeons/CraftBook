@@ -23,17 +23,17 @@ import com.sk89q.craftbook.util.RegexUtil;
 
 public class ItemCounter extends AbstractIC {
 
-    public ItemCounter (Server server, ChangedSign sign, ICFactory factory) {
+    public ItemCounter(Server server, ChangedSign sign, ICFactory factory) {
         super(server, sign, factory);
     }
 
     @Override
-    public String getTitle () {
+    public String getTitle() {
         return "Item Counter";
     }
 
     @Override
-    public String getSignTitle () {
+    public String getSignTitle() {
         return "ITEM COUNTER";
     }
 
@@ -48,17 +48,18 @@ public class ItemCounter extends AbstractIC {
     }
 
     @Override
-    public void trigger (ChipState chip) {
+    public void trigger(ChipState chip) {
 
-        if(chip.getInput(0)) {
+        if (chip.getInput(0)) {
 
             int amount = 0;
 
-            if(InventoryUtil.doesBlockHaveInventory(getBackBlock().getRelative(0, 1, 0))) {
+            if (InventoryUtil.doesBlockHaveInventory(getBackBlock().getRelative(0, 1, 0))) {
                 InventoryHolder chest = (InventoryHolder) getBackBlock().getRelative(0, 1, 0).getState();
-                for(ItemStack stack : chest.getInventory().getContents()) {
-                    if(!ItemUtil.isStackValid(stack)) continue;
-                    if(item == null || ItemUtil.areItemsIdentical(stack, item)) {
+                for (ItemStack stack : chest.getInventory().getContents()) {
+                    if (!ItemUtil.isStackValid(stack))
+                        continue;
+                    if (item == null || ItemUtil.areItemsIdentical(stack, item)) {
                         amount += stack.getAmount();
                     }
                 }
@@ -66,7 +67,7 @@ public class ItemCounter extends AbstractIC {
 
             chip.setOutput(0, amount > 0);
 
-            String var,key;
+            String var, key;
             var = VariableManager.getVariableName(variable);
             key = VariableManager.getNamespace(variable);
 
@@ -111,39 +112,41 @@ public class ItemCounter extends AbstractIC {
         @Override
         public String[] getPinDescription(ChipState state) {
 
-            return new String[] {
-                    "Trigger IC",//Inputs
-                    "High if found item"//Outputs
+            return new String[]{
+                    "Trigger IC", // Inputs
+                    "High if found item"// Outputs
             };
         }
 
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"Variable Name", "ItemSyntax"};
+            return new String[]{"Variable Name", "ItemSyntax"};
         }
 
         @Override
         public void checkPlayer(ChangedSign sign, CraftBookPlayer player) throws ICVerificationException {
 
             String[] parts = RegexUtil.PIPE_PATTERN.split(sign.getLine(2));
-            if(parts.length == 1) {
-                if(!VariableCommands.hasVariablePermission(((BukkitCraftBookPlayer) player).getPlayer(), "global", parts[0], "use"))
-                    throw new ICVerificationException("You do not have permissions to use the global variable namespace!");
-            } else
-                if(!VariableCommands.hasVariablePermission(((BukkitCraftBookPlayer) player).getPlayer(), parts[0], parts[1], "use"))
-                    throw new ICVerificationException("You do not have permissions to use the " + parts[0] + " variable namespace!");
+            if (parts.length == 1) {
+                if (!VariableCommands.hasVariablePermission(((BukkitCraftBookPlayer) player).getPlayer(), "global",
+                        parts[0], "use"))
+                    throw new ICVerificationException(
+                            "You do not have permissions to use the global variable namespace!");
+            } else if (!VariableCommands.hasVariablePermission(((BukkitCraftBookPlayer) player).getPlayer(), parts[0],
+                    parts[1], "use"))
+                throw new ICVerificationException(
+                        "You do not have permissions to use the " + parts[0] + " variable namespace!");
         }
 
         @Override
         public void verify(ChangedSign sign) throws ICVerificationException {
             String[] parts = RegexUtil.PIPE_PATTERN.split(sign.getLine(2));
-            if(parts.length == 1) {
-                if(!VariableManager.instance.hasVariable(sign.getLine(2), "global"))
+            if (parts.length == 1) {
+                if (!VariableManager.instance.hasVariable(sign.getLine(2), "global"))
                     throw new ICVerificationException("Unknown Variable!");
-            } else
-                if(!VariableManager.instance.hasVariable(parts[1], parts[0]))
-                    throw new ICVerificationException("Unknown Variable!");
+            } else if (!VariableManager.instance.hasVariable(parts[1], parts[0]))
+                throw new ICVerificationException("Unknown Variable!");
         }
     }
 }

@@ -114,18 +114,18 @@ public class Counter extends AbstractIC {
         @Override
         public String[] getPinDescription(ChipState state) {
 
-            return new String[] {
-                    "Trigger IC",//Inputs
+            return new String[]{
+                    "Trigger IC", // Inputs
                     "Reset Counter",
                     "Nothing",
-                    "High on Counter Complete"//Outputs
+                    "High on Counter Complete"// Outputs
             };
         }
 
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"reset ticks:(Optional)INF", "current ticks"};
+            return new String[]{"reset ticks:(Optional)INF", "current ticks"};
         }
     }
 }

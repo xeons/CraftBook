@@ -14,7 +14,8 @@ public class CartBlockImpactEvent extends VehicleMoveEvent {
     protected final CartMechanismBlocks blocks;
     protected final boolean minor;
 
-    public CartBlockImpactEvent(Minecart minecart, Location from, Location to, CartMechanismBlocks blocks, boolean minor) {
+    public CartBlockImpactEvent(Minecart minecart, Location from, Location to, CartMechanismBlocks blocks,
+            boolean minor) {
         super(minecart, from, to);
 
         this.blocks = blocks;

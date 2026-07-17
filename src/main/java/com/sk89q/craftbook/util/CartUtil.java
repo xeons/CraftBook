@@ -37,23 +37,24 @@ public final class CartUtil {
         EntityType type = cart.getType();
         final Minecart toCart;
 
-        if(type == EntityType.CHEST_MINECART) {
+        if (type == EntityType.CHEST_MINECART) {
             toCart = cart.getWorld().spawn(destination, StorageMinecart.class);
-            ((StorageMinecart) toCart).getInventory().setContents(((StorageMinecart) cart).getInventory().getContents());
+            ((StorageMinecart) toCart).getInventory()
+                    .setContents(((StorageMinecart) cart).getInventory().getContents());
             ((StorageMinecart) cart).getInventory().clear();
-        } else if(type == EntityType.FURNACE_MINECART) {
+        } else if (type == EntityType.FURNACE_MINECART) {
             toCart = cart.getWorld().spawn(destination, PoweredMinecart.class);
-        } else if(type == EntityType.HOPPER_MINECART) {
+        } else if (type == EntityType.HOPPER_MINECART) {
             toCart = cart.getWorld().spawn(destination, HopperMinecart.class);
             ((HopperMinecart) toCart).getInventory().setContents(((HopperMinecart) cart).getInventory().getContents());
             ((HopperMinecart) cart).getInventory().clear();
-        } else if(type == EntityType.SPAWNER_MINECART) {
+        } else if (type == EntityType.SPAWNER_MINECART) {
             toCart = cart.getWorld().spawn(destination, SpawnerMinecart.class);
-        } else if(type == EntityType.TNT_MINECART)
+        } else if (type == EntityType.TNT_MINECART)
             toCart = cart.getWorld().spawn(destination, ExplosiveMinecart.class);
-        else if(type == EntityType.COMMAND_BLOCK_MINECART) {
+        else if (type == EntityType.COMMAND_BLOCK_MINECART) {
             toCart = cart.getWorld().spawn(destination, CommandMinecart.class);
-            ((CommandMinecart) toCart).setCommand(((CommandMinecart)toCart).getCommand());
+            ((CommandMinecart) toCart).setCommand(((CommandMinecart) toCart).getCommand());
             ((CommandMinecart) toCart).setName(toCart.getName());
         } else
             toCart = cart.getWorld().spawn(destination, RideableMinecart.class);
@@ -79,19 +80,19 @@ public final class CartUtil {
 
     public static ItemStack getCartStack(Minecart cart) {
 
-        if(cart instanceof RideableMinecart)
+        if (cart instanceof RideableMinecart)
             return new ItemStack(Material.MINECART, 1);
-        else if(cart instanceof StorageMinecart)
+        else if (cart instanceof StorageMinecart)
             return new ItemStack(Material.CHEST_MINECART, 1);
-        else if(cart instanceof PoweredMinecart)
+        else if (cart instanceof PoweredMinecart)
             return new ItemStack(Material.FURNACE_MINECART, 1);
-        else if(cart instanceof ExplosiveMinecart)
+        else if (cart instanceof ExplosiveMinecart)
             return new ItemStack(Material.TNT_MINECART, 1);
-        else if(cart instanceof HopperMinecart)
+        else if (cart instanceof HopperMinecart)
             return new ItemStack(Material.HOPPER_MINECART, 1);
-        else if(cart instanceof CommandMinecart)
+        else if (cart instanceof CommandMinecart)
             return new ItemStack(Material.COMMAND_BLOCK_MINECART, 1);
-        else if(cart instanceof SpawnerMinecart)
+        else if (cart instanceof SpawnerMinecart)
             return new ItemStack(Material.MINECART, 1);
 
         return null;
@@ -99,14 +100,14 @@ public final class CartUtil {
 
     public static boolean isMinecart(Material material) {
         switch (material) {
-            case MINECART:
-            case CHEST_MINECART:
-            case COMMAND_BLOCK_MINECART:
-            case FURNACE_MINECART:
-            case HOPPER_MINECART:
-            case TNT_MINECART:
+            case MINECART :
+            case CHEST_MINECART :
+            case COMMAND_BLOCK_MINECART :
+            case FURNACE_MINECART :
+            case HOPPER_MINECART :
+            case TNT_MINECART :
                 return true;
-            default:
+            default :
                 return false;
         }
     }

@@ -11,7 +11,7 @@ import com.sk89q.craftbook.mechanics.ic.ICFactory;
 
 public class DeMultiplexer extends AbstractIC {
 
-    public DeMultiplexer (Server server, ChangedSign sign, ICFactory factory) {
+    public DeMultiplexer(Server server, ChangedSign sign, ICFactory factory) {
         super(server, sign, factory);
     }
 
@@ -44,11 +44,11 @@ public class DeMultiplexer extends AbstractIC {
         @Override
         public String[] getPinDescription(ChipState state) {
 
-            return new String[] {
-                    "Swaps between Output 2 and 3",//Inputs
+            return new String[]{
+                    "Swaps between Output 2 and 3", // Inputs
                     "Value to carry",
                     "Nothing",
-                    "Nothing",//Outputs
+                    "Nothing", // Outputs
                     "Output if Input 1 Low",
                     "Output if Input 1 High"
             };

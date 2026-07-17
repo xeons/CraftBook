@@ -17,17 +17,17 @@ import com.sk89q.craftbook.util.RegexUtil;
 
 public class IsAtLeast extends AbstractSelfTriggeredIC {
 
-    public IsAtLeast (Server server, ChangedSign sign, ICFactory factory) {
+    public IsAtLeast(Server server, ChangedSign sign, ICFactory factory) {
         super(server, sign, factory);
     }
 
     @Override
-    public String getTitle () {
+    public String getTitle() {
         return "Is At Least";
     }
 
     @Override
-    public String getSignTitle () {
+    public String getSignTitle() {
         return "IS AT LEAST";
     }
 
@@ -40,13 +40,14 @@ public class IsAtLeast extends AbstractSelfTriggeredIC {
         try {
             variable = getLine(2);
             amount = Double.parseDouble(getLine(3));
-        } catch(Exception ignored) {}
+        } catch (Exception ignored) {
+        }
     }
 
     @Override
-    public void trigger (ChipState chip) {
+    public void trigger(ChipState chip) {
 
-        if(chip.getInput(0)) {
+        if (chip.getInput(0)) {
             chip.setOutput(0, isAtLeast());
         }
     }
@@ -57,7 +58,7 @@ public class IsAtLeast extends AbstractSelfTriggeredIC {
     }
 
     public boolean isAtLeast() {
-        String var,key;
+        String var, key;
         var = VariableManager.getVariableName(variable);
         key = VariableManager.getNamespace(variable);
 
@@ -98,42 +99,44 @@ public class IsAtLeast extends AbstractSelfTriggeredIC {
         @Override
         public String[] getPinDescription(ChipState state) {
 
-            return new String[] {
-                    "Trigger IC",//Inputs
-                    "High if variable is at least"//Outputs
+            return new String[]{
+                    "Trigger IC", // Inputs
+                    "High if variable is at least"// Outputs
             };
         }
 
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"Variable Name", "Amount"};
+            return new String[]{"Variable Name", "Amount"};
         }
 
         @Override
         public void checkPlayer(ChangedSign sign, CraftBookPlayer player) throws ICVerificationException {
 
             String[] parts = RegexUtil.PIPE_PATTERN.split(sign.getLine(2));
-            if(parts.length == 1) {
-                if(!VariableCommands.hasVariablePermission(((BukkitCraftBookPlayer) player).getPlayer(), "global", parts[0], "use"))
-                    throw new ICVerificationException("You do not have permissions to use the global variable namespace!");
-            } else
-                if(!VariableCommands.hasVariablePermission(((BukkitCraftBookPlayer) player).getPlayer(), parts[0], parts[1], "use"))
-                    throw new ICVerificationException("You do not have permissions to use the " + parts[0] + " variable namespace!");
+            if (parts.length == 1) {
+                if (!VariableCommands.hasVariablePermission(((BukkitCraftBookPlayer) player).getPlayer(), "global",
+                        parts[0], "use"))
+                    throw new ICVerificationException(
+                            "You do not have permissions to use the global variable namespace!");
+            } else if (!VariableCommands.hasVariablePermission(((BukkitCraftBookPlayer) player).getPlayer(), parts[0],
+                    parts[1], "use"))
+                throw new ICVerificationException(
+                        "You do not have permissions to use the " + parts[0] + " variable namespace!");
         }
 
         @Override
         public void verify(ChangedSign sign) throws ICVerificationException {
             try {
                 String[] parts = RegexUtil.PIPE_PATTERN.split(sign.getLine(2));
-                if(parts.length == 1) {
-                    if(!VariableManager.instance.hasVariable(sign.getLine(2), "global"))
+                if (parts.length == 1) {
+                    if (!VariableManager.instance.hasVariable(sign.getLine(2), "global"))
                         throw new ICVerificationException("Unknown Variable!");
-                } else
-                    if(!VariableManager.instance.hasVariable(parts[1], parts[0]))
-                        throw new ICVerificationException("Unknown Variable!");
+                } else if (!VariableManager.instance.hasVariable(parts[1], parts[0]))
+                    throw new ICVerificationException("Unknown Variable!");
                 Double.parseDouble(sign.getLine(3));
-            } catch(NumberFormatException e) {
+            } catch (NumberFormatException e) {
                 throw new ICVerificationException("Amount must be a number!");
             }
         }

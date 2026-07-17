@@ -20,26 +20,26 @@ public class NoCheatPlusCompatability implements CraftBookCompatability {
     };
 
     @Override
-    public void enable (Player player) {
+    public void enable(Player player) {
         EnumSet<CheckType> dis;
-        if(disabledChecks.containsKey(player.getName()))
+        if (disabledChecks.containsKey(player.getName()))
             dis = disabledChecks.get(player.getName());
         else
             dis = EnumSet.noneOf(CheckType.class);
-        for(CheckType to : toDisable) {
-            if(!NCPExemptionManager.isExempted(player, to)) {
+        for (CheckType to : toDisable) {
+            if (!NCPExemptionManager.isExempted(player, to)) {
                 NCPExemptionManager.exemptPermanently(player, to);
                 dis.add(to);
             }
         }
-        if(dis.size() > 0)
+        if (dis.size() > 0)
             disabledChecks.put(player.getName(), dis);
     }
 
     @Override
-    public void disable (Player player) {
-        if(disabledChecks.containsKey(player.getName())) {
-            for(CheckType type : disabledChecks.get(player.getName()))
+    public void disable(Player player) {
+        if (disabledChecks.containsKey(player.getName())) {
+            for (CheckType type : disabledChecks.get(player.getName()))
                 NCPExemptionManager.unexempt(player, type);
             disabledChecks.remove(player.getName());
         }

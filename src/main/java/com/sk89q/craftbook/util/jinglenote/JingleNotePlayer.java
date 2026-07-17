@@ -18,7 +18,7 @@ public abstract class JingleNotePlayer implements Runnable {
 
     /**
      * Constructs a new JingleNotePlayer
-     * 
+     *
      * @param player The player who is hearing this's name.
      * @param seq The JingleSequencer to play.
      * @param area The SearchArea for this player. (optional)
@@ -33,7 +33,7 @@ public abstract class JingleNotePlayer implements Runnable {
     @Override
     public void run() {
 
-        if(sequencer == null)
+        if (sequencer == null)
             return;
         try {
             try {
@@ -42,7 +42,7 @@ public abstract class JingleNotePlayer implements Runnable {
                 CraftBookBukkitUtil.printStacktrace(t);
             }
 
-            while(isPlaying()){
+            while (isPlaying()) {
                 Thread.sleep(10L);
             }
         } catch (InterruptedException e) {

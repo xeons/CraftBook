@@ -169,9 +169,8 @@ public class CraftBookPlugin extends JavaPlugin {
     private Random random;
 
     /**
-     * Manager for commands. This automatically handles nested commands,
-     * permissions checking, and a number of other fancy command things.
-     * We just set it up and register commands against it.
+     * Manager for commands. This automatically handles nested commands, permissions checking, and a number of other
+     * fancy command things. We just set it up and register commands against it.
      */
     private CommandsManager<CommandSender> commands;
 
@@ -305,8 +304,7 @@ public class CraftBookPlugin extends JavaPlugin {
     }
 
     /**
-     * Construct objects. Actual loading occurs when the plugin is enabled, so
-     * this merely instantiates the objects.
+     * Construct objects. Actual loading occurs when the plugin is enabled, so this merely instantiates the objects.
      */
     public CraftBookPlugin() {
 
@@ -327,8 +325,8 @@ public class CraftBookPlugin extends JavaPlugin {
 
     public boolean isMechanicEnabled(Class<? extends CraftBookMechanic> clazz) {
 
-        for(CraftBookMechanic mech : mechanics) {
-            if(mech.getClass().equals(clazz))
+        for (CraftBookMechanic mech : mechanics) {
+            if (mech.getClass().equals(clazz))
                 return true;
         }
 
@@ -337,8 +335,8 @@ public class CraftBookPlugin extends JavaPlugin {
 
     public CraftBookMechanic getMechanic(Class<? extends CraftBookMechanic> clazz) {
 
-        for(CraftBookMechanic mech : mechanics) {
-            if(mech.getClass().equals(clazz))
+        for (CraftBookMechanic mech : mechanics) {
+            if (mech.getClass().equals(clazz))
                 return mech;
         }
 
@@ -347,7 +345,7 @@ public class CraftBookPlugin extends JavaPlugin {
 
     /**
      * Retrieve the UUID Mappings system of CraftBook.
-     * 
+     *
      * @return The UUID Mappings System.
      */
     public UUIDMappings getUUIDMappings() {
@@ -359,7 +357,7 @@ public class CraftBookPlugin extends JavaPlugin {
      * Retrieve the NMS Adapter.
      *
      * <p>
-     *     Note: This may not actually be using NMS.
+     * Note: This may not actually be using NMS.
      * </p>
      *
      * @return The NMS Adapter
@@ -395,7 +393,8 @@ public class CraftBookPlugin extends JavaPlugin {
 
         // Setup Config and the Commands Manager
         createDefaultConfiguration(new File(getDataFolder(), "config.yml"), "config.yml");
-        config = new BukkitConfiguration(new YAMLProcessor(new File(getDataFolder(), "config.yml"), true, YAMLFormat.EXTENDED), logger());
+        config = new BukkitConfiguration(
+                new YAMLProcessor(new File(getDataFolder(), "config.yml"), true, YAMLFormat.EXTENDED), logger());
         // Load the configuration
         try {
             config.load();
@@ -409,7 +408,7 @@ public class CraftBookPlugin extends JavaPlugin {
 
         persistentStorage = PersistentStorage.createFromType(config.persistentStorageType);
 
-        if(persistentStorage != null)
+        if (persistentStorage != null)
             persistentStorage.open();
 
         uuidMappings = new UUIDMappings();
@@ -437,7 +436,7 @@ public class CraftBookPlugin extends JavaPlugin {
         final CommandsManagerRegistration reg = new CommandsManagerRegistration(this, commands);
         reg.register(TopLevelCommands.class);
 
-        if(config.realisticRandoms)
+        if (config.realisticRandoms)
             try {
                 random = SecureRandom.getInstance("SHA1PRNG");
             } catch (NoSuchAlgorithmException e1) {
@@ -454,7 +453,7 @@ public class CraftBookPlugin extends JavaPlugin {
 
             @EventHandler(priority = EventPriority.LOWEST)
             public void signChange(SignChangeEvent event) {
-                for(int i = 0; i < event.getLines().length; i++) {
+                for (int i = 0; i < event.getLines().length; i++) {
                     StringBuilder builder = new StringBuilder();
                     for (char c : event.getLine(i).toCharArray()) {
                         if (c < 0xF700 || c > 0xF747) {
@@ -462,7 +461,7 @@ public class CraftBookPlugin extends JavaPlugin {
                         }
                     }
                     String fixed = builder.toString();
-                    if(!fixed.equals(event.getLine(i)))
+                    if (!fixed.equals(event.getLine(i)))
                         event.setLine(i, fixed);
                 }
             }
@@ -472,33 +471,37 @@ public class CraftBookPlugin extends JavaPlugin {
             @EventHandler(priority = EventPriority.HIGH)
             public void playerJoin(PlayerJoinEvent event) {
 
-                if(!event.getPlayer().isOp()) return;
+                if (!event.getPlayer().isOp())
+                    return;
 
                 boolean foundAMech = false;
 
-                for(CraftBookMechanic mech : getMechanics())
-                    if(!(mech instanceof VariableManager)) {
+                for (CraftBookMechanic mech : getMechanics())
+                    if (!(mech instanceof VariableManager)) {
                         foundAMech = true;
                         break;
                     }
 
-                if(!foundAMech) {
-                    event.getPlayer().sendMessage(ChatColor.RED + "[CraftBook] Warning! You have no mechanics enabled, the plugin will appear to do nothing until a feature is enabled!");
+                if (!foundAMech) {
+                    event.getPlayer().sendMessage(ChatColor.RED
+                            + "[CraftBook] Warning! You have no mechanics enabled, the plugin will appear to do nothing until a feature is enabled!");
                 }
             }
         }, this);
 
         boolean foundAMech = false;
 
-        for(CraftBookMechanic mech : mechanics)
-            if(!(mech instanceof VariableManager)) {
+        for (CraftBookMechanic mech : mechanics)
+            if (!(mech instanceof VariableManager)) {
                 foundAMech = true;
                 break;
             }
 
-        if(!foundAMech) {
+        if (!foundAMech) {
             Bukkit.getScheduler().runTaskTimer(this,
-                    () -> getLogger().warning(ChatColor.RED + "Warning! You have no mechanics enabled, the plugin will appear to do nothing until a feature is enabled!"), 20L, 20*60*5);
+                    () -> getLogger().warning(ChatColor.RED
+                            + "Warning! You have no mechanics enabled, the plugin will appear to do nothing until a feature is enabled!"),
+                    20L, 20 * 60 * 5);
         }
 
         PaperLib.suggestPaper(this);
@@ -511,7 +514,7 @@ public class CraftBookPlugin extends JavaPlugin {
      */
     public void setupCraftBook() {
 
-        if(config.debugLogToFile) {
+        if (config.debugLogToFile) {
             try {
                 debugLogger = new PrintWriter(new File(getDataFolder(), "debug.log"));
             } catch (FileNotFoundException e1) {
@@ -542,7 +545,9 @@ public class CraftBookPlugin extends JavaPlugin {
         mechanismsConfig.setWriteDefaults(true);
 
         mechanismsConfig.setHeader(
-                "# CraftBook Mechanism Configuration. Generated for version: " + (CraftBookPlugin.inst() == null ? CraftBookPlugin.getVersion() : CraftBookPlugin.inst().getDescription().getVersion()),
+                "# CraftBook Mechanism Configuration. Generated for version: " + (CraftBookPlugin.inst() == null
+                        ? CraftBookPlugin.getVersion()
+                        : CraftBookPlugin.inst().getDescription().getVersion()),
                 "# This configuration will automatically add new configuration options for you,",
                 "# So there is no need to regenerate this configuration unless you need to.",
                 "# More information about these features are available at...",
@@ -551,11 +556,11 @@ public class CraftBookPlugin extends JavaPlugin {
                 "# NOTE! MAKE SURE TO ENABLE FEATURES IN THE config.yml FILE!",
                 "");
 
-        for(String enabled : Sets.newHashSet(config.enabledMechanics)) {
+        for (String enabled : Sets.newHashSet(config.enabledMechanics)) {
 
             Class<? extends CraftBookMechanic> mechClass = availableMechanics.get(enabled);
             try {
-                if(mechClass != null) {
+                if (mechClass != null) {
 
                     CraftBookMechanic mech = mechClass.newInstance();
                     mech.loadConfiguration(mechanismsConfig, "mechanics." + enabled + '.');
@@ -571,34 +576,35 @@ public class CraftBookPlugin extends JavaPlugin {
         boolean hasSTMechanic = false;
 
         Iterator<CraftBookMechanic> iter = mechanics.iterator();
-        while(iter.hasNext()) {
+        while (iter.hasNext()) {
             CraftBookMechanic mech = iter.next();
             try {
-                if(!mech.enable()) {
+                if (!mech.enable()) {
                     getLogger().warning("Failed to enable mechanic: " + mech.getClass().getSimpleName());
                     mech.disable();
                     iter.remove();
                     continue;
                 }
                 getServer().getPluginManager().registerEvents(mech, this);
-                if(mech instanceof CookingPot || mech instanceof XPStorer || (mech instanceof ICMechanic && !((ICMechanic) mech).disableSelfTriggered)) {
-                    //TODO make this a better check.
+                if (mech instanceof CookingPot || mech instanceof XPStorer
+                        || (mech instanceof ICMechanic && !((ICMechanic) mech).disableSelfTriggered)) {
+                    // TODO make this a better check.
                     hasSTMechanic = true;
                 }
-                if(mech instanceof CartBlockMechanism)
+                if (mech instanceof CartBlockMechanism)
                     useLegacyCartSystem = true;
-            } catch(Throwable t) {
+            } catch (Throwable t) {
                 getLogger().log(Level.WARNING, "Failed to enable mechanic: " + mech.getClass().getSimpleName(), t);
             }
         }
 
-        if(hasSTMechanic)
+        if (hasSTMechanic)
             setupSelfTriggered();
     }
 
     /**
      * Enables the mechanic with the specified name.
-     * 
+     *
      * @param mechanic The name of the mechanic.
      * @return If the mechanic could be found and enabled.
      */
@@ -611,7 +617,9 @@ public class CraftBookPlugin extends JavaPlugin {
         }
 
         mechanismsConfig.setHeader(
-                "# CraftBook Mechanism Configuration. Generated for version: " + (CraftBookPlugin.inst() == null ? CraftBookPlugin.getVersion() : CraftBookPlugin.inst().getDescription().getVersion()),
+                "# CraftBook Mechanism Configuration. Generated for version: " + (CraftBookPlugin.inst() == null
+                        ? CraftBookPlugin.getVersion()
+                        : CraftBookPlugin.inst().getDescription().getVersion()),
                 "# This configuration will automatically add new configuration options for you,",
                 "# So there is no need to regenerate this configuration unless you need to.",
                 "# More information about these features are available at...",
@@ -622,13 +630,13 @@ public class CraftBookPlugin extends JavaPlugin {
 
         Class<? extends CraftBookMechanic> mechClass = availableMechanics.get(mechanic);
         try {
-            if(mechClass != null) {
+            if (mechClass != null) {
 
                 CraftBookMechanic mech = mechClass.newInstance();
                 mech.loadConfiguration(mechanismsConfig, "mechanics." + mechanic + '.');
                 mechanics.add(mech);
 
-                if(!mech.enable()) {
+                if (!mech.enable()) {
                     getLogger().warning("Failed to enable mechanic: " + mech.getClass().getSimpleName());
                     mech.disable();
                     return false;
@@ -649,7 +657,7 @@ public class CraftBookPlugin extends JavaPlugin {
 
     /**
      * Disables the mechanic with the specified name.
-     * 
+     *
      * @param mechanic The name of the mechanic.
      * @return If the mechanic could be found and disabled.
      */
@@ -657,18 +665,20 @@ public class CraftBookPlugin extends JavaPlugin {
 
         Class<? extends CraftBookMechanic> mechClass = availableMechanics.get(mechanic);
 
-        if(mechClass == null) return false;
+        if (mechClass == null)
+            return false;
 
         boolean found = false;
 
-        for(CraftBookMechanic mech : mechanics) {
-            if(mech.getClass().equals(mechClass)) {
+        for (CraftBookMechanic mech : mechanics) {
+            if (mech.getClass().equals(mechClass)) {
                 found = true;
                 break;
             }
         }
 
-        if(!found) return false;
+        if (!found)
+            return false;
 
         config.enabledMechanics.remove(mechanic);
         config.save();
@@ -684,25 +694,35 @@ public class CraftBookPlugin extends JavaPlugin {
         logDebugMessage("Registring managers!", "startup");
         getServer().getPluginManager().registerEvents(managerAdapter, inst());
 
-        if(config.easterEggs) {
+        if (config.easterEggs) {
             Bukkit.getScheduler().runTaskLater(this, new Runnable() {
 
                 @Override
-                public void run () {
+                public void run() {
 
                     logDebugMessage("Checking easter eggs!", "startup");
                     Calendar date = Calendar.getInstance();
 
-                    if(date.get(Calendar.MONTH) == Calendar.JUNE && date.get(Calendar.DAY_OF_MONTH) == 22) //Me4502 reddit cakeday
-                        getLogger().info("Happy " + formatDate(date.get(Calendar.YEAR) - 2012) + " reddit cakeday me4502!");
-                    else if(date.get(Calendar.MONTH) == Calendar.OCTOBER && date.get(Calendar.DAY_OF_MONTH) == 16) //Me4502 birthday
+                    if (date.get(Calendar.MONTH) == Calendar.JUNE && date.get(Calendar.DAY_OF_MONTH) == 22) // Me4502
+                                                                                                            // reddit
+                                                                                                            // cakeday
+                        getLogger().info(
+                                "Happy " + formatDate(date.get(Calendar.YEAR) - 2012) + " reddit cakeday me4502!");
+                    else if (date.get(Calendar.MONTH) == Calendar.OCTOBER && date.get(Calendar.DAY_OF_MONTH) == 16) // Me4502
+                                                                                                                    // birthday
                         getLogger().info("Happy birthday me4502!");
-                    else if(date.get(Calendar.MONTH) == Calendar.JANUARY && date.get(Calendar.DAY_OF_MONTH) == 1) //New Years
+                    else if (date.get(Calendar.MONTH) == Calendar.JANUARY && date.get(Calendar.DAY_OF_MONTH) == 1) // New
+                                                                                                                   // Years
                         getLogger().info("Happy new years! Happy " + date.get(Calendar.YEAR) + "!!!");
-                    else if(date.get(Calendar.MONTH) == Calendar.OCTOBER && date.get(Calendar.DAY_OF_MONTH) == 22) //CraftBook birthday
-                        getLogger().info("Happy " + formatDate(date.get(Calendar.YEAR) - 2010) + " birthday CraftBook!");
-                    else if(date.get(Calendar.MONTH) == Calendar.APRIL && date.get(Calendar.DAY_OF_MONTH) == 24) //Me4502ian CraftBook birthday
-                        getLogger().info("CraftBook has been under Me4502's 'harsh dictatorship :P' for " + (date.get(Calendar.YEAR) - 2012) + " year(s) today!");
+                    else if (date.get(Calendar.MONTH) == Calendar.OCTOBER && date.get(Calendar.DAY_OF_MONTH) == 22) // CraftBook
+                                                                                                                    // birthday
+                        getLogger()
+                                .info("Happy " + formatDate(date.get(Calendar.YEAR) - 2010) + " birthday CraftBook!");
+                    else if (date.get(Calendar.MONTH) == Calendar.APRIL && date.get(Calendar.DAY_OF_MONTH) == 24) // Me4502ian
+                                                                                                                  // CraftBook
+                                                                                                                  // birthday
+                        getLogger().info("CraftBook has been under Me4502's 'harsh dictatorship :P' for "
+                                + (date.get(Calendar.YEAR) - 2012) + " year(s) today!");
                 }
 
                 private String formatDate(int date) {
@@ -723,9 +743,11 @@ public class CraftBookPlugin extends JavaPlugin {
             org.bstats.bukkit.Metrics metrics = new org.bstats.bukkit.Metrics(this, 3319);
 
             metrics.addCustomChart(new org.bstats.charts.AdvancedPie("language",
-                    () -> languageManager.getLanguages().stream().collect(Collectors.toMap(Function.identity(), o -> 1))));
+                    () -> languageManager.getLanguages().stream()
+                            .collect(Collectors.toMap(Function.identity(), o -> 1))));
             metrics.addCustomChart(new org.bstats.charts.SimpleBarChart("enabled_mechanics",
-                    () -> mechanics.stream().collect(Collectors.toMap(mech -> mech.getClass().getSimpleName(), o -> 1))));
+                    () -> mechanics.stream()
+                            .collect(Collectors.toMap(mech -> mech.getClass().getSimpleName(), o -> 1))));
         } catch (Throwable e1) {
             CraftBookBukkitUtil.printStacktrace(e1);
         }
@@ -737,20 +759,20 @@ public class CraftBookPlugin extends JavaPlugin {
     @Override
     public void onDisable() {
 
-        if(languageManager != null)
+        if (languageManager != null)
             languageManager.close();
-        if(mechanics != null) {
-            for(CraftBookMechanic mech : mechanics)
+        if (mechanics != null) {
+            for (CraftBookMechanic mech : mechanics)
                 mech.disable();
             mechanics = null;
         }
 
-        if(hasPersistentStorage()) {
+        if (hasPersistentStorage()) {
 
             persistentStorage.close();
         }
 
-        if(uuidMappings != null)
+        if (uuidMappings != null)
             uuidMappings.disable();
     }
 
@@ -796,7 +818,7 @@ public class CraftBookPlugin extends JavaPlugin {
 
     public static void setInstance(CraftBookPlugin instance) throws IllegalArgumentException {
 
-        if(CraftBookPlugin.instance != null)
+        if (CraftBookPlugin.instance != null)
             throw new IllegalArgumentException("Instance already set!");
 
         CraftBookPlugin.instance = instance;
@@ -848,7 +870,8 @@ public class CraftBookPlugin extends JavaPlugin {
 
         long time = System.currentTimeMillis() - start;
 
-        getLogger().info(numChunks + " chunk(s) for " + numWorlds + " world(s) processed " + "(" + time + "ms elapsed)");
+        getLogger()
+                .info(numChunks + " chunk(s) for " + numWorlds + " world(s) processed " + "(" + time + "ms elapsed)");
 
         // Set up the clock for self-triggered ICs.
 
@@ -860,9 +883,9 @@ public class CraftBookPlugin extends JavaPlugin {
     /**
      * This is a method used to register events for a class under CraftBook.
      */
-    public static void registerEvents(Listener ... listeners) {
+    public static void registerEvents(Listener... listeners) {
 
-        for(Listener listener : listeners)
+        for (Listener listener : listeners)
             inst().getServer().getPluginManager().registerEvents(listener, inst());
     }
 
@@ -876,8 +899,8 @@ public class CraftBookPlugin extends JavaPlugin {
     }
 
     /**
-     * Get the global ConfigurationManager.
-     * Use this to access global configuration values and per-world configuration values.
+     * Get the global ConfigurationManager. Use this to access global configuration values and per-world configuration
+     * values.
      *
      * @return The global ConfigurationManager
      */
@@ -906,17 +929,16 @@ public class CraftBookPlugin extends JavaPlugin {
      * @return CraftBook's {@link Random}
      */
     public Random getRandom() {
-        if(random == null)
+        if (random == null)
             return ThreadLocalRandom.current(); // If none is set, use a thread local random.
         return random;
     }
 
     /**
-     * Check whether a player is in a group.
-     * This calls the corresponding method in PermissionsResolverManager
+     * Check whether a player is in a group. This calls the corresponding method in PermissionsResolverManager
      *
      * @param player The player to check
-     * @param group  The group
+     * @param group The group
      *
      * @return whether {@code player} is in {@code group}
      */
@@ -931,8 +953,7 @@ public class CraftBookPlugin extends JavaPlugin {
     }
 
     /**
-     * Get the groups of a player.
-     * This calls the corresponding method in PermissionsResolverManager.
+     * Get the groups of a player. This calls the corresponding method in PermissionsResolverManager.
      *
      * @param player The player to check
      *
@@ -949,8 +970,7 @@ public class CraftBookPlugin extends JavaPlugin {
     }
 
     /**
-     * Gets the name of a command sender. This is a unique name and this
-     * method should never return a "display name".
+     * Gets the name of a command sender. This is a unique name and this method should never return a "display name".
      *
      * @param sender The sender to get the name of
      *
@@ -987,7 +1007,7 @@ public class CraftBookPlugin extends JavaPlugin {
      * Checks permissions.
      *
      * @param sender The sender to check the permission on.
-     * @param perm   The permission to check the permission on.
+     * @param perm The permission to check the permission on.
      *
      * @return whether {@code sender} has {@code perm}
      */
@@ -996,7 +1016,8 @@ public class CraftBookPlugin extends JavaPlugin {
         if (sender.isOp()) {
             if (sender instanceof Player) {
 
-                if (!config.noOpPermissions) return true;
+                if (!config.noOpPermissions)
+                    return true;
             } else {
                 return true;
             }
@@ -1015,7 +1036,7 @@ public class CraftBookPlugin extends JavaPlugin {
      * Checks permissions and throws an exception if permission is not met.
      *
      * @param sender The sender to check the permission on.
-     * @param perm   The permission to check the permission on.
+     * @param perm The permission to check the permission on.
      *
      * @throws CommandPermissionsException if {@code sender} doesn't have {@code perm}
      */
@@ -1071,14 +1092,14 @@ public class CraftBookPlugin extends JavaPlugin {
      */
     public void reloadConfiguration() throws Throwable {
 
-        if(mechanics != null)
-            for(CraftBookMechanic mech : mechanics)
+        if (mechanics != null)
+            for (CraftBookMechanic mech : mechanics)
                 mech.disable();
         mechanics = null;
         getServer().getScheduler().cancelTasks(inst());
         HandlerList.unregisterAll(inst());
 
-        if(config.debugLogToFile) {
+        if (config.debugLogToFile) {
             debugLogger.close();
             debugLogger = null;
         }
@@ -1093,7 +1114,7 @@ public class CraftBookPlugin extends JavaPlugin {
     /**
      * Create a default configuration file from the .jar.
      *
-     * @param actual      The destination file
+     * @param actual The destination file
      * @param defaultName The name of the file inside the jar's defaults folder
      */
     public void createDefaultConfiguration(File actual, String defaultName) {
@@ -1178,25 +1199,26 @@ public class CraftBookPlugin extends JavaPlugin {
 
     public static boolean isDebugFlagEnabled(String flag) {
 
-        if(inst() == null) return false;
+        if (inst() == null)
+            return false;
 
-        if(!inst().config.debugMode || inst().config.debugFlags == null || inst().config.debugFlags.isEmpty())
+        if (!inst().config.debugMode || inst().config.debugFlags == null || inst().config.debugFlags.isEmpty())
             return false;
 
         String[] flagBits = RegexUtil.PERIOD_PATTERN.split(flag);
 
         String tempFlag = "";
 
-        for(int i = 0; i < flagBits.length; i++) {
+        for (int i = 0; i < flagBits.length; i++) {
 
-            if(i == 0)
+            if (i == 0)
                 tempFlag = flagBits[i];
             else
                 tempFlag = tempFlag + "." + flagBits[i];
 
-            for(String testflag : inst().config.debugFlags) {
+            for (String testflag : inst().config.debugFlags) {
 
-                if(testflag.toLowerCase(Locale.ENGLISH).equals(tempFlag))
+                if (testflag.toLowerCase(Locale.ENGLISH).equals(tempFlag))
                     return true;
             }
         }
@@ -1208,12 +1230,12 @@ public class CraftBookPlugin extends JavaPlugin {
 
     public static void logDebugMessage(String message, String code) {
 
-        if(!isDebugFlagEnabled(code))
+        if (!isDebugFlagEnabled(code))
             return;
 
         logger().info("[Debug][" + code + "] " + message);
 
-        if(CraftBookPlugin.inst().config.debugLogToFile)
+        if (CraftBookPlugin.inst().config.debugLogToFile)
             debugLogger.println("[" + code + "] " + message);
     }
 
@@ -1240,16 +1262,16 @@ public class CraftBookPlugin extends JavaPlugin {
 
     /**
      * Parses more advanced portions of the Item Syntax.
-     * 
+     *
      * @param item The item to parse
      * @return The parsed string. (Can be the same, and should be if nothing found)
      */
     @SuppressWarnings({"MethodMayBeStatic", "unused"})
     public final String parseItemSyntax(String item) {
 
-        if(CommandItems.INSTANCE != null)  {
+        if (CommandItems.INSTANCE != null) {
             CommandItemDefinition def = CommandItems.INSTANCE.getDefinitionByName(item);
-            if(def != null) {
+            if (def != null) {
                 return ItemSyntax.getStringFromItem(def.getItem());
             }
         }

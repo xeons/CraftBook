@@ -1,15 +1,15 @@
 // $Id$
 /*
  * Copyright (C) 2010, 2011 sk89q <http://www.sk89q.com>
- * 
+ *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
  * License as published by the Free
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
  * warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with this program. If not,
  * see <http://www.gnu.org/licenses/>.
  */
@@ -67,16 +67,16 @@ public class FamilyAISO extends AbstractICFamily {
         protected Block getBlock(int pin) {
 
             switch (pin) {
-                case 0:
+                case 0 :
                     return SignUtil.getFrontBlock(CraftBookBukkitUtil.toSign(sign).getBlock());
-                case 1:
+                case 1 :
                     return SignUtil.getLeftBlock(CraftBookBukkitUtil.toSign(sign).getBlock());
-                case 2:
+                case 2 :
                     return SignUtil.getRightBlock(CraftBookBukkitUtil.toSign(sign).getBlock());
-                case 3:
+                case 3 :
                     BlockFace face = SignUtil.getBack(CraftBookBukkitUtil.toSign(sign).getBlock());
                     return CraftBookBukkitUtil.toSign(sign).getBlock().getRelative(face).getRelative(face);
-                default:
+                default :
                     return null;
             }
 
@@ -85,7 +85,11 @@ public class FamilyAISO extends AbstractICFamily {
         @Override
         public boolean getInput(int inputIndex) {
 
-            for (int i = 0; i < getInputCount(); i++) { if (isValid(i)) if (get(i)) return true; }
+            for (int i = 0; i < getInputCount(); i++) {
+                if (isValid(i))
+                    if (get(i))
+                        return true;
+            }
             return false;
         }
 
@@ -116,7 +120,7 @@ public class FamilyAISO extends AbstractICFamily {
     }
 
     @Override
-    public String getName () {
+    public String getName() {
         return "AISO";
     }
 }

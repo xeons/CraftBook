@@ -51,7 +51,7 @@ public class ContainerDispenser extends AbstractSelfTriggeredIC {
         }
 
         item = ItemSyntax.getItem(getLine(3));
-        if(item != null)
+        if (item != null)
             item.setAmount(amount);
     }
 
@@ -100,7 +100,7 @@ public class ContainerDispenser extends AbstractSelfTriggeredIC {
             Chest c = (Chest) bl.getState();
             for (ItemStack it : c.getInventory().getContents()) {
                 if (ItemUtil.isStackValid(it)) {
-                    if(item == null || ItemUtil.areItemsIdentical(it, item)) {
+                    if (item == null || ItemUtil.areItemsIdentical(it, item)) {
                         stack = it;
                         inv = c.getInventory();
                         break;
@@ -118,7 +118,7 @@ public class ContainerDispenser extends AbstractSelfTriggeredIC {
                     if (ItemUtil.areItemsIdentical(it, c.getInventory().getIngredient())) {
                         continue;
                     }
-                    if(item == null || ItemUtil.areItemsIdentical(it, item)) {
+                    if (item == null || ItemUtil.areItemsIdentical(it, item)) {
                         stack = it;
                         inv = c.getInventory();
                         break;
@@ -129,7 +129,7 @@ public class ContainerDispenser extends AbstractSelfTriggeredIC {
             Dispenser c = (Dispenser) bl.getState();
             for (ItemStack it : c.getInventory().getContents()) {
                 if (ItemUtil.isStackValid(it)) {
-                    if(item == null || ItemUtil.areItemsIdentical(it, item)) {
+                    if (item == null || ItemUtil.areItemsIdentical(it, item)) {
                         stack = it;
                         inv = c.getInventory();
                         break;
@@ -145,21 +145,24 @@ public class ContainerDispenser extends AbstractSelfTriggeredIC {
 
         ItemStack item = old.clone();
         item.setAmount(amount);
-        if (inv == null) return false;
+        if (inv == null)
+            return false;
         HashMap<Integer, ItemStack> over = inv.removeItem(item.clone());
         if (over.isEmpty()) {
 
             BlockFace back = SignUtil.getBack(CraftBookBukkitUtil.toSign(getSign()).getBlock());
             Block pipe = getBackBlock().getRelative(back);
 
-            PipeRequestEvent event = new PipeRequestEvent(pipe, new ArrayList<>(Collections.singletonList(item.clone())), getBackBlock());
+            PipeRequestEvent event = new PipeRequestEvent(pipe,
+                    new ArrayList<>(Collections.singletonList(item.clone())), getBackBlock());
             Bukkit.getPluginManager().callEvent(event);
 
-            if(!event.isValid())
+            if (!event.isValid())
                 return true;
 
-            for(ItemStack stack : event.getItems())
-                CraftBookBukkitUtil.toSign(getSign()).getWorld().dropItemNaturally(CraftBookBukkitUtil.toSign(getSign()).getLocation(), stack);
+            for (ItemStack stack : event.getItems())
+                CraftBookBukkitUtil.toSign(getSign()).getWorld()
+                        .dropItemNaturally(CraftBookBukkitUtil.toSign(getSign()).getLocation(), stack);
             return true;
         } else {
 
@@ -173,14 +176,16 @@ public class ContainerDispenser extends AbstractSelfTriggeredIC {
             }
             leftover.setAmount(availableAmount);
 
-            PipeRequestEvent event = new PipeRequestEvent(pipe, new ArrayList<>(Collections.singletonList(leftover.clone())), getBackBlock());
+            PipeRequestEvent event = new PipeRequestEvent(pipe,
+                    new ArrayList<>(Collections.singletonList(leftover.clone())), getBackBlock());
             Bukkit.getPluginManager().callEvent(event);
 
-            if(!event.isValid())
+            if (!event.isValid())
                 return true;
 
             for (ItemStack it : event.getItems())
-                CraftBookBukkitUtil.toSign(getSign()).getWorld().dropItemNaturally(CraftBookBukkitUtil.toSign(getSign()).getLocation(), it);
+                CraftBookBukkitUtil.toSign(getSign()).getWorld()
+                        .dropItemNaturally(CraftBookBukkitUtil.toSign(getSign()).getLocation(), it);
             return true;
         }
     }
@@ -207,7 +212,7 @@ public class ContainerDispenser extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"amount to dispense", null};
+            return new String[]{"amount to dispense", null};
         }
     }
 }

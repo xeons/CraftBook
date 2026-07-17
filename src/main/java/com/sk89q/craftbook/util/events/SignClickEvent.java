@@ -19,7 +19,7 @@ public class SignClickEvent extends PlayerInteractEvent {
 
     private final ChangedSign sign;
 
-    public SignClickEvent (Player who, Action action, ItemStack item, Block clickedBlock, BlockFace clickedFace) {
+    public SignClickEvent(Player who, Action action, ItemStack item, Block clickedBlock, BlockFace clickedFace) {
         super(who, action, item, clickedBlock, clickedFace);
 
         sign = CraftBookBukkitUtil.toChangedSign(getClickedBlock());

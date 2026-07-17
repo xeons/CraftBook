@@ -21,9 +21,11 @@ public class FallModifier extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onVehicleCreate(VehicleCreateEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event))
+            return;
 
-        if (!(event.getVehicle() instanceof Minecart)) return;
+        if (!(event.getVehicle() instanceof Minecart))
+            return;
 
         ((Minecart) event.getVehicle()).setFlyingVelocityMod(fallSpeed);
     }
@@ -31,9 +33,11 @@ public class FallModifier extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onVehicleMove(VehicleMoveEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event))
+            return;
 
-        if (!(event.getVehicle() instanceof Minecart)) return;
+        if (!(event.getVehicle() instanceof Minecart))
+            return;
 
         ((Minecart) event.getVehicle()).setFlyingVelocityMod(fallSpeed);
     }
@@ -43,7 +47,7 @@ public class FallModifier extends AbstractCraftBookMechanic {
     private Vector fallSpeed;
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadConfiguration(YAMLProcessor config, String path) {
 
         config.setComment(path + "vertical-fall-speed", "Sets the vertical fall speed of the minecart");
         verticalSpeed = config.getDouble(path + "vertical-fall-speed", 0.9D);

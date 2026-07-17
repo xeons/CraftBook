@@ -91,18 +91,18 @@ public class WeatherControlAdvanced extends AbstractIC {
         @Override
         public String[] getPinDescription(ChipState state) {
 
-            return new String[] {
-                    "Trigger IC",//Inputs
+            return new String[]{
+                    "Trigger IC", // Inputs
                     "High to rain",
                     "High to thunder",
-                    "High on success"//Outputs
+                    "High on success"// Outputs
             };
         }
 
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"rain duration", "thunder duration"};
+            return new String[]{"rain duration", "thunder duration"};
         }
     }
 }

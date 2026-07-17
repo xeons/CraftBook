@@ -70,7 +70,7 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
                 Recipe temprecipe = recipes.next();
                 if (isValidRecipe(temprecipe, disp.getInventory())) {
                     recipe = temprecipe;
-                    break; //There should only be 1 valid recipe.
+                    break; // There should only be 1 valid recipe.
                 }
             }
         } catch (Exception e) {
@@ -85,14 +85,16 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
         for (ItemStack it : inv.getContents()) {
             if (!ItemUtil.isStackValid(it))
                 continue;
-            if (it.getAmount() < 2) return false;
+            if (it.getAmount() < 2)
+                return false;
         }
 
         if (recipe == null) {
             computeRecipe(disp);
         }
 
-        if (recipe == null) return false;
+        if (recipe == null)
+            return false;
 
         if (!isValidRecipe(recipe, inv)) {
             recipe = null;
@@ -101,10 +103,11 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
 
         ItemStack result = CustomCrafting.craftItem(recipe);
 
-        if(!ItemUtil.isStackValid(result)) {
+        if (!ItemUtil.isStackValid(result)) {
             if (!hasWarnedNoResult) {
-                CraftBookPlugin.inst().getLogger().warning("An Automatic Crafter IC had a valid recipe, but there was no result! This means Bukkit"
-                        + " has an invalid recipe! Result: " + result);
+                CraftBookPlugin.inst().getLogger().warning(
+                        "An Automatic Crafter IC had a valid recipe, but there was no result! This means Bukkit"
+                                + " has an invalid recipe! Result: " + result);
                 hasWarnedNoResult = true;
             }
             return false;
@@ -119,18 +122,21 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
             }
             replace[i] = new ItemStack(disp.getInventory().getContents()[i]);
 
-            if(replace[i].getType() == Material.WATER_BUCKET || replace[i].getType() == Material.LAVA_BUCKET || replace[i].getType() == Material.MILK_BUCKET)
+            if (replace[i].getType() == Material.WATER_BUCKET || replace[i].getType() == Material.LAVA_BUCKET
+                    || replace[i].getType() == Material.MILK_BUCKET)
                 items.add(new ItemStack(Material.BUCKET, 1));
 
             replace[i].setAmount(replace[i].getAmount() - 1);
         }
         disp.getInventory().clear();
 
-        CraftBookPlugin.logDebugMessage("AutoCrafter is dispensing a " + result.getType().name() + " with data: " + result.getDurability() + " and amount: " + result.getAmount(), "ic-mc1219");
+        CraftBookPlugin.logDebugMessage("AutoCrafter is dispensing a " + result.getType().name() + " with data: "
+                + result.getDurability() + " and amount: " + result.getAmount(), "ic-mc1219");
 
         items.add(result);
 
-        Block pipe = ((BlockState) disp).getBlock().getRelative(((org.bukkit.material.Directional) ((BlockState) disp).getData()).getFacing());
+        Block pipe = ((BlockState) disp).getBlock()
+                .getRelative(((org.bukkit.material.Directional) ((BlockState) disp).getData()).getFacing());
         Block base = ((BlockState) disp).getBlock();
 
         PipeRequestEvent event = new PipeRequestEvent(pipe, items, base);
@@ -138,13 +144,13 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
 
         items = event.getItems();
 
-        if(!items.isEmpty()) {
-            for(ItemStack stack : items) {
-                if(disp.getInventory().addItem(stack).isEmpty())
-                    for(int i = 0; i < stack.getAmount(); i++)
-                        if(disp instanceof Dispenser)
+        if (!items.isEmpty()) {
+            for (ItemStack stack : items) {
+                if (disp.getInventory().addItem(stack).isEmpty())
+                    for (int i = 0; i < stack.getAmount(); i++)
+                        if (disp instanceof Dispenser)
                             ((Dispenser) disp).dispense();
-                        else if(disp instanceof Dropper)
+                        else if (disp instanceof Dropper)
                             ((Dropper) disp).drop();
             }
         }
@@ -168,7 +174,8 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
             int newAmount = stack.getAmount();
             for (int i = 0; i < stack.getAmount(); i++) {
                 ItemStack it = ItemUtil.getSmallestStackOfType(disp.getInventory().getContents(), stack);
-                if (it == null) break;
+                if (it == null)
+                    break;
                 if (it.getAmount() < 64) {
                     it.setAmount(it.getAmount() + 1);
                     newAmount -= 1;
@@ -178,7 +185,8 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
                 }
             }
 
-            if (newAmount > 0) delete = false;
+            if (newAmount > 0)
+                delete = false;
 
             if (delete) {
                 item.remove();
@@ -214,7 +222,8 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
             ShapedRecipe shape = (ShapedRecipe) r;
             Map<Character, ItemStack> ingredientMap = shape.getIngredientMap();
             String[] shapeArr = shape.getShape();
-            if (shape.getShape().length != shapeArr.length  || shapeArr[0].length() != shape.getShape()[0].length()) return false;
+            if (shape.getShape().length != shapeArr.length || shapeArr[0].length() != shape.getShape()[0].length())
+                return false;
             int c = -1, in = 0;
             int validRecipeItems = 0;
             for (int slot = 0; slot < 9; slot++) {
@@ -229,27 +238,26 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
                         }
                     }
                     String shapeSection;
-                    if(in < shapeArr.length)
+                    if (in < shapeArr.length)
                         shapeSection = shapeArr[in];
                     else
                         shapeSection = "   ";
                     ItemStack require = null;
                     try {
                         Character item;
-                        if(c < shapeSection.length())
+                        if (c < shapeSection.length())
                             item = shapeSection.charAt(c);
                         else
                             item = ' ';
-                        if(item == ' ')
+                        if (item == ' ')
                             require = null;
                         else
                             require = ingredientMap.get(item);
-                    }
-                    catch(Exception e){
+                    } catch (Exception e) {
                         CraftBookBukkitUtil.printStacktrace(e);
                     }
                     if (require != null && require.getType() != Material.AIR) {
-                        validRecipeItems ++;
+                        validRecipeItems++;
                     }
                     if (!ItemUtil.areItemsIdentical(require, stack))
                         return false;
@@ -260,7 +268,9 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
             }
             if (validRecipeItems == 0) {
                 if (!hasWarned) {
-                    CraftBookPlugin.logger().warning("Found invalid recipe! This is an issue with Bukkit/Spigot/etc, please report to them. All recipe ingredients are air. Recipe result: " + r.getResult().toString());
+                    CraftBookPlugin.logger().warning(
+                            "Found invalid recipe! This is an issue with Bukkit/Spigot/etc, please report to them. All recipe ingredients are air. Recipe result: "
+                                    + r.getResult().toString());
                     hasWarned = true;
                 }
                 return false;
@@ -277,12 +287,13 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
                 return false; // If it's empty already, something is wrong with the recipe.
             }
             for (ItemStack it : inv.getContents()) {
-                if (!ItemUtil.isStackValid(it)) continue;
-                if(ing.isEmpty())
+                if (!ItemUtil.isStackValid(it))
+                    continue;
+                if (ing.isEmpty())
                     return false;
                 Iterator<ItemStack> ingIterator = ing.iterator();
                 while (ingIterator.hasNext()) {
-                    if(ing.isEmpty())
+                    if (ing.isEmpty())
                         break;
                     ItemStack stack = ingIterator.next();
                     if (!ItemUtil.isStackValid(stack)) {
@@ -323,7 +334,7 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {null, null};
+            return new String[]{null, null};
         }
     }
 
@@ -336,13 +347,15 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
 
             List<ItemStack> newItems = new ArrayList<>(event.getItems());
             for (ItemStack ite : event.getItems()) {
-                if (!ItemUtil.isStackValid(ite)) continue;
+                if (!ItemUtil.isStackValid(ite))
+                    continue;
                 boolean delete = true;
                 int iteind = newItems.indexOf(ite);
                 int newAmount = ite.getAmount();
                 for (int i = 0; i < ite.getAmount(); i++) {
                     ItemStack it = ItemUtil.getSmallestStackOfType(disp.getInventory().getContents(), ite);
-                    if (!ItemUtil.isStackValid(it) || !ItemUtil.areItemsIdentical(ite, it)) continue;
+                    if (!ItemUtil.isStackValid(it) || !ItemUtil.areItemsIdentical(ite, it))
+                        continue;
                     if (it.getAmount() < 64) {
                         it.setAmount(it.getAmount() + 1);
                         newAmount -= 1;
@@ -353,11 +366,14 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
                         }
                     }
                 }
-                if (newAmount > 0) delete = false;
-                if(newAmount != ite.getAmount())
+                if (newAmount > 0)
+                    delete = false;
+                if (newAmount != ite.getAmount())
                     ite.setAmount(newAmount);
-                if (delete) newItems.remove(iteind);
-                else newItems.set(iteind, ite);
+                if (delete)
+                    newItems.remove(iteind);
+                else
+                    newItems.set(iteind, ite);
             }
             event.getItems().clear();
             event.setItems(newItems);

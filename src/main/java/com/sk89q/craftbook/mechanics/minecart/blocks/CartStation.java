@@ -45,20 +45,22 @@ public class CartStation extends CartBlockMechanism {
     public void stationInteraction(Minecart cart, CartMechanismBlocks blocks) {
 
         // validate
-        if (!blocks.matches(getMaterial())) return;
-        if (!blocks.matches("station")) return;
+        if (!blocks.matches(getMaterial()))
+            return;
+        if (!blocks.matches("station"))
+            return;
 
-        if(cart == null)
+        if (cart == null)
             return;
 
         // go
         switch (isActive(blocks)) {
-            case ON:
+            case ON :
                 // standardize its speed and direction.
                 launch(cart, blocks.sign);
                 break;
-            case OFF:
-            case NA:
+            case OFF :
+            case NA :
                 // park it.
                 stop(cart);
                 // recenter it
@@ -88,26 +90,29 @@ public class CartStation extends CartBlockMechanism {
     public void onVehicleEnter(CartBlockEnterEvent event) {
 
         // validate
-        if (!event.getBlocks().matches(getMaterial())) return;
-        if (!event.getBlocks().matches("station")) return;
+        if (!event.getBlocks().matches(getMaterial()))
+            return;
+        if (!event.getBlocks().matches("station"))
+            return;
 
-        if (!event.getBlocks().getSign().getLine(2).equalsIgnoreCase("AUTOSTART")) return;
+        if (!event.getBlocks().getSign().getLine(2).equalsIgnoreCase("AUTOSTART"))
+            return;
 
-        if(!event.getBlocks().getSign().getLine(3).isEmpty() && event.getEntered() instanceof Player) {
+        if (!event.getBlocks().getSign().getLine(3).isEmpty() && event.getEntered() instanceof Player) {
 
             ItemStack testItem = ItemSyntax.getItem(event.getBlocks().getSign().getLine(3));
-            if(!ItemUtil.areItemsIdentical(testItem, ((Player) event.getEntered()).getInventory().getItemInMainHand()))
+            if (!ItemUtil.areItemsIdentical(testItem, ((Player) event.getEntered()).getInventory().getItemInMainHand()))
                 return;
         }
 
         // go
         switch (isActive(event.getBlocks())) {
-            case ON:
+            case ON :
                 // standardize its speed and direction.
                 launch(event.getMinecart(), event.getBlocks().sign);
                 break;
-            case OFF:
-            case NA:
+            case OFF :
+            case NA :
                 // park it.
                 stop(event.getMinecart());
                 // recenter it
@@ -130,11 +135,11 @@ public class CartStation extends CartBlockMechanism {
     @Override
     public String[] getApplicableSigns() {
 
-        return new String[] {"station"};
+        return new String[]{"station"};
     }
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadConfiguration(YAMLProcessor config, String path) {
 
         config.setComment(path + "block", "Sets the block that is the base of the station mechanic.");
         material = BlockSyntax.getBlock(config.getString(path + "block", BlockTypes.OBSIDIAN.id()), true);

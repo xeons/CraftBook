@@ -23,7 +23,7 @@ import com.sk89q.craftbook.util.SearchArea;
 
 public class AnimalHarvester extends AbstractSelfTriggeredIC {
 
-    public AnimalHarvester (Server server, ChangedSign sign, ICFactory factory) {
+    public AnimalHarvester(Server server, ChangedSign sign, ICFactory factory) {
         super(server, sign, factory);
     }
 
@@ -42,31 +42,31 @@ public class AnimalHarvester extends AbstractSelfTriggeredIC {
     }
 
     @Override
-    public String getTitle () {
+    public String getTitle() {
         return "Animal Harvester";
     }
 
     @Override
-    public String getSignTitle () {
+    public String getSignTitle() {
         return "ANIMAL HARVEST";
     }
 
     @Override
-    public void trigger (ChipState chip) {
+    public void trigger(ChipState chip) {
 
-        if(chip.getInput(0))
+        if (chip.getInput(0))
             chip.setOutput(0, harvest());
     }
 
     @Override
-    public boolean isActive () {
+    public boolean isActive() {
         return true;
     }
 
     @Override
-    public void think (ChipState chip) {
+    public void think(ChipState chip) {
 
-        if(chip.getInput(0))
+        if (chip.getInput(0))
             chip.setOutput(0, harvest());
     }
 
@@ -74,9 +74,9 @@ public class AnimalHarvester extends AbstractSelfTriggeredIC {
 
         for (Entity entity : area.getEntitiesInArea(Collections.singletonList(EntityType.MOB_PEACEFUL))) {
             if (entity.isValid() && (entity instanceof Cow || entity instanceof Sheep)) {
-                if(!((Animals) entity).isAdult())
+                if (!((Animals) entity).isAdult())
                     continue;
-                if(canHarvest(entity))
+                if (canHarvest(entity))
                     return harvestAnimal(entity);
             }
         }
@@ -88,7 +88,7 @@ public class AnimalHarvester extends AbstractSelfTriggeredIC {
 
         if (entity instanceof Cow) {
 
-            if(doesChestContain(Material.BUCKET)) {
+            if (doesChestContain(Material.BUCKET)) {
 
                 return true;
             }
@@ -96,7 +96,7 @@ public class AnimalHarvester extends AbstractSelfTriggeredIC {
 
         if (entity instanceof Sheep) {
 
-            if(doesChestContain(Material.SHEARS)) {
+            if (doesChestContain(Material.SHEARS)) {
 
                 Sheep sh = (Sheep) entity;
                 return !sh.isSheared();
@@ -110,9 +110,9 @@ public class AnimalHarvester extends AbstractSelfTriggeredIC {
     public boolean harvestAnimal(Entity entity) {
 
         if (entity instanceof Cow) {
-            if(doesChestContain(Material.BUCKET)) {
+            if (doesChestContain(Material.BUCKET)) {
                 removeFromChest(Material.BUCKET);
-                if(!addToChest(new ItemStack(Material.MILK_BUCKET, 1))) {
+                if (!addToChest(new ItemStack(Material.MILK_BUCKET, 1))) {
                     addToChest(new ItemStack(Material.BUCKET, 1));
                     return false;
                 }
@@ -122,11 +122,12 @@ public class AnimalHarvester extends AbstractSelfTriggeredIC {
         }
 
         if (entity instanceof Sheep) {
-            if(doesChestContain(Material.SHEARS)) {
+            if (doesChestContain(Material.SHEARS)) {
                 Sheep sh = (Sheep) entity;
-                if(sh.isSheared())
+                if (sh.isSheared())
                     return false;
-                if (addToChest(new ItemStack(ItemUtil.getWoolFromColour(sh.getColor()), CraftBookPlugin.inst().getRandom().nextInt(2) + 1))) {
+                if (addToChest(new ItemStack(ItemUtil.getWoolFromColour(sh.getColor()),
+                        CraftBookPlugin.inst().getRandom().nextInt(2) + 1))) {
                     sh.setSheared(true);
                     return true;
                 }
@@ -191,7 +192,7 @@ public class AnimalHarvester extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"+oSearchArea", null};
+            return new String[]{"+oSearchArea", null};
         }
     }
 }

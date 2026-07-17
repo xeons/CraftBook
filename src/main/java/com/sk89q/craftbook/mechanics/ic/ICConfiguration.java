@@ -16,7 +16,7 @@ public class ICConfiguration {
         this.logger = logger;
     }
 
-    public void load () {
+    public void load() {
 
         try {
             config.load();
@@ -29,6 +29,6 @@ public class ICConfiguration {
             if (factory.getFactory() instanceof ConfigurableIC)
                 ((ConfigurableIC) factory.getFactory()).addConfiguration(config, "ics." + factory.getId() + ".");
 
-        config.save(); //Save all the added values.
+        config.save(); // Save all the added values.
     }
 }

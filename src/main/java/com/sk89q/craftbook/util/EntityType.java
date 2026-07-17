@@ -11,43 +11,45 @@ import java.util.Set;
 
 public enum EntityType {
 
-    PLAYER('P'), ITEM('I'), MOB_HOSTILE('H'), MOB_PEACEFUL('A'), MOB_ANY('M'), ANY('L'), CART('C'), RIDEABLE('R'),
-    CART_STORAGE('S'), CART_POWERED('E'), CART_HOPPER('O'), EXPLOSIVE('T'), AMBIENT('N'), NON_LIVING('D'), LIVING('L');
+    PLAYER('P'), ITEM('I'), MOB_HOSTILE('H'), MOB_PEACEFUL('A'), MOB_ANY('M'), ANY('L'), CART('C'), RIDEABLE(
+            'R'), CART_STORAGE('S'), CART_POWERED(
+                    'E'), CART_HOPPER('O'), EXPLOSIVE('T'), AMBIENT('N'), NON_LIVING('D'), LIVING('L');
 
     public boolean is(Entity entity) {
 
         switch (this) {
-            case PLAYER:
+            case PLAYER :
                 return entity instanceof Player;
-            case ITEM:
+            case ITEM :
                 return entity instanceof Item;
-            case MOB_HOSTILE:
+            case MOB_HOSTILE :
                 return entity instanceof Monster && !(entity instanceof HumanEntity);
-            case MOB_PEACEFUL:
+            case MOB_PEACEFUL :
                 return entity instanceof Animals && !(entity instanceof HumanEntity);
-            case MOB_ANY:
+            case MOB_ANY :
                 return entity instanceof Mob && !(entity instanceof HumanEntity);
-            case CART:
+            case CART :
                 return entity instanceof Minecart;
-            case CART_STORAGE:
+            case CART_STORAGE :
                 return entity instanceof StorageMinecart;
-            case CART_POWERED:
+            case CART_POWERED :
                 return entity instanceof PoweredMinecart;
-            case CART_HOPPER:
+            case CART_HOPPER :
                 return entity instanceof HopperMinecart;
-            case EXPLOSIVE:
+            case EXPLOSIVE :
                 return entity instanceof Explosive;
-            case RIDEABLE:
-                return entity instanceof RideableMinecart || entity instanceof Boat || entity instanceof Pig || entity instanceof Horse;
-            case AMBIENT:
+            case RIDEABLE :
+                return entity instanceof RideableMinecart || entity instanceof Boat || entity instanceof Pig
+                        || entity instanceof Horse;
+            case AMBIENT :
                 return entity instanceof Ambient;
-            case NON_LIVING:
+            case NON_LIVING :
                 return !(entity instanceof LivingEntity);
-            case LIVING:
+            case LIVING :
                 return entity instanceof LivingEntity;
-            case ANY:
+            case ANY :
                 return true;
-            default:
+            default :
                 break;
         }
         return false;

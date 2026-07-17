@@ -16,25 +16,29 @@ public class CartMaxSpeed extends CartBlockMechanism {
     public void onVehicleImpact(CartBlockImpactEvent event) {
 
         // care?
-        if (!event.getBlocks().matches(getMaterial())) return;
-        if (event.isMinor()) return;
+        if (!event.getBlocks().matches(getMaterial()))
+            return;
+        if (event.isMinor())
+            return;
 
         double maxSpeed = 0.4D;
         try {
             maxSpeed = Double.parseDouble(event.getBlocks().getSign().getLine(2));
-        } catch(Exception e){}
+        } catch (Exception e) {
+        }
 
         // enabled?
-        if (Power.OFF == isActive(event.getBlocks())) return;
+        if (Power.OFF == isActive(event.getBlocks()))
+            return;
 
-        ((Minecart)event.getVehicle()).setMaxSpeed(maxSpeed);
+        ((Minecart) event.getVehicle()).setMaxSpeed(maxSpeed);
     }
 
     @Override
     public boolean verify(ChangedSign sign, CraftBookPlayer player) {
 
         try {
-            if(!sign.getLine(2).isEmpty())
+            if (!sign.getLine(2).isEmpty())
                 Double.parseDouble(sign.getLine(2));
         } catch (NumberFormatException e) {
             player.printError("Line 3 must be a number that represents the max speed!");
@@ -56,7 +60,7 @@ public class CartMaxSpeed extends CartBlockMechanism {
     }
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadConfiguration(YAMLProcessor config, String path) {
 
         config.setComment(path + "block", "Sets the block that is the base of the max speed mechanic.");
         material = BlockSyntax.getBlock(config.getString(path + "block", BlockTypes.COAL_BLOCK.id()), true);

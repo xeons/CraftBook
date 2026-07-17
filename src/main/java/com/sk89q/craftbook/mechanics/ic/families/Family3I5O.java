@@ -45,23 +45,23 @@ public class Family3I5O extends AbstractICFamily {
             Block farBlock = backBlock.getRelative(fback);
 
             switch (pin) {
-                case 0:
+                case 0 :
                     return SignUtil.getFrontBlock(CraftBookBukkitUtil.toSign(sign).getBlock());
-                case 1:
+                case 1 :
                     return SignUtil.getLeftBlock(CraftBookBukkitUtil.toSign(sign).getBlock());
-                case 2:
+                case 2 :
                     return SignUtil.getRightBlock(CraftBookBukkitUtil.toSign(sign).getBlock());
-                case 3:
+                case 3 :
                     return farBlock.getRelative(fback);
-                case 4:
+                case 4 :
                     return farBlock.getRelative(SignUtil.getCounterClockWise(fback));
-                case 5:
+                case 5 :
                     return farBlock.getRelative(SignUtil.getClockWise(fback));
-                case 6:
+                case 6 :
                     return backBlock.getRelative(SignUtil.getCounterClockWise(fback));
-                case 7:
+                case 7 :
                     return backBlock.getRelative(SignUtil.getClockWise(fback));
-                default:
+                default :
                     return null;
             }
         }
@@ -89,10 +89,12 @@ public class Family3I5O extends AbstractICFamily {
 
             Block block = getBlock(pin);
             if (block != null) {
-                if(pin == 3 || pin == 4 || pin == 5)
-                    ICUtil.setState(block, value, icBlock.getRelative(SignUtil.getBack(CraftBookBukkitUtil.toSign(sign).getBlock()), 2));
+                if (pin == 3 || pin == 4 || pin == 5)
+                    ICUtil.setState(block, value,
+                            icBlock.getRelative(SignUtil.getBack(CraftBookBukkitUtil.toSign(sign).getBlock()), 2));
                 else
-                    ICUtil.setState(block, value, icBlock.getRelative(SignUtil.getBack(CraftBookBukkitUtil.toSign(sign).getBlock())));
+                    ICUtil.setState(block, value,
+                            icBlock.getRelative(SignUtil.getBack(CraftBookBukkitUtil.toSign(sign).getBlock())));
             }
         }
 
@@ -111,7 +113,7 @@ public class Family3I5O extends AbstractICFamily {
     }
 
     @Override
-    public String getName () {
+    public String getName() {
         return "3I5O";
     }
 }

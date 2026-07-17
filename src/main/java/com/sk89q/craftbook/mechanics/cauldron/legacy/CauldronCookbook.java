@@ -1,15 +1,15 @@
 // $Id$
 /*
  * CraftBook Copyright (C) 2010 sk89q <http://www.sk89q.com>
- * 
+ *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
  * License as published by the Free
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
  * warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with this program. If not,
  * see <http://www.gnu.org/licenses/>.
  */
@@ -66,7 +66,8 @@ public class CauldronCookbook {
         } catch (FileNotFoundException e) {
             CraftBookPlugin.logger().info("cauldron-recipes.txt not found: " + e.getMessage());
             try {
-                CraftBookPlugin.logger().info("Looked in: " + CraftBookPlugin.inst().getDataFolder().getCanonicalPath());
+                CraftBookPlugin.logger()
+                        .info("Looked in: " + CraftBookPlugin.inst().getDataFolder().getCanonicalPath());
             } catch (IOException ioe) {
                 // Eat error
             }
@@ -91,9 +92,8 @@ public class CauldronCookbook {
     }
 
     /**
-     * Gets a recipe by its ingredients. If multiple recipies have the all of the specified ingredients,
-     * the first one that matches will be selected
-     * (the list is checked in the same order as recipes are entered in the config file).
+     * Gets a recipe by its ingredients. If multiple recipies have the all of the specified ingredients, the first one
+     * that matches will be selected (the list is checked in the same order as recipes are entered in the config file).
      *
      * @param ingredients
      *
@@ -101,7 +101,10 @@ public class CauldronCookbook {
      */
     public Recipe find(Map<BlockStateHolder, Integer> ingredients) {
 
-        for (Recipe recipe : recipes) { if (recipe.hasAllIngredients(ingredients)) return recipe; }
+        for (Recipe recipe : recipes) {
+            if (recipe.hasAllIngredients(ingredients))
+                return recipe;
+        }
         return null;
     }
 
@@ -137,7 +140,8 @@ public class CauldronCookbook {
                 }
                 String[] parts = RegexUtil.COLON_PATTERN.split(line);
                 if (parts.length < 3) {
-                    CraftBookPlugin.logger().log(Level.WARNING, "Invalid cauldron recipe line in " + file.getName() + ": '" + line + "'");
+                    CraftBookPlugin.logger().log(Level.WARNING,
+                            "Invalid cauldron recipe line in " + file.getName() + ": '" + line + "'");
                 } else {
                     String name = parts[0];
                     List<BlockStateHolder> ingredients = parseCauldronItems(parts[1]);
@@ -193,7 +197,7 @@ public class CauldronCookbook {
                 } catch (NumberFormatException e) {
                     /*
                      * int item = server.getConfiguration().getItemId(part);
-                     * 
+                     *
                      * if (item > 0) { for (int i = 0; i < multiplier; i++) { out.add(item); } } else {
                      */
                     CraftBookPlugin.logger().log(Level.WARNING, "Cauldron: Unknown item " + part);
@@ -240,7 +244,8 @@ public class CauldronCookbook {
          * @param results
          * @param groups
          */
-        public Recipe(String name, List<BlockStateHolder> ingredients, List<BlockStateHolder> results, String[] groups) {
+        public Recipe(String name, List<BlockStateHolder> ingredients, List<BlockStateHolder> results,
+                String[] groups) {
 
             this.name = name;
             this.ingredients = Collections.unmodifiableList(ingredients);
@@ -290,8 +295,10 @@ public class CauldronCookbook {
 
             for (Map.Entry<BlockStateHolder, Integer> entry : ingredientLookup.entrySet()) {
                 BlockStateHolder id = entry.getKey();
-                if (!check.containsKey(id)) return false;
-                else if (check.get(id) < entry.getValue()) return false;
+                if (!check.containsKey(id))
+                    return false;
+                else if (check.get(id) < entry.getValue())
+                    return false;
             }
             return true;
         }

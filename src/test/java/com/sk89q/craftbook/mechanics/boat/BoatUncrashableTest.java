@@ -31,6 +31,6 @@ public class BoatUncrashableTest {
         new Uncrashable().onVehicleDestroy(event);
 
         verify(event).setCancelled(true);
-        verify(boat).setVelocity(new Vector(0,0,0));
+        verify(boat).setVelocity(new Vector(0, 0, 0));
     }
 }

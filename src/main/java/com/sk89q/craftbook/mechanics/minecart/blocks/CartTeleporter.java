@@ -18,10 +18,14 @@ public class CartTeleporter extends CartBlockMechanism {
     @EventHandler
     public void onVehicleImpact(CartBlockImpactEvent event) {
         // validate
-        if (!event.getBlocks().matches(getMaterial())) return;
-        if (!event.getBlocks().hasSign()) return;
-        if (event.isMinor()) return;
-        if (!event.getBlocks().matches("teleport")) return;
+        if (!event.getBlocks().matches(getMaterial()))
+            return;
+        if (!event.getBlocks().hasSign())
+            return;
+        if (event.isMinor())
+            return;
+        if (!event.getBlocks().matches("teleport"))
+            return;
 
         // go
         World world = event.getMinecart().getWorld();
@@ -52,7 +56,8 @@ public class CartTeleporter extends CartBlockMechanism {
         }
 
         Location loc = CraftBookBukkitUtil
-                .center(new Location(world, x, y, z, event.getMinecart().getLocation().getYaw(), event.getMinecart().getLocation().getPitch()));
+                .center(new Location(world, x, y, z, event.getMinecart().getLocation().getYaw(),
+                        event.getMinecart().getLocation().getPitch()));
         loc.getChunk().load(true);
         CartUtil.teleport(event.getMinecart(), loc);
     }
@@ -81,11 +86,11 @@ public class CartTeleporter extends CartBlockMechanism {
     @Override
     public String[] getApplicableSigns() {
 
-        return new String[] {"Teleport"};
+        return new String[]{"Teleport"};
     }
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadConfiguration(YAMLProcessor config, String path) {
 
         config.setComment(path + "block", "Sets the block that is the base of the teleport mechanic.");
         material = BlockSyntax.getBlock(config.getString(path + "block", BlockTypes.EMERALD_BLOCK.id()), true);

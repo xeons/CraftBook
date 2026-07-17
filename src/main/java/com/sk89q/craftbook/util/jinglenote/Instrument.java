@@ -1,26 +1,7 @@
 package com.sk89q.craftbook.util.jinglenote;
 
 public enum Instrument {
-    BANJO,
-    BASEDRUM,
-    BASS,
-    BELL,
-    BIT,
-    CHIME,
-    COW_BELL,
-    DIDGERIDOO,
-    FLUTE,
-    GUITAR,
-    HARP,
-    HAT,
-    IRON_XYLOPHONE,
-    PLING,
-    SNARE,
-    TRUMPET,
-    TRUMPET_DISTORTED,
-    TROMBONE,
-    TROMBONE_DISTORTED,
-    XYLOPHONE;
+    BANJO, BASEDRUM, BASS, BELL, BIT, CHIME, COW_BELL, DIDGERIDOO, FLUTE, GUITAR, HARP, HAT, IRON_XYLOPHONE, PLING, SNARE, TRUMPET, TRUMPET_DISTORTED, TROMBONE, TROMBONE_DISTORTED, XYLOPHONE;
 
     public static Instrument toMCSound(byte instrument) {
         return switch (instrument) {

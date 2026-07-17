@@ -1,15 +1,15 @@
 // $Id$
 /*
  * Copyright (C) 2010, 2011 sk89q <http://www.sk89q.com>
- * 
+ *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
  * License as published by the Free
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
  * warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with this program. If not,
  * see <http://www.gnu.org/licenses/>.
  */
@@ -60,10 +60,10 @@ public class SetBlockAdmin extends SetBlock {
     @Override
     protected void doSet(Block body, BlockStateHolder blockData, boolean force) {
 
-        if(Blocks.containsFuzzy(((Factory) getFactory()).blockBlacklist, item))
+        if (Blocks.containsFuzzy(((Factory) getFactory()).blockBlacklist, item))
             return;
 
-        BlockFace toPlace = ((Factory)getFactory()).above ? BlockFace.UP : BlockFace.DOWN;
+        BlockFace toPlace = ((Factory) getFactory()).above ? BlockFace.UP : BlockFace.DOWN;
 
         if (force || body.getRelative(toPlace).getType() == Material.AIR) {
             body.getRelative(toPlace).setBlockData(BukkitAdapter.adapt(blockData));
@@ -91,12 +91,12 @@ public class SetBlockAdmin extends SetBlock {
         @Override
         public void verify(ChangedSign sign) throws ICVerificationException {
 
-            if(sign.getLine(2) == null || sign.getLine(2).isEmpty())
+            if (sign.getLine(2) == null || sign.getLine(2).isEmpty())
                 throw new ICVerificationException("A block must be provided on line 2!");
             BlockStateHolder item = BlockSyntax.getBlock(sign.getLine(2), true);
-            if(item == null)
+            if (item == null)
                 throw new ICVerificationException("An invalid block was provided on line 2!");
-            if(Blocks.containsFuzzy(blockBlacklist, item))
+            if (Blocks.containsFuzzy(blockBlacklist, item))
                 throw new ICVerificationException("A blacklisted block was provided on line 2!");
         }
 
@@ -109,14 +109,15 @@ public class SetBlockAdmin extends SetBlock {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"id{:data}", "+oFORCE if should force setting the block"};
+            return new String[]{"id{:data}", "+oFORCE if should force setting the block"};
         }
 
         @Override
-        public void addConfiguration (YAMLProcessor config, String path) {
+        public void addConfiguration(YAMLProcessor config, String path) {
 
             config.setComment(path + "blacklist", "Stops the IC from placing the listed blocks.");
-            blockBlacklist = BlockSyntax.getBlocks(config.getStringList(path + "blacklist", Lists.newArrayList(BlockTypes.BEDROCK.id())), true);
+            blockBlacklist = BlockSyntax.getBlocks(
+                    config.getStringList(path + "blacklist", Lists.newArrayList(BlockTypes.BEDROCK.id())), true);
         }
     }
 }

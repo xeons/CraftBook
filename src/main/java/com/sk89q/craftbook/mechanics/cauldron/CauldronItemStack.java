@@ -25,9 +25,9 @@ public class CauldronItemStack implements Comparable<CauldronItemStack> {
 
             boolean has = false;
             Iterator<ItemStack> stackit = items.iterator();
-            while(stackit.hasNext()) {
+            while (stackit.hasNext()) {
                 ItemStack cstack = stackit.next();
-                if(ItemUtil.areItemsIdentical(cstack, stack)) {
+                if (ItemUtil.areItemsIdentical(cstack, stack)) {
                     stackit.remove();
                     ItemUtil.addToStack(stack, cstack);
                     items.add(stack);
@@ -35,7 +35,7 @@ public class CauldronItemStack implements Comparable<CauldronItemStack> {
                     break;
                 }
             }
-            if(!has)
+            if (!has)
                 items.add(stack);
         }
         Set<CauldronItemStack> stackSet = new LinkedHashSet<>();

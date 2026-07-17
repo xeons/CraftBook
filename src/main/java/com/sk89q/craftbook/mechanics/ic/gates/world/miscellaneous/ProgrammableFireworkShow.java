@@ -71,12 +71,13 @@ public class ProgrammableFireworkShow extends AbstractSelfTriggeredIC {
         try {
             handler = new FireworkShowHandler(show);
         } catch (IOException e) {
-            CraftBookPlugin.logger().severe("Failed to load firework file for IC at " + getSign().getBlock().getLocation().toString());
+            CraftBookPlugin.logger()
+                    .severe("Failed to load firework file for IC at " + getSign().getBlock().getLocation().toString());
             CraftBookBukkitUtil.printStacktrace(e);
         }
 
         String[] bits = RegexUtil.COMMA_PATTERN.split(getLine(3));
-        if(bits.length > 0)
+        if (bits.length > 0)
             stopOnLow = Boolean.getBoolean(bits[0]);
     }
 
@@ -96,7 +97,7 @@ public class ProgrammableFireworkShow extends AbstractSelfTriggeredIC {
         if (handler == null) {
             return;
         }
-        if(handler.isShowRunning() != chip.getOutput(0)) {
+        if (handler.isShowRunning() != chip.getOutput(0)) {
             chip.setOutput(0, handler.isShowRunning());
         }
     }
@@ -117,7 +118,10 @@ public class ProgrammableFireworkShow extends AbstractSelfTriggeredIC {
         @Override
         public void verify(ChangedSign sign) throws ICVerificationException {
 
-            if (sign.getLine(2).trim().isEmpty() || !new File(ICManager.inst().getFireworkFolder(), sign.getLine(2).trim() + ".txt").exists() && !new File(ICManager.inst().getFireworkFolder(), sign.getLine(2).trim() + ".fwk").exists())
+            if (sign.getLine(2).trim().isEmpty()
+                    || !new File(ICManager.inst().getFireworkFolder(), sign.getLine(2).trim() + ".txt").exists()
+                            && !new File(ICManager.inst().getFireworkFolder(), sign.getLine(2).trim() + ".fwk")
+                                    .exists())
                 throw new ICVerificationException("A valid firework show is required on line 3!");
         }
 
@@ -130,7 +134,7 @@ public class ProgrammableFireworkShow extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"Name of firework show", "true to stop on low"};
+            return new String[]{"Name of firework show", "true to stop on low"};
         }
     }
 
@@ -157,20 +161,19 @@ public class ProgrammableFireworkShow extends AbstractSelfTriggeredIC {
 
             lines.clear();
             File firework = new File(ICManager.inst().getFireworkFolder(), showName + ".txt");
-            if(!firework.exists()) {
+            if (!firework.exists()) {
                 fyrestone = true;
                 firework = new File(ICManager.inst().getFireworkFolder(), showName + ".fwk");
                 if (!firework.exists()) {
                     throw new FileNotFoundException("Firework File Not Found! " + firework.getName());
                 }
-            }
-            else
+            } else
                 fyrestone = false;
             BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(firework), "UTF-8"));
             String line = "";
             while ((line = br.readLine()) != null) {
 
-                if(line.trim().isEmpty())
+                if (line.trim().isEmpty())
                     continue;
                 lines.add(line);
             }
@@ -193,7 +196,7 @@ public class ProgrammableFireworkShow extends AbstractSelfTriggeredIC {
             if (task != null)
                 task.cancel();
             ShowInterpreter show;
-            if(!fyrestone)
+            if (!fyrestone)
                 show = new BasicShowInterpreter();
             else
                 show = new FyrestoneInterpreter();
@@ -214,7 +217,8 @@ public class ProgrammableFireworkShow extends AbstractSelfTriggeredIC {
                 isRunning = true;
             }
 
-            public FyrestoneInterpreter(Map<String, List<FireworkEffect>> effects, String currentBuilding, Location location, float duration, FireworkEffect.Builder builder) {
+            public FyrestoneInterpreter(Map<String, List<FireworkEffect>> effects, String currentBuilding,
+                    Location location, float duration, FireworkEffect.Builder builder) {
 
                 this.effects = effects;
                 this.currentBuilding = currentBuilding;
@@ -224,7 +228,7 @@ public class ProgrammableFireworkShow extends AbstractSelfTriggeredIC {
             }
 
             @Override
-            public void run () {
+            public void run() {
 
                 while (isRunning && position < lines.size()) {
 
@@ -265,12 +269,14 @@ public class ProgrammableFireworkShow extends AbstractSelfTriggeredIC {
                         } else if (args[0].equalsIgnoreCase("color")) {
 
                             String[] rgb = RegexUtil.COMMA_PATTERN.split(args[1]);
-                            Color color = org.bukkit.Color.fromRGB(Integer.parseInt(rgb[0]), Integer.parseInt(rgb[1]), Integer.parseInt(rgb[2]));
+                            Color color = org.bukkit.Color.fromRGB(Integer.parseInt(rgb[0]), Integer.parseInt(rgb[1]),
+                                    Integer.parseInt(rgb[2]));
                             builder.withColor(color);
                         } else if (args[0].equalsIgnoreCase("fade")) {
 
                             String[] rgb = RegexUtil.COMMA_PATTERN.split(args[1]);
-                            Color fade = org.bukkit.Color.fromRGB(Integer.parseInt(rgb[0]), Integer.parseInt(rgb[1]), Integer.parseInt(rgb[2]));
+                            Color fade = org.bukkit.Color.fromRGB(Integer.parseInt(rgb[0]), Integer.parseInt(rgb[1]),
+                                    Integer.parseInt(rgb[2]));
                             builder.withFade(fade);
                         } else if (args[0].equalsIgnoreCase("flicker") || args[0].equalsIgnoreCase("twinkle")) {
 
@@ -281,7 +287,7 @@ public class ProgrammableFireworkShow extends AbstractSelfTriggeredIC {
                         }
                     } else if (line.startsWith("location ")) {
 
-                        double x,y,z;
+                        double x, y, z;
                         String[] args = RegexUtil.COMMA_PATTERN.split(line.replace("location ", ""));
                         x = Double.parseDouble(args[0]);
                         y = Double.parseDouble(args[1]);
@@ -295,9 +301,11 @@ public class ProgrammableFireworkShow extends AbstractSelfTriggeredIC {
                         preciseDuration = bits.length > 1 && bits[1].equalsIgnoreCase("precise");
                     } else if (line.startsWith("wait ")) {
 
-                        FyrestoneInterpreter nshow = new FyrestoneInterpreter(effects,currentBuilding,location,duration,builder);
+                        FyrestoneInterpreter nshow = new FyrestoneInterpreter(effects, currentBuilding, location,
+                                duration, builder);
                         nshow.setRunning(isRunning);
-                        task = Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), nshow, Long.parseLong(line.replace("wait ", "")));
+                        task = Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), nshow,
+                                Long.parseLong(line.replace("wait ", "")));
                         show = nshow;
                         return;
                     } else if (line.startsWith("sound ")) {
@@ -305,18 +313,18 @@ public class ProgrammableFireworkShow extends AbstractSelfTriggeredIC {
                         String[] bits = RegexUtil.SPACE_PATTERN.split(line.replace("sound ", ""));
                         Sound sound = Sound.valueOf(bits[0]);
                         Location sloc = location.clone();
-                        float volume = 1.0f,pitch = 1.0f;
-                        if(bits.length > 1) {
-                            double x,y,z;
+                        float volume = 1.0f, pitch = 1.0f;
+                        if (bits.length > 1) {
+                            double x, y, z;
                             String[] args = RegexUtil.COMMA_PATTERN.split(bits[1]);
                             x = Double.parseDouble(args[0]);
                             y = Double.parseDouble(args[1]);
                             z = Double.parseDouble(args[2]);
 
                             sloc = CraftBookBukkitUtil.toSign(getSign()).getLocation().add(x, y, z);
-                            if(bits.length > 2) {
+                            if (bits.length > 2) {
                                 volume = Float.parseFloat(bits[2]);
-                                if(bits.length > 3)
+                                if (bits.length > 3)
                                     pitch = Float.parseFloat(bits[3]);
                             }
                         }
@@ -342,18 +350,21 @@ public class ProgrammableFireworkShow extends AbstractSelfTriggeredIC {
                         currentBuilding = null;
                     } else if (line.startsWith("launch ")) {
 
-                        if(effects.containsKey(line.replace("launch ", ""))) {
+                        if (effects.containsKey(line.replace("launch ", ""))) {
 
-                            if(!location.getWorld().isChunkLoaded(location.getBlockX() >> 4, location.getBlockZ() >> 4))
+                            if (!location.getWorld().isChunkLoaded(location.getBlockX() >> 4,
+                                    location.getBlockZ() >> 4))
                                 continue;
-                            final Firework firework = (Firework) location.getWorld().spawnEntity(location, EntityType.FIREWORK_ROCKET);
+                            final Firework firework = (Firework) location.getWorld().spawnEntity(location,
+                                    EntityType.FIREWORK_ROCKET);
                             FireworkMeta meta = firework.getFireworkMeta();
-                            for(FireworkEffect effect : effects.get(line.replace("launch ", "")))
+                            for (FireworkEffect effect : effects.get(line.replace("launch ", "")))
                                 meta.addEffect(effect);
                             meta.setPower((int) duration * 2);
                             firework.setFireworkMeta(meta);
-                            if(preciseDuration)
-                                Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), firework::detonate, (long) (duration*10));
+                            if (preciseDuration)
+                                Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), firework::detonate,
+                                        (long) (duration * 10));
                         }
                     }
                 }
@@ -362,12 +373,12 @@ public class ProgrammableFireworkShow extends AbstractSelfTriggeredIC {
             }
 
             @Override
-            public void setRunning (boolean isRunning) {
+            public void setRunning(boolean isRunning) {
                 this.isRunning = isRunning;
             }
 
             @Override
-            public boolean isRunning () {
+            public boolean isRunning() {
                 return isRunning;
             }
         }
@@ -402,18 +413,18 @@ public class ProgrammableFireworkShow extends AbstractSelfTriggeredIC {
                         try {
                             String[] data = RegexUtil.SEMICOLON_PATTERN.split(bits[1]);
 
-                            //Offset data (0)
+                            // Offset data (0)
                             errorLocation = "Offset";
                             String[] offset = RegexUtil.COMMA_PATTERN.split(data[0]);
                             Location location = CraftBookBukkitUtil.toSign(getSign()).getLocation();
                             location.add(Double.parseDouble(offset[0]), Double.parseDouble(offset[1]),
                                     Double.parseDouble(offset[2]));
 
-                            //Duration data (1)
+                            // Duration data (1)
                             errorLocation = "Duration";
-                            double duration = Double.parseDouble(data[1]); //1 duration = 1 second.
+                            double duration = Double.parseDouble(data[1]); // 1 duration = 1 second.
 
-                            //Shape data (2)
+                            // Shape data (2)
                             errorLocation = "Shape";
                             FireworkEffect.Type type;
                             if (data[2].equalsIgnoreCase("sball") || data[2].equalsIgnoreCase("smallball"))
@@ -429,13 +440,13 @@ public class ProgrammableFireworkShow extends AbstractSelfTriggeredIC {
                             else
                                 type = FireworkEffect.Type.BALL;
 
-                            //Colour Data (3)
+                            // Colour Data (3)
                             errorLocation = "Colour";
                             String[] rgb = RegexUtil.COMMA_PATTERN.split(data[3]);
                             Color colour = org.bukkit.Color.fromRGB(Integer.parseInt(rgb[0]),
                                     Integer.parseInt(rgb[1]), Integer.parseInt(rgb[2]));
 
-                            //Colour Data (4)
+                            // Colour Data (4)
                             errorLocation = "Fade";
                             rgb = RegexUtil.COMMA_PATTERN.split(data[4]);
                             Color fade = org.bukkit.Color.fromRGB(Integer.parseInt(rgb[0]), Integer.parseInt(rgb[1]),
@@ -446,7 +457,7 @@ public class ProgrammableFireworkShow extends AbstractSelfTriggeredIC {
 
                             if (data.length > 5) {
 
-                                //Shape data (5)
+                                // Shape data (5)
                                 errorLocation = "Effects";
                                 if (data[5].equalsIgnoreCase("twinkle"))
                                     flicker = true;
@@ -456,18 +467,22 @@ public class ProgrammableFireworkShow extends AbstractSelfTriggeredIC {
 
                             errorLocation = "Creation";
 
-                            FireworkEffect effect = FireworkEffect.builder().with(type).withColor(colour).withFade(fade).flicker(flicker).trail(trail).build();
+                            FireworkEffect effect = FireworkEffect.builder().with(type).withColor(colour).withFade(fade)
+                                    .flicker(flicker).trail(trail).build();
 
-                            if(!location.getWorld().isChunkLoaded(location.getBlockX() >> 4, location.getBlockZ() >> 4))
+                            if (!location.getWorld().isChunkLoaded(location.getBlockX() >> 4,
+                                    location.getBlockZ() >> 4))
                                 continue;
 
-                            Firework firework = (Firework) location.getWorld().spawnEntity(location, EntityType.FIREWORK_ROCKET);
+                            Firework firework = (Firework) location.getWorld().spawnEntity(location,
+                                    EntityType.FIREWORK_ROCKET);
                             FireworkMeta meta = firework.getFireworkMeta();
                             meta.addEffect(effect);
                             meta.setPower((int) duration * 2);
                             firework.setFireworkMeta(meta);
                         } catch (Exception e) {
-                            CraftBookPlugin.logger().severe("Error occured while doing: " + errorLocation + ". Whilst reading line " + position + " of the firework file " + showName + "!");
+                            CraftBookPlugin.logger().severe("Error occured while doing: " + errorLocation
+                                    + ". Whilst reading line " + position + " of the firework file " + showName + "!");
                             CraftBookBukkitUtil.printStacktrace(e);
                         }
                     }
@@ -477,12 +492,12 @@ public class ProgrammableFireworkShow extends AbstractSelfTriggeredIC {
             }
 
             @Override
-            public void setRunning (boolean isRunning) {
+            public void setRunning(boolean isRunning) {
                 this.isRunning = isRunning;
             }
 
             @Override
-            public boolean isRunning () {
+            public boolean isRunning() {
                 return isRunning;
             }
 

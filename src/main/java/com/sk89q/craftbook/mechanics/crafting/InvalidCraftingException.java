@@ -5,7 +5,7 @@ import com.sk89q.craftbook.util.exceptions.CraftbookException;
 public class InvalidCraftingException extends CraftbookException {
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 4305166656444438242L;
 

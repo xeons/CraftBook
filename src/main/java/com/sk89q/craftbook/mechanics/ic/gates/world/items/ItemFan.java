@@ -46,7 +46,8 @@ public class ItemFan extends AbstractSelfTriggeredIC {
     @Override
     public void trigger(ChipState chip) {
 
-        if (chip.getInput(0)) chip.setOutput(0, push());
+        if (chip.getInput(0))
+            chip.setOutput(0, push());
     }
 
     @Override
@@ -91,7 +92,7 @@ public class ItemFan extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"force (default 1)", null};
+            return new String[]{"force (default 1)", null};
         }
     }
 }

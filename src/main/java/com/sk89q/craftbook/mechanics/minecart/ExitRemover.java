@@ -22,28 +22,34 @@ public class ExitRemover extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onVehicleExit(final VehicleExitEvent event) {
 
-        if (!(event.getVehicle() instanceof RideableMinecart)) return;
-        if (event.getVehicle().isDead() || !event.getVehicle().isValid()) return;
+        if (!(event.getVehicle() instanceof RideableMinecart))
+            return;
+        if (event.getVehicle().isDead() || !event.getVehicle().isValid())
+            return;
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event))
+            return;
 
-        if(CraftBookPlugin.inst().isMechanicEnabled(TemporaryCart.class)) {
-            if(((TemporaryCart) CraftBookPlugin.inst().getMechanic(TemporaryCart.class)).getMinecarts().contains(event.getVehicle()))
+        if (CraftBookPlugin.inst().isMechanicEnabled(TemporaryCart.class)) {
+            if (((TemporaryCart) CraftBookPlugin.inst().getMechanic(TemporaryCart.class)).getMinecarts()
+                    .contains(event.getVehicle()))
                 return;
         }
 
         Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), () -> {
 
-            if (event.getVehicle().isDead() || !event.getVehicle().isValid()) return;
+            if (event.getVehicle().isDead() || !event.getVehicle().isValid())
+                return;
 
-            if(giveItem) {
+            if (giveItem) {
 
                 ItemStack stack = CartUtil.getCartStack((Minecart) event.getVehicle());
 
-                if(event.getExited() instanceof Player) {
-                    if(!((Player) event.getExited()).getInventory().addItem(stack).isEmpty() && ((Player) event.getExited()).getGameMode() != GameMode.CREATIVE)
+                if (event.getExited() instanceof Player) {
+                    if (!((Player) event.getExited()).getInventory().addItem(stack).isEmpty()
+                            && ((Player) event.getExited()).getGameMode() != GameMode.CREATIVE)
                         event.getExited().getWorld().dropItemNaturally(event.getExited().getLocation(), stack);
-                } else if(event.getExited() != null)
+                } else if (event.getExited() != null)
                     event.getExited().getWorld().dropItemNaturally(event.getExited().getLocation(), stack);
             }
             EntityUtil.killEntity(event.getVehicle());
@@ -53,7 +59,7 @@ public class ExitRemover extends AbstractCraftBookMechanic {
     private boolean giveItem;
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadConfiguration(YAMLProcessor config, String path) {
 
         config.setComment(path + "give-item", "Sets whether to give the player the item back or not.");
         giveItem = config.getBoolean(path + "give-item", false);

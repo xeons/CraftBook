@@ -51,9 +51,11 @@ public class Area extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onSignChange(SignChangeEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event))
+            return;
 
-        if (!event.getLine(1).equalsIgnoreCase("[Area]") && !event.getLine(1).equalsIgnoreCase("[SaveArea]")) return;
+        if (!event.getLine(1).equalsIgnoreCase("[Area]") && !event.getLine(1).equalsIgnoreCase("[SaveArea]"))
+            return;
 
         CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
@@ -67,16 +69,16 @@ public class Area extends AbstractCraftBookMechanic {
         }
 
         if (event.getLine(1).equalsIgnoreCase("[Area]")) {
-            if(!player.hasPermission("craftbook.mech.area.sign.area")) {
-                if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+            if (!player.hasPermission("craftbook.mech.area.sign.area")) {
+                if (CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
                     player.print("mech.create-permission");
                 SignUtil.cancelSign(event);
                 return;
             }
             event.setLine(1, "[Area]");
         } else if (event.getLine(1).equalsIgnoreCase("[SaveArea]")) {
-            if(!player.hasPermission("craftbook.mech.area.sign.savearea")) {
-                if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+            if (!player.hasPermission("craftbook.mech.area.sign.savearea")) {
+                if (CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
                     player.print("mech.create-permission");
                 SignUtil.cancelSign(event);
                 return;
@@ -84,7 +86,7 @@ public class Area extends AbstractCraftBookMechanic {
             event.setLine(1, "[SaveArea]");
         }
         // check if the namespace and area exists
-        if(!isValidArea(event.getLine(0), event.getLine(2), event.getLine(3))) {
+        if (!isValidArea(event.getLine(0), event.getLine(2), event.getLine(3))) {
             player.printError("mech.area.missing");
             SignUtil.cancelSign(event);
             return;
@@ -96,30 +98,34 @@ public class Area extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onRightClick(SignClickEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event))
+            return;
 
-        if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK)
+            return;
         CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
         boolean save;
 
         ChangedSign sign = event.getSign();
 
-        if (!sign.getLine(1).equals("[Area]") && !sign.getLine(1).equals("[SaveArea]")) return;
+        if (!sign.getLine(1).equals("[Area]") && !sign.getLine(1).equals("[SaveArea]"))
+            return;
 
         if (!player.hasPermission("craftbook.mech.area.use")) {
-            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+            if (CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
                 player.print("mech.use-permission");
             return;
         }
 
-        if(!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
-            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+        if (!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(),
+                event.getAction())) {
+            if (CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
                 player.printError("area.use-permissions");
             return;
         }
 
         // check if the namespace and area exists
-        if(!isValidArea(sign)) {
+        if (!isValidArea(sign)) {
             player.printError("mech.area.missing");
             return;
         }
@@ -134,7 +140,8 @@ public class Area extends AbstractCraftBookMechanic {
     private static boolean isValidArea(String namespace, String areaOn, String areaOff) {
 
         if (CopyManager.isExistingArea(CraftBookPlugin.inst().getDataFolder(), namespace, areaOn)) {
-            if (areaOff == null || areaOff.isEmpty() || areaOff.equals("--")) return true;
+            if (areaOff == null || areaOff.isEmpty() || areaOff.equals("--"))
+                return true;
             return CopyManager.isExistingArea(CraftBookPlugin.inst().getDataFolder(), namespace, areaOff);
         }
         return false;
@@ -144,10 +151,11 @@ public class Area extends AbstractCraftBookMechanic {
 
         String namespace = sign.getLine(0).trim();
 
-        if(CraftBookPlugin.inst().getConfiguration().convertNamesToCBID
-                && namespace.startsWith("~") && CraftBookPlugin.inst().getUUIDMappings().getUUID(namespace.replace("~", "")) == null) {
+        if (CraftBookPlugin.inst().getConfiguration().convertNamesToCBID
+                && namespace.startsWith("~")
+                && CraftBookPlugin.inst().getUUIDMappings().getUUID(namespace.replace("~", "")) == null) {
             OfflinePlayer player = Bukkit.getOfflinePlayer(namespace.replace("~", ""));
-            if(player.hasPlayedBefore()) {
+            if (player.hasPlayedBefore()) {
                 String originalNamespace = namespace;
 
                 try {
@@ -163,16 +171,17 @@ public class Area extends AbstractCraftBookMechanic {
             }
         }
 
-        return isValidArea(namespace, sign.getLine(2).trim().toLowerCase(Locale.ENGLISH), sign.getLine(3).trim().toLowerCase(Locale.ENGLISH));
+        return isValidArea(namespace, sign.getLine(2).trim().toLowerCase(Locale.ENGLISH),
+                sign.getLine(3).trim().toLowerCase(Locale.ENGLISH));
     }
 
     @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
     public void onSelfTriggerPing(SelfTriggerPingEvent event) {
 
-        if(SignUtil.isSign(event.getBlock())) {
+        if (SignUtil.isSign(event.getBlock())) {
             ChangedSign sign = CraftBookBukkitUtil.toChangedSign(event.getBlock());
-            if(sign.getLine(1).equals("[Area]")) {
-                isValidArea(sign); //Perform a conversion,
+            if (sign.getLine(1).equals("[Area]")) {
+                isValidArea(sign); // Perform a conversion,
                 sign.update(false);
             }
         }
@@ -181,19 +190,24 @@ public class Area extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockRedstoneChange(SourcedBlockRedstoneEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event))
+            return;
 
-        if (!allowRedstone) return;
-        if (!SignUtil.isSign(event.getBlock())) return;
+        if (!allowRedstone)
+            return;
+        if (!SignUtil.isSign(event.getBlock()))
+            return;
 
         boolean save;
 
         ChangedSign sign = CraftBookBukkitUtil.toChangedSign(event.getBlock());
 
-        if (!sign.getLine(1).equals("[Area]") && !sign.getLine(1).equals("[SaveArea]")) return;
+        if (!sign.getLine(1).equals("[Area]") && !sign.getLine(1).equals("[SaveArea]"))
+            return;
 
         // check if the namespace and area exists
-        if(!isValidArea(sign)) return;
+        if (!isValidArea(sign))
+            return;
 
         save = sign.getLine(1).equals("[SaveArea]");
 
@@ -203,7 +217,8 @@ public class Area extends AbstractCraftBookMechanic {
 
     private static boolean toggle(ChangedSign sign, boolean save) {
 
-        if (!checkSign(sign)) return false;
+        if (!checkSign(sign))
+            return false;
 
         try {
             String namespace = sign.getLine(0);
@@ -252,7 +267,8 @@ public class Area extends AbstractCraftBookMechanic {
 
     public static boolean toggleCold(ChangedSign sign) {
 
-        if (!checkSign(sign)) return false;
+        if (!checkSign(sign))
+            return false;
 
         boolean toggleOn = coldCheckToggleState(sign);
         boolean save = sign.getLine(1).equalsIgnoreCase("[SaveArea]");
@@ -340,21 +356,24 @@ public class Area extends AbstractCraftBookMechanic {
     int maxAreasPerUser;
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadConfiguration(YAMLProcessor config, String path) {
 
         config.setComment(path + "allow-redstone", "Allow ToggleAreas to be toggled via redstone.");
         allowRedstone = config.getBoolean(path + "allow-redstone", true);
 
-        config.setComment(path + "use-schematics", "Use Schematics for saving areas. This allows support of all blocks and chest/sign data.");
+        config.setComment(path + "use-schematics",
+                "Use Schematics for saving areas. This allows support of all blocks and chest/sign data.");
         useSchematics = config.getBoolean(path + "use-schematics", true);
 
-        config.setComment(path + "shorten-long-names", "If this is enabled, namespaces too long to fit on signs will be shortened.");
+        config.setComment(path + "shorten-long-names",
+                "If this is enabled, namespaces too long to fit on signs will be shortened.");
         shortenNames = config.getBoolean(path + "shorten-long-names", true);
 
         config.setComment(path + "max-size", "Sets the max amount of blocks that a ToggleArea can hold.");
         maxAreaSize = config.getInt(path + "max-size", 5000);
 
-        config.setComment(path + "max-per-user", "Sets the max amount of ToggleAreas that can be within one namespace.");
+        config.setComment(path + "max-per-user",
+                "Sets the max amount of ToggleAreas that can be within one namespace.");
         maxAreasPerUser = config.getInt(path + "max-per-user", 30);
     }
 }

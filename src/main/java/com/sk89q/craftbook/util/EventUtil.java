@@ -15,15 +15,18 @@ public final class EventUtil {
 
     public static boolean shouldIgnoreEvent(Event ev) {
 
-        if(!shouldIgnoreEventType(ev.getClass())) return false;
+        if (!shouldIgnoreEventType(ev.getClass()))
+            return false;
 
-        if(CraftBookPlugin.inst() == null || !CraftBookPlugin.inst().getConfiguration().advancedBlockChecks) return false;
+        if (CraftBookPlugin.inst() == null || !CraftBookPlugin.inst().getConfiguration().advancedBlockChecks)
+            return false;
 
         Long time = ignoredEvents.get(ev);
 
-        if(time == null) return false;
+        if (time == null)
+            return false;
 
-        if(System.currentTimeMillis() - time > 1000*3)
+        if (System.currentTimeMillis() - time > 1000 * 3)
             ignoredEvents.remove(ev);
 
         return true;
@@ -33,13 +36,15 @@ public final class EventUtil {
 
     public static void ignoreEvent(Event ev) {
 
-        if (!CraftBookPlugin.inst().getConfiguration().advancedBlockChecks) return;
+        if (!CraftBookPlugin.inst().getConfiguration().advancedBlockChecks)
+            return;
 
         if (!shouldIgnoreEventType(ev.getClass())) {
             ignoredEventTypes.add(ev.getClass());
         }
 
-        if (++lastGarbageCollect > 100) garbageCollectEvents();
+        if (++lastGarbageCollect > 100)
+            garbageCollectEvents();
         ignoredEvents.put(ev, System.currentTimeMillis());
     }
 
@@ -53,7 +58,6 @@ public final class EventUtil {
         ignoredEvents.entrySet().removeIf(bit -> System.currentTimeMillis() - bit.getValue() > 1000 * 5);
     }
 
-
     /**
      * Used to filter events for processing. This allows for short circuiting code so that code isn't checked
      * unnecessarily.
@@ -64,9 +68,9 @@ public final class EventUtil {
      */
     public static boolean passesFilter(Event event) {
 
-        if(CraftBookPlugin.inst() != null && CraftBookPlugin.inst().getConfiguration().advancedBlockChecks) {
-            if(event instanceof Cancellable && ((Cancellable) event).isCancelled())
-                if(!(event instanceof PlayerInteractEvent && ((PlayerInteractEvent) event).getClickedBlock() == null))
+        if (CraftBookPlugin.inst() != null && CraftBookPlugin.inst().getConfiguration().advancedBlockChecks) {
+            if (event instanceof Cancellable && ((Cancellable) event).isCancelled())
+                if (!(event instanceof PlayerInteractEvent && ((PlayerInteractEvent) event).getClickedBlock() == null))
                     return false;
         }
 

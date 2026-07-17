@@ -35,50 +35,60 @@ public class SelfTriggeringManager implements Listener {
         if (!chunk.getWorld().isChunkLoaded(chunk))
             return;
         try {
-            for(BlockState state : chunk.getTileEntities()) {
-                if(!(state instanceof Sign)) continue;
-                if(thinkingMechanics.contains(state.getLocation())) continue;
+            for (BlockState state : chunk.getTileEntities()) {
+                if (!(state instanceof Sign))
+                    continue;
+                if (thinkingMechanics.contains(state.getLocation()))
+                    continue;
                 SelfTriggerPingEvent event = new SelfTriggerPingEvent(state.getBlock());
                 Bukkit.getServer().getPluginManager().callEvent(event);
             }
         } catch (Throwable e) {
-            Bukkit.getLogger().warning("A corrupt tile entity was found in the chunk: (world: " + chunk.getWorld().getName() + " x: " + chunk.getX() + " z: " + chunk.getZ() + ") Self-Triggering mechanics may not work here until the issue is resolved.");
-            if(CraftBookPlugin.inst().getConfiguration().debugMode)
+            Bukkit.getLogger()
+                    .warning("A corrupt tile entity was found in the chunk: (world: " + chunk.getWorld().getName()
+                            + " x: " + chunk.getX() + " z: " + chunk.getZ()
+                            + ") Self-Triggering mechanics may not work here until the issue is resolved.");
+            if (CraftBookPlugin.inst().getConfiguration().debugMode)
                 CraftBookBukkitUtil.printStacktrace(e);
         }
     }
 
     public void registerSelfTrigger(Location location) {
 
-        if(thinkingMechanics.contains(location)) return;
+        if (thinkingMechanics.contains(location))
+            return;
         hasChanged = true;
         thinkingMechanics.add(location);
     }
 
     public void unregisterSelfTrigger(Location location, UnregisterReason reason) {
 
-        if(thinkingMechanics.isEmpty()) return; //Skip the checks this round. Save a little CPU with the array creation.
+        if (thinkingMechanics.isEmpty())
+            return; // Skip the checks this round. Save a little CPU with the array creation.
 
-        if(!thinkingMechanics.contains(location)) return;
+        if (!thinkingMechanics.contains(location))
+            return;
         SelfTriggerUnregisterEvent event = new SelfTriggerUnregisterEvent(location.getBlock(), reason);
         Bukkit.getServer().getPluginManager().callEvent(event);
-        if(!event.isCancelled()) {
+        if (!event.isCancelled()) {
             hasChanged = true;
             thinkingMechanics.remove(location);
-            CraftBookPlugin.logDebugMessage("Unregistered ST at: " + location.toString() + " for reason: " + reason.name(), "st.unregister");
+            CraftBookPlugin.logDebugMessage(
+                    "Unregistered ST at: " + location.toString() + " for reason: " + reason.name(), "st.unregister");
         }
     }
 
     public void unregisterSelfTrigger(Chunk chunk) {
 
-        if(thinkingMechanics.isEmpty()) return; //Skip the checks this round. Save a little CPU with the array creation.
+        if (thinkingMechanics.isEmpty())
+            return; // Skip the checks this round. Save a little CPU with the array creation.
 
-        if(hasChanged || registeredLocations == null) {
+        if (hasChanged || registeredLocations == null) {
             registeredLocations = thinkingMechanics.toArray(new Location[thinkingMechanics.size()]);
         }
 
         for (Location location : registeredLocations) {
-            if(location.getChunk().equals(chunk))
+            if (location.getChunk().equals(chunk))
                 unregisterSelfTrigger(location, UnregisterReason.UNLOAD);
         }
     }
@@ -123,14 +133,15 @@ public class SelfTriggeringManager implements Listener {
      */
     public void think() {
 
-        if(thinkingMechanics.isEmpty()) return; //Skip the checks this round. Save a little CPU with the array creation.
+        if (thinkingMechanics.isEmpty())
+            return; // Skip the checks this round. Save a little CPU with the array creation.
 
-        if(hasChanged || registeredLocations == null) {
+        if (hasChanged || registeredLocations == null) {
             registeredLocations = thinkingMechanics.toArray(new Location[thinkingMechanics.size()]);
         }
 
         for (Location location : registeredLocations) {
-            if(!location.getWorld().isChunkLoaded(location.getBlockX() >> 4, location.getBlockZ() >> 4)) {
+            if (!location.getWorld().isChunkLoaded(location.getBlockX() >> 4, location.getBlockZ() >> 4)) {
                 unregisterSelfTrigger(location, UnregisterReason.UNLOAD);
                 continue;
             }
@@ -144,11 +155,12 @@ public class SelfTriggeringManager implements Listener {
             try {
                 SelfTriggerThinkEvent event = new SelfTriggerThinkEvent(location.getBlock());
                 Bukkit.getServer().getPluginManager().callEvent(event);
-                if(!event.isHandled()) {
+                if (!event.isHandled()) {
                     unregisterSelfTrigger(location, UnregisterReason.NOT_HANDLED);
                 }
             } catch (Throwable t) { // Mechanic failed to think for some reason
-                CraftBookPlugin.logger().log(Level.WARNING, "CraftBook mechanic: Failed to think for " + location.toString());
+                CraftBookPlugin.logger().log(Level.WARNING,
+                        "CraftBook mechanic: Failed to think for " + location.toString());
                 CraftBookBukkitUtil.printStacktrace(t);
                 unregisterSelfTrigger(location, UnregisterReason.ERROR);
             }
@@ -161,7 +173,8 @@ public class SelfTriggeringManager implements Listener {
         if (!EventUtil.passesFilter(event))
             return;
 
-        CraftBookPlugin.server().getScheduler().runTaskLater(CraftBookPlugin.inst(), () -> registerSelfTrigger(event.getChunk()), 2);
+        CraftBookPlugin.server().getScheduler().runTaskLater(CraftBookPlugin.inst(),
+                () -> registerSelfTrigger(event.getChunk()), 2);
     }
 
     @EventHandler(priority = EventPriority.HIGH)

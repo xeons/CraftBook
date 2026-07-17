@@ -34,28 +34,30 @@ public class RecipeCommands {
     @CommandPermissions(value = "craftbook.mech.recipes.remove")
     public void deleteRecipe(CommandContext context, CommandSender sender) throws CommandException {
 
-        if(RecipeManager.INSTANCE == null) {
+        if (RecipeManager.INSTANCE == null) {
             sender.sendMessage(ChatColor.RED + "CustomCrafting is not enabled!");
             return;
         }
 
-        if(RecipeManager.INSTANCE.removeRecipe(context.getString(0))) {
+        if (RecipeManager.INSTANCE.removeRecipe(context.getString(0))) {
             sender.sendMessage(ChatColor.RED + "Recipe removed successfully! This will be in effect after a restart!");
             RecipeManager.INSTANCE.save();
         } else
             sender.sendMessage(ChatColor.RED + "Recipe doesn't exist!");
     }
 
-    @Command(aliases = {"save", "add"}, desc = "Saves the current recipe", usage = "RecipeName RecipeType -p permission node", flags = "p:", min = 2)
+    @Command(aliases = {"save",
+            "add"}, desc = "Saves the current recipe", usage = "RecipeName RecipeType -p permission node", flags = "p:", min = 2)
     @CommandPermissions(value = "craftbook.mech.recipes.add")
     public void saveRecipe(CommandContext context, CommandSender sender) throws CommandException {
 
-        if(RecipeManager.INSTANCE == null) {
+        if (RecipeManager.INSTANCE == null) {
             sender.sendMessage(ChatColor.RED + "CustomCrafting is not enabled!");
             return;
         }
 
-        if (!(sender instanceof Player)) return;
+        if (!(sender instanceof Player))
+            return;
         CraftBookPlayer player = plugin.wrapPlayer((Player) sender);
 
         String name = context.getString(0);
@@ -66,12 +68,15 @@ public class RecipeCommands {
             advancedData.put("permission-node", context.getFlag('p'));
         }
 
-        ItemStack[] slots = new ItemStack[]{((Player) sender).getInventory().getItem(9),((Player) sender).getInventory().getItem(10),
-                ((Player) sender).getInventory().getItem(11),((Player) sender).getInventory().getItem(18),((Player) sender).getInventory().getItem(19),
-                ((Player) sender).getInventory().getItem(20),((Player) sender).getInventory().getItem(27),((Player) sender).getInventory().getItem(28),
+        ItemStack[] slots = new ItemStack[]{((Player) sender).getInventory().getItem(9),
+                ((Player) sender).getInventory().getItem(10),
+                ((Player) sender).getInventory().getItem(11), ((Player) sender).getInventory().getItem(18),
+                ((Player) sender).getInventory().getItem(19),
+                ((Player) sender).getInventory().getItem(20), ((Player) sender).getInventory().getItem(27),
+                ((Player) sender).getInventory().getItem(28),
                 ((Player) sender).getInventory().getItem(29)};
 
-        if(type == RecipeType.SHAPED) {
+        if (type == RecipeType.SHAPED) {
 
             LinkedHashMap<CraftingItemStack, Character> items = new LinkedHashMap<>();
 
@@ -80,59 +85,59 @@ public class RecipeCommands {
 
             for (int slot = 0; slot < 3; slot++) {
                 ItemStack stack = slots[slot];
-                if(ItemUtil.isStackValid(stack)) {
+                if (ItemUtil.isStackValid(stack)) {
                     furtherestY = 0;
-                    if(furtherestX < slot)
+                    if (furtherestX < slot)
                         furtherestX = slot;
                 }
             }
             for (int slot = 3; slot < 6; slot++) {
                 ItemStack stack = slots[slot];
-                if(ItemUtil.isStackValid(stack)) {
+                if (ItemUtil.isStackValid(stack)) {
                     furtherestY = 1;
-                    if(furtherestX < slot-3)
-                        furtherestX = slot-3;
+                    if (furtherestX < slot - 3)
+                        furtherestX = slot - 3;
                 }
             }
             for (int slot = 6; slot < 9; slot++) {
                 ItemStack stack = slots[slot];
-                if(ItemUtil.isStackValid(stack)) {
+                if (ItemUtil.isStackValid(stack)) {
                     furtherestY = 2;
-                    if(furtherestX < slot-6)
-                        furtherestX = slot-6;
+                    if (furtherestX < slot - 6)
+                        furtherestX = slot - 6;
                 }
             }
 
-            if(furtherestX > 2)
+            if (furtherestX > 2)
                 furtherestX = 2;
 
-            String[] shape = new String[furtherestY+1];
-            Character[] characters = new Character[]{'a','b','c','d','e','f','g','h','i'};
+            String[] shape = new String[furtherestY + 1];
+            Character[] characters = new Character[]{'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'};
             int curChar = 0;
 
-            for(int y = 0; y < furtherestY+1; y++) {
-                for(int x = 0; x < furtherestX+1; x++) {
+            for (int y = 0; y < furtherestY + 1; y++) {
+                for (int x = 0; x < furtherestX + 1; x++) {
 
                     String c = " ";
-                    CraftingItemStack stack = new CraftingItemStack(slots[x+y*3]);
-                    if(ItemUtil.isStackValid(stack.getItemStack())) {
+                    CraftingItemStack stack = new CraftingItemStack(slots[x + y * 3]);
+                    if (ItemUtil.isStackValid(stack.getItemStack())) {
 
                         boolean found = false;
-                        for(Entry<CraftingItemStack, Character> st : items.entrySet()) {
-                            if(st.getKey().isSameType(stack)) {
+                        for (Entry<CraftingItemStack, Character> st : items.entrySet()) {
+                            if (st.getKey().isSameType(stack)) {
                                 c = st.getValue().toString();
                                 found = true;
                                 break;
                             }
                         }
-                        if(!found) {
+                        if (!found) {
                             items.put(stack, characters[curChar]);
                             c = characters[curChar].toString();
                             curChar++;
                         }
                     }
 
-                    if(x == 0)
+                    if (x == 0)
                         shape[y] = c;
                     else
                         shape[y] = shape[y] + c;
@@ -140,7 +145,7 @@ public class RecipeCommands {
             }
 
             List<CraftingItemStack> results = getResults(((Player) sender).getInventory());
-            if(results.size() > 1)
+            if (results.size() > 1)
                 advancedData.put("extra-results", results.subList(1, results.size()));
             else if (results.isEmpty()) {
                 player.printError("Results are required to create a recipe!");
@@ -148,10 +153,12 @@ public class RecipeCommands {
             }
 
             try {
-                RecipeManager.Recipe recipe = RecipeManager.INSTANCE.new Recipe(name, type, items, Arrays.asList(shape), results.get(0), advancedData);
+                RecipeManager.Recipe recipe = RecipeManager.INSTANCE.new Recipe(name, type, items, Arrays.asList(shape),
+                        results.get(0), advancedData);
                 RecipeManager.INSTANCE.addRecipe(recipe);
                 if (CustomCrafting.INSTANCE == null) {
-                    player.printError("You do not have CustomCrafting enabled, or Java has bugged and unloaded it (Did you use /reload?)!");
+                    player.printError(
+                            "You do not have CustomCrafting enabled, or Java has bugged and unloaded it (Did you use /reload?)!");
                     return;
                 }
                 CustomCrafting.INSTANCE.addRecipe(recipe);
@@ -165,29 +172,29 @@ public class RecipeCommands {
 
             ArrayList<CraftingItemStack> ingredients = new ArrayList<>();
 
-            for(ItemStack slot : slots) {
+            for (ItemStack slot : slots) {
 
-                if(!ItemUtil.isStackValid(slot))
+                if (!ItemUtil.isStackValid(slot))
                     continue;
 
                 CraftingItemStack stack = new CraftingItemStack(slot.clone());
 
                 boolean used = false;
-                for(CraftingItemStack compare : ingredients) {
+                for (CraftingItemStack compare : ingredients) {
 
-                    if(compare.isSameType(stack)) {
+                    if (compare.isSameType(stack)) {
                         ingredients.set(ingredients.indexOf(compare), compare.add(stack));
                         used = true;
                         break;
                     }
                 }
 
-                if(!used)
+                if (!used)
                     ingredients.add(stack);
             }
 
             List<CraftingItemStack> results = getResults(((Player) sender).getInventory());
-            if(results.size() > 1)
+            if (results.size() > 1)
                 advancedData.put("extra-results", results.subList(1, results.size()));
             else if (results.isEmpty()) {
                 player.printError("Results are required to create a recipe!");
@@ -195,7 +202,8 @@ public class RecipeCommands {
             }
 
             try {
-                RecipeManager.Recipe recipe = RecipeManager.INSTANCE.new Recipe(name, type, ingredients, results.get(0), advancedData);
+                RecipeManager.Recipe recipe = RecipeManager.INSTANCE.new Recipe(name, type, ingredients, results.get(0),
+                        advancedData);
                 RecipeManager.INSTANCE.addRecipe(recipe);
                 CustomCrafting.INSTANCE.addRecipe(recipe);
                 player.print("Successfully added a new " + type.name() + " recipe!");
@@ -210,10 +218,10 @@ public class RecipeCommands {
 
         List<CraftingItemStack> results = new ArrayList<>();
 
-        for(int i = 21; i < 27; i++) {
+        for (int i = 21; i < 27; i++) {
 
             ItemStack slot = inv.getItem(i);
-            if(!ItemUtil.isStackValid(slot))
+            if (!ItemUtil.isStackValid(slot))
                 break;
 
             results.add(new CraftingItemStack(slot));

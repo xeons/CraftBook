@@ -1,15 +1,15 @@
 // $Id$
 /*
  * Copyright (C) 2010, 2011 sk89q <http://www.sk89q.com>
- * 
+ *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
  * License as published by the Free
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
  * warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with this program. If not,
  * see <http://www.gnu.org/licenses/>.
  */
@@ -61,12 +61,15 @@ public class FlexibleSetBlock extends AbstractIC {
         String line4 = getSign().getLine(3);
 
         String[] params = RegexUtil.COLON_PATTERN.split(line3, 2);
-        if (params.length < 2) return;
-        if (params[0].length() < 2) return;
+        if (params.length < 2)
+            return;
+        if (params[0].length() < 2)
+            return;
 
         // Get and validate axis
         String axis = params[0].substring(0, 1);
-        if (!axis.equals("X") && !axis.equals("Y") && !axis.equals("Z")) return;
+        if (!axis.equals("X") && !axis.equals("Y") && !axis.equals("Z"))
+            return;
 
         // Get and validate operator (default +)
         String op = params[0].substring(1, 2);
@@ -104,13 +107,13 @@ public class FlexibleSetBlock extends AbstractIC {
         z = body.getZ();
 
         switch (axis) {
-            case "X":
+            case "X" :
                 x += dist;
                 break;
-            case "Y":
+            case "Y" :
                 y += dist;
                 break;
-            default:
+            default :
                 z += dist;
                 break;
         }
@@ -135,7 +138,8 @@ public class FlexibleSetBlock extends AbstractIC {
 
         boolean inp = chip.getInput(0);
 
-        if (body == null) return;
+        if (body == null)
+            return;
 
         if (inp) {
             body.getWorld().getBlockAt(x, y, z).setBlockData(block, true);
@@ -163,8 +167,10 @@ public class FlexibleSetBlock extends AbstractIC {
             String line3 = sign.getLine(2).toUpperCase(Locale.ENGLISH);
 
             String[] params = RegexUtil.COLON_PATTERN.split(line3, 2);
-            if (params.length < 2) throw new ICVerificationException("Not enough parameters on second line!");
-            if (params[0].length() < 2) throw new ICVerificationException("Invalid first parameter!");
+            if (params.length < 2)
+                throw new ICVerificationException("Not enough parameters on second line!");
+            if (params[0].length() < 2)
+                throw new ICVerificationException("Invalid first parameter!");
 
             // Get and validate axis
             String axis = params[0].substring(0, 1);
@@ -203,7 +209,7 @@ public class FlexibleSetBlock extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"axis{+/-}distance:blockTypeId{:blockData}", "H to clear on low."};
+            return new String[]{"axis{+/-}distance:blockTypeId{:blockData}", "H to clear on low."};
         }
     }
 }

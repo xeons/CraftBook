@@ -18,19 +18,23 @@ public class EmptyDecay extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onVehicleExit(VehicleExitEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event))
+            return;
 
         Vehicle vehicle = event.getVehicle();
 
-        if (!(vehicle instanceof RideableMinecart)) return;
+        if (!(vehicle instanceof RideableMinecart))
+            return;
 
-        CraftBookPlugin.inst().getServer().getScheduler().runTaskLater(CraftBookPlugin.inst(), new Decay((RideableMinecart) vehicle), delay);
+        CraftBookPlugin.inst().getServer().getScheduler().runTaskLater(CraftBookPlugin.inst(),
+                new Decay((RideableMinecart) vehicle), delay);
     }
 
     @EventHandler(priority = EventPriority.HIGH)
     public void onChunkLoad(ChunkLoadEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event))
+            return;
 
         for (Entity ent : event.getChunk().getEntities()) {
             if (ent == null || !ent.isValid())
@@ -39,7 +43,8 @@ public class EmptyDecay extends AbstractCraftBookMechanic {
                 continue;
             if (!ent.isEmpty())
                 continue;
-            CraftBookPlugin.inst().getServer().getScheduler().runTaskLater(CraftBookPlugin.inst(), new Decay((RideableMinecart) ent), delay);
+            CraftBookPlugin.inst().getServer().getScheduler().runTaskLater(CraftBookPlugin.inst(),
+                    new Decay((RideableMinecart) ent), delay);
         }
     }
 
@@ -55,7 +60,8 @@ public class EmptyDecay extends AbstractCraftBookMechanic {
         @Override
         public void run() {
 
-            if (cart == null || !cart.isValid() || !cart.isEmpty()) return;
+            if (cart == null || !cart.isValid() || !cart.isEmpty())
+                return;
             cart.remove();
         }
     }
@@ -63,7 +69,7 @@ public class EmptyDecay extends AbstractCraftBookMechanic {
     private int delay;
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadConfiguration(YAMLProcessor config, String path) {
 
         config.setComment(path + "time-in-ticks", "The time in ticks that the cart will wait before decaying.");
         delay = config.getInt(path + "time-in-ticks", 20);

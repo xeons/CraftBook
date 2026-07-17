@@ -93,7 +93,7 @@ public class BlockBreaker extends AbstractSelfTriggeredIC {
 
         ItemStack tool = null;
 
-        if(useSilkTouch) {
+        if (useSilkTouch) {
             tool = new ItemStack(Material.NETHERITE_PICKAXE);
             ItemMeta meta = tool.getItemMeta();
             if (meta != null) {
@@ -103,7 +103,8 @@ public class BlockBreaker extends AbstractSelfTriggeredIC {
         }
 
         if (item == null || item.equalsFuzzy(BukkitAdapter.adapt(brokenData))) {
-            ICUtil.collectItem(this, above ? BlockVector3.at(0, -1, 0) : BlockVector3.at(0, 1, 0), BlockUtil.getBlockDrops(broken, tool));
+            ICUtil.collectItem(this, above ? BlockVector3.at(0, -1, 0) : BlockVector3.at(0, 1, 0),
+                    BlockUtil.getBlockDrops(broken, tool));
             broken.setType(Material.AIR);
         }
 
@@ -131,11 +132,11 @@ public class BlockBreaker extends AbstractSelfTriggeredIC {
         @Override
         public void verify(ChangedSign sign) throws ICVerificationException {
 
-            if(!sign.getLine(2).trim().isEmpty()) {
+            if (!sign.getLine(2).trim().isEmpty()) {
                 BaseBlock item = BlockSyntax.getBlock(sign.getLine(2), true);
-                if(item == null)
+                if (item == null)
                     throw new ICVerificationException("An invalid block was provided on line 2!");
-                if(Blocks.containsFuzzy(blockBlacklist, item))
+                if (Blocks.containsFuzzy(blockBlacklist, item))
                     throw new ICVerificationException("A blacklisted block was provided on line 2!");
             }
         }
@@ -149,14 +150,15 @@ public class BlockBreaker extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"+oBlock ID:Data", null};
+            return new String[]{"+oBlock ID:Data", null};
         }
 
         @Override
-        public void addConfiguration (YAMLProcessor config, String path) {
+        public void addConfiguration(YAMLProcessor config, String path) {
 
             config.setComment(path + "blacklist", "Stops the IC from breaking the listed blocks.");
-            blockBlacklist = BlockSyntax.getBlocks(config.getStringList(path + "blacklist", Lists.newArrayList(BlockTypes.BEDROCK.id())), true);
+            blockBlacklist = BlockSyntax.getBlocks(
+                    config.getStringList(path + "blacklist", Lists.newArrayList(BlockTypes.BEDROCK.id())), true);
         }
     }
 }

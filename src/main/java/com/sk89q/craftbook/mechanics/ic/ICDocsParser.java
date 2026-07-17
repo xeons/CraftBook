@@ -43,14 +43,15 @@ public class ICDocsParser {
             } else {
                 player.sendMessage(ChatColor.DARK_GRAY + "Line 4: Blank.");
             }
-            player.sendMessage(ChatColor.AQUA + "Docs: " + CraftBookPlugin.getWikiDomain() + "/mechanics/ics/" + ric.getId().toUpperCase(Locale.ENGLISH));
+            player.sendMessage(ChatColor.AQUA + "Docs: " + CraftBookPlugin.getWikiDomain() + "/mechanics/ics/"
+                    + ric.getId().toUpperCase(Locale.ENGLISH));
         } catch (Exception ignored) {
         }
     }
 
     private static String parseLine(String line) {
 
-        if(line.contains("+o"))
+        if (line.contains("+o"))
             line = ChatColor.GRAY + line + " (Optional)";
 
         line = StringUtils.replace(line, "{", ChatColor.GRAY + "");

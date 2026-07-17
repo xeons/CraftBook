@@ -19,7 +19,8 @@ public class RemoveEntities extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onVehicleEntityCollision(VehicleEntityCollisionEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event))
+            return;
 
         if (!(event.getVehicle() instanceof Boat))
             return;
@@ -30,17 +31,18 @@ public class RemoveEntities extends AbstractCraftBookMechanic {
             return;
 
         if (event.getEntity() instanceof LivingEntity) {
-            if(event.getEntity().isInsideVehicle())
+            if (event.getEntity().isInsideVehicle())
                 return;
             ((LivingEntity) event.getEntity()).damage(10);
             try {
-                event.getEntity().setVelocity(event.getVehicle().getVelocity().normalize().multiply(1.8).add(HALF_BLOCK_UP));
-            } catch(IllegalArgumentException e) {
+                event.getEntity()
+                        .setVelocity(event.getVehicle().getVelocity().normalize().multiply(1.8).add(HALF_BLOCK_UP));
+            } catch (IllegalArgumentException e) {
                 event.getEntity().setVelocity(HALF_BLOCK_UP);
             }
         } else if (event.getEntity() instanceof Vehicle) {
 
-            if(!event.getEntity().isEmpty())
+            if (!event.getEntity().isEmpty())
                 return;
             else
                 event.getEntity().remove();
@@ -55,7 +57,7 @@ public class RemoveEntities extends AbstractCraftBookMechanic {
     private boolean removeOtherBoats;
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadConfiguration(YAMLProcessor config, String path) {
 
         config.setComment(path + "remove-other-boats", "Allows the remove entities boats to remove other boats.");
         removeOtherBoats = config.getBoolean(path + "remove-other-boats", false);

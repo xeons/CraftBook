@@ -16,7 +16,8 @@ public class PipeFilterEvent extends PipeEvent {
     private Set<ItemStack> excludeFilters;
     private List<ItemStack> filteredItems;
 
-    public PipeFilterEvent(Block theBlock, List<ItemStack> items, Set<ItemStack> includeFilters, Set<ItemStack> excludeFilters, List<ItemStack> filteredItems) {
+    public PipeFilterEvent(Block theBlock, List<ItemStack> items, Set<ItemStack> includeFilters,
+            Set<ItemStack> excludeFilters, List<ItemStack> filteredItems) {
         super(theBlock, items);
 
         this.includeFilters = includeFilters;

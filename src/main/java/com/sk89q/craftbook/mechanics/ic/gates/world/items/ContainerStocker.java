@@ -37,7 +37,7 @@ public class ContainerStocker extends AbstractSelfTriggeredIC {
     @Override
     public void load() {
 
-        if(getLine(3).isEmpty())
+        if (getLine(3).isEmpty())
             offset = getBackBlock().getRelative(0, 1, 0).getLocation();
         else
             offset = ICUtil.parseBlockLocation(getSign(), 3).getLocation();
@@ -59,7 +59,8 @@ public class ContainerStocker extends AbstractSelfTriggeredIC {
     @Override
     public void trigger(ChipState chip) {
 
-        if (chip.getInput(0)) chip.setOutput(0, stock());
+        if (chip.getInput(0))
+            chip.setOutput(0, stock());
     }
 
     @Override
@@ -75,16 +76,17 @@ public class ContainerStocker extends AbstractSelfTriggeredIC {
             BlockFace back = SignUtil.getBack(CraftBookBukkitUtil.toSign(getSign()).getBlock());
             Block pipe = getBackBlock().getRelative(back);
 
-            PipeRequestEvent event = new PipeRequestEvent(pipe, new ArrayList<>(Collections.singletonList(item.clone())), getBackBlock());
+            PipeRequestEvent event = new PipeRequestEvent(pipe,
+                    new ArrayList<>(Collections.singletonList(item.clone())), getBackBlock());
             Bukkit.getPluginManager().callEvent(event);
 
-            if(!event.isValid())
+            if (!event.isValid())
                 return false;
 
             InventoryHolder c = (InventoryHolder) offset.getBlock().getState();
-            for(ItemStack stack : event.getItems())
+            for (ItemStack stack : event.getItems())
                 if (c.getInventory().addItem(stack).isEmpty()) {
-                    //((BlockState) c).update();
+                    // ((BlockState) c).update();
                     return true;
                 }
         }
@@ -113,7 +115,7 @@ public class ContainerStocker extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"item id:data", "x:y:z offset"};
+            return new String[]{"item id:data", "x:y:z offset"};
         }
     }
 }

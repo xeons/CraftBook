@@ -40,7 +40,8 @@ class VariablePacketModifier {
                 }
             } catch (RuntimeException e) {
                 // Never break the outbound packet pipeline over a variable substitution failure.
-                CraftBookPlugin.inst().getLogger().warning("Failed to substitute variables in a system chat packet: " + e.getMessage());
+                CraftBookPlugin.inst().getLogger()
+                        .warning("Failed to substitute variables in a system chat packet: " + e.getMessage());
             }
         }
     }

@@ -33,7 +33,7 @@ import java.util.List;
 
 public class RangedCollector extends AbstractSelfTriggeredIC {
 
-    public RangedCollector (Server server, ChangedSign sign, ICFactory factory) {
+    public RangedCollector(Server server, ChangedSign sign, ICFactory factory) {
         super(server, sign, factory);
     }
 
@@ -50,15 +50,16 @@ public class RangedCollector extends AbstractSelfTriggeredIC {
     }
 
     @Override
-    public void think (ChipState chip) {
+    public void think(ChipState chip) {
 
-        if(chip.getInput(0)) return;
+        if (chip.getInput(0))
+            return;
 
         chip.setOutput(0, collect());
     }
 
     @Override
-    public void trigger (ChipState chip) {
+    public void trigger(ChipState chip) {
         if (chip.getInput(0))
             chip.setOutput(0, collect());
     }
@@ -77,7 +78,7 @@ public class RangedCollector extends AbstractSelfTriggeredIC {
 
         radius = ICUtil.parseRadius(getSign());
         String radiusString = radius.x() + "," + radius.y() + "," + radius.z();
-        if(radius.x() == radius.y() && radius.y() == radius.z())
+        if (radius.x() == radius.y() && radius.y() == radius.z())
             radiusString = String.valueOf(radius.x());
         if (getLine(2).contains("=")) {
             getSign().setLine(2, radiusString + "=" + RegexUtil.EQUALS_PATTERN.split(getLine(2))[1]);
@@ -89,7 +90,7 @@ public class RangedCollector extends AbstractSelfTriggeredIC {
 
         include = !getLine(3).startsWith("-");
 
-        for(String bit : getLine(3).replace("-","").split(",")) {
+        for (String bit : getLine(3).replace("-", "").split(",")) {
             if (bit.trim().length() > 0) {
                 ItemStack item = ItemSyntax.getItem(bit);
                 if (ItemUtil.isStackValid(item)) {
@@ -111,19 +112,19 @@ public class RangedCollector extends AbstractSelfTriggeredIC {
             if (entity.isValid() && entity instanceof Item && ((Item) entity).getPickupDelay() < 1) {
                 ItemStack stack = ((Item) entity).getItemStack();
 
-                if(!ItemUtil.isStackValid(stack))
+                if (!ItemUtil.isStackValid(stack))
                     return false;
 
                 boolean passed = filters.isEmpty() || !include;
 
-                for(ItemStack filter : filters) {
-                    if(!ItemUtil.isStackValid(filter))
+                for (ItemStack filter : filters) {
+                    if (!ItemUtil.isStackValid(filter))
                         continue;
 
-                    if(include && ItemUtil.areItemsIdentical(filter, stack)) {
+                    if (include && ItemUtil.areItemsIdentical(filter, stack)) {
                         passed = true;
                         break;
-                    } else if(!include && ItemUtil.areItemsIdentical(filter, stack)) {
+                    } else if (!include && ItemUtil.areItemsIdentical(filter, stack)) {
                         passed = false;
                         break;
                     }
@@ -136,14 +137,15 @@ public class RangedCollector extends AbstractSelfTriggeredIC {
                 BlockFace back = SignUtil.getBack(CraftBookBukkitUtil.toSign(getSign()).getBlock());
                 Block pipe = getBackBlock().getRelative(back);
 
-                RangedCollectEvent event = new RangedCollectEvent(pipe, (Item) entity, new ArrayList<>(Collections.singletonList(stack)), getBackBlock());
+                RangedCollectEvent event = new RangedCollectEvent(pipe, (Item) entity,
+                        new ArrayList<>(Collections.singletonList(stack)), getBackBlock());
                 Bukkit.getPluginManager().callEvent(event);
 
                 if (event.isCancelled()) {
                     continue;
                 }
 
-                if(event.getItems().isEmpty()) {
+                if (event.getItems().isEmpty()) {
                     entity.remove();
                     return true;
                 }
@@ -153,7 +155,7 @@ public class RangedCollector extends AbstractSelfTriggeredIC {
         }
 
         if (!itemsForChest.isEmpty()) {
-            if(!InventoryUtil.doesBlockHaveInventory(chest))
+            if (!InventoryUtil.doesBlockHaveInventory(chest))
                 return false;
 
             InventoryHolder chestState = (InventoryHolder) chest.getState();
@@ -165,16 +167,17 @@ public class RangedCollector extends AbstractSelfTriggeredIC {
                 if (leftovers.isEmpty()) {
                     entity.remove();
                 } else {
-                    if (ItemUtil.areItemsIdentical(leftovers.get(0), stack) && leftovers.get(0).getAmount() != stack.getAmount()) {
+                    if (ItemUtil.areItemsIdentical(leftovers.get(0), stack)
+                            && leftovers.get(0).getAmount() != stack.getAmount()) {
                         entity.setItemStack(leftovers.get(0));
                     }
                 }
                 collected = true;
             }
 
-            //if (collected) {
-            //    chestState.update();
-            //}
+            // if (collected) {
+            // chestState.update();
+            // }
         }
 
         return collected;
@@ -202,7 +205,7 @@ public class RangedCollector extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"radius=x:y:z offset", "{-}id:data{,id:data}"};
+            return new String[]{"radius=x:y:z offset", "{-}id:data{,id:data}"};
         }
     }
 }

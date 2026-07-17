@@ -50,15 +50,17 @@ public class Irrigator extends AbstractSelfTriggeredIC {
     @Override
     public void trigger(ChipState chip) {
 
-        if (chip.getInput(0)) chip.setOutput(0, irrigate());
+        if (chip.getInput(0))
+            chip.setOutput(0, irrigate());
     }
 
     @Override
     public void think(ChipState chip) {
 
-        if(chip.getInput(0)) return;
+        if (chip.getInput(0))
+            return;
 
-        for(int i = 0; i < 10; i++)
+        for (int i = 0; i < 10; i++)
             chip.setOutput(0, irrigate());
     }
 
@@ -66,7 +68,8 @@ public class Irrigator extends AbstractSelfTriggeredIC {
 
         Block b = area.getRandomBlockInArea();
 
-        if(b == null) return false;
+        if (b == null)
+            return false;
 
         if (b.getType() == Material.FARMLAND) {
             Farmland farmland = (Farmland) b.getBlockData();
@@ -127,12 +130,12 @@ public class Irrigator extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"+oSearchArea", null};
+            return new String[]{"+oSearchArea", null};
         }
 
         @Override
         public void verify(ChangedSign sign) throws ICVerificationException {
-            if(!SearchArea.isValidArea(CraftBookBukkitUtil.toSign(sign).getBlock(), sign.getLine(2)))
+            if (!SearchArea.isValidArea(CraftBookBukkitUtil.toSign(sign).getBlock(), sign.getLine(2)))
                 throw new ICVerificationException("Invalid SearchArea on 3rd line!");
         }
     }

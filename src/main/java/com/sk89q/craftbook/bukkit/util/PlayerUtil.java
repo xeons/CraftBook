@@ -25,7 +25,8 @@ public final class PlayerUtil {
      */
     public static Player checkPlayer(CommandSender sender) throws CommandException {
 
-        if (sender instanceof Player) return (Player) sender;
+        if (sender instanceof Player)
+            return (Player) sender;
         else
             throw new CommandException("A player context is required. (Specify a world or player if the command " +
                     "supports it.)");
@@ -80,7 +81,8 @@ public final class PlayerUtil {
 
             for (Player player : players) {
                 if (player.getName().toLowerCase(Locale.ENGLISH).startsWith(filter) || useDisplayNames
-                        && ChatColor.stripColor(player.getDisplayName().toLowerCase(Locale.ENGLISH)).startsWith(filter)) {
+                        && ChatColor.stripColor(player.getDisplayName().toLowerCase(Locale.ENGLISH))
+                                .startsWith(filter)) {
                     list.add(player);
                 }
             }
@@ -98,9 +100,11 @@ public final class PlayerUtil {
      *
      * @throws CommandException
      */
-    protected static Iterable<? extends Player> checkPlayerMatch(Collection<? extends Player> players) throws CommandException {
+    protected static Iterable<? extends Player> checkPlayerMatch(Collection<? extends Player> players)
+            throws CommandException {
         // Check to see if there were any matches
-        if (players.isEmpty()) throw new CommandException("No players matched query.");
+        if (players.isEmpty())
+            throw new CommandException("No players matched query.");
 
         return players;
     }
@@ -120,7 +124,8 @@ public final class PlayerUtil {
         if (CraftBookPlugin.server().getOnlinePlayers().size() == 0)
             throw new CommandException("No players matched query.");
 
-        if (filter.equals("*")) return checkPlayerMatch(CraftBookPlugin.server().getOnlinePlayers());
+        if (filter.equals("*"))
+            return checkPlayerMatch(CraftBookPlugin.server().getOnlinePlayers());
 
         // Handle special hash tag groups
         if (filter.charAt(0) == '#') // Handle #world, which matches player of the same world as the
@@ -144,13 +149,15 @@ public final class PlayerUtil {
                 Player sourcePlayer = checkPlayer(source);
 
                 for (Player player : CraftBookPlugin.server().getOnlinePlayers()) {
-                    if (player.getWorld().equals(sourcePlayer.getWorld()) && LocationUtil.getDistanceSquared(player.getLocation(), sourcePlayer.getLocation()) < 900)
+                    if (player.getWorld().equals(sourcePlayer.getWorld())
+                            && LocationUtil.getDistanceSquared(player.getLocation(), sourcePlayer.getLocation()) < 900)
                         players.add(player);
                 }
 
                 return checkPlayerMatch(players);
 
-            } else throw new CommandException("Invalid group '" + filter + "'.");
+            } else
+                throw new CommandException("Invalid group '" + filter + "'.");
 
         List<Player> players = matchPlayerNames(filter);
 
@@ -262,8 +269,10 @@ public final class PlayerUtil {
                 name = name + endColor;
             }
             return name;
-        } else if (sender instanceof ConsoleCommandSender) return "*Console*";
-        else return sender.getName();
+        } else if (sender instanceof ConsoleCommandSender)
+            return "*Console*";
+        else
+            return sender.getName();
     }
 
     /**
@@ -275,7 +284,9 @@ public final class PlayerUtil {
      */
     public static String toUniqueName(CommandSender sender) {
 
-        if (sender instanceof Player) return sender.getName();
-        else return "*Console*";
+        if (sender instanceof Player)
+            return sender.getName();
+        else
+            return "*Console*";
     }
 }

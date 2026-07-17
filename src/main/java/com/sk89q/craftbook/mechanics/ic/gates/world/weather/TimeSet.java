@@ -86,7 +86,7 @@ public class TimeSet extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"time to set", null};
+            return new String[]{"time to set", null};
         }
     }
 

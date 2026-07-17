@@ -89,7 +89,11 @@ public class BoatExitRemoverTest {
 
         Inventory inv = mock(PlayerInventory.class);
 
-        when(inv.addItem(Mockito.<ItemStack[]>any())).thenReturn(new HashMap<Integer, ItemStack>(){{put(0,null);}});
+        when(inv.addItem(Mockito.<ItemStack[]>any())).thenReturn(new HashMap<Integer, ItemStack>() {
+            {
+                put(0, null);
+            }
+        });
 
         when(((Player) player).getInventory()).thenReturn((PlayerInventory) inv);
 

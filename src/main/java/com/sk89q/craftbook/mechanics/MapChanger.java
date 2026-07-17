@@ -23,12 +23,14 @@ public class MapChanger extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onSignChange(SignChangeEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event))
+            return;
 
-        if(!event.getLine(1).equalsIgnoreCase("[map]")) return;
+        if (!event.getLine(1).equalsIgnoreCase("[map]"))
+            return;
         CraftBookPlayer lplayer = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
-        if(!lplayer.hasPermission("craftbook.mech.map")) {
-            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+        if (!lplayer.hasPermission("craftbook.mech.map")) {
+            if (CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
                 lplayer.printError("You don't have permission for this.");
             SignUtil.cancelSign(event);
             return;
@@ -42,28 +44,32 @@ public class MapChanger extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onSignClick(SignClickEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event))
+            return;
 
-        if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK)
+            return;
         ChangedSign sign = event.getSign();
-        if(!sign.getLine(1).equalsIgnoreCase("[map]")) return;
+        if (!sign.getLine(1).equalsIgnoreCase("[map]"))
+            return;
 
         CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
         if (!player.hasPermission("craftbook.mech.map.use")) {
-            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+            if (CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
                 player.printError("mech.use-permission");
             return;
         }
 
-        if(!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(), event.getAction())) {
-            if(CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
+        if (!ProtectionUtil.canUse(event.getPlayer(), event.getClickedBlock().getLocation(), event.getBlockFace(),
+                event.getAction())) {
+            if (CraftBookPlugin.inst().getConfiguration().showPermissionMessages)
                 player.printError("area.use-permissions");
             return;
         }
 
         ItemStack item = event.getPlayer().getInventory().getItemInMainHand();
-        if (item == null 
-            || (item.getType() != Material.MAP && item.getType() != Material.FILLED_MAP)) {
+        if (item == null
+                || (item.getType() != Material.MAP && item.getType() != Material.FILLED_MAP)) {
             return;
         }
 
@@ -89,7 +95,7 @@ public class MapChanger extends AbstractCraftBookMechanic {
     }
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadConfiguration(YAMLProcessor config, String path) {
 
     }
 }

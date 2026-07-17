@@ -53,11 +53,11 @@ public class FullSubtractor extends AbstractIC {
         @Override
         public String[] getPinDescription(ChipState state) {
 
-            return new String[] {
-                    "Bit to be subtracted from (minuend)",//Inputs
+            return new String[]{
+                    "Bit to be subtracted from (minuend)", // Inputs
                     "First bit to subract (subtrahend)",
                     "Second bit to subtract (subtrahend)",
-                    "Difference",//Outputs
+                    "Difference", // Outputs
                     "Borrow",
                     "Borrow (Same as Output 2)"
             };

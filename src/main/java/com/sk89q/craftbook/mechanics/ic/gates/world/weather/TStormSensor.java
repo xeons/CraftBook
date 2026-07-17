@@ -59,9 +59,9 @@ public class TStormSensor extends AbstractSelfTriggeredIC {
         @Override
         public String[] getPinDescription(ChipState state) {
 
-            return new String[] {
-                    "Trigger IC",//Inputs
-                    "High if storming"//Outputs
+            return new String[]{
+                    "Trigger IC", // Inputs
+                    "High if storming"// Outputs
             };
         }
 

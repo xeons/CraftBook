@@ -1,15 +1,15 @@
 // $Id$
 /*
  * Copyright (C) 2012 Lymia Aluysia <lymiahugs@gmail.com>
- * 
+ *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
  * License as published by the Free
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
  * warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with this program. If not,
  * see <http://www.gnu.org/licenses/>.
  */
@@ -82,7 +82,8 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
 
         lang = l;
         sign = s;
-        if (s == null) return;
+        if (s == null)
+            return;
         try {
             codeString = getCode();
         } catch (CodeNotFoundException e) {
@@ -113,7 +114,8 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
 
         if (!isShared()) {
             return lang.getName() + "$$" + sign.getX() + "_" + sign.getY() + "_" + sign.getZ();
-        } else return lang.getName() + "$" + sign.getLine(3);
+        } else
+            return lang.getName() + "$" + sign.getLine(3);
     }
 
     private File getStorageLocation() {
@@ -121,12 +123,12 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
         World w = sign.getBlock().getWorld();
         File worldDir = w.getWorldFolder();
         File targetDir = new File(new File(worldDir, "craftbook"), "plcs");
-        if(new File(worldDir, "craftbook-plcs").exists()) {
+        if (new File(worldDir, "craftbook-plcs").exists()) {
 
             File oldFolder = new File(worldDir, "craftbook-plcs");
-            if(!targetDir.exists())
+            if (!targetDir.exists())
                 targetDir.mkdirs();
-            if(!oldFolder.renameTo(targetDir))
+            if (!oldFolder.renameTo(targetDir))
                 logger.warning("Failed to copy PLC States over to new directory!");
             oldFolder.delete();
         }
@@ -136,7 +138,7 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
 
     private String hashCode(String code) {
 
-        if(code == null)
+        if (code == null)
             return "";
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-1");
@@ -168,14 +170,15 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
 
     private void loadState() throws IOException {
 
-        if (!getStorageLocation().exists()) return; // Prevent error spam
+        if (!getStorageLocation().exists())
+            return; // Prevent error spam
 
         try (DataInputStream in = new DataInputStream(new FileInputStream(getStorageLocation()))) {
             switch (in.readInt()) {
-                case 1:
+                case 1 :
                     error = in.readBoolean();
                     errorString = in.readUTF();
-                case 0:
+                case 0 :
                     String langName = in.readUTF();
                     String id = in.readUTF();
                     String code = hashCode(in.readUTF());
@@ -188,7 +191,7 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
                         errorString = "no error";
                     }
                     break;
-                default:
+                default :
                     throw new IOException("incompatible version");
             }
         }
@@ -223,12 +226,15 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
         Inventory i = c.getBlockInventory();
         ItemStack book = null;
         for (ItemStack s : i.getContents()) {
-            if (s != null && s.getAmount() > 0 && (s.getType() == Material.WRITABLE_BOOK || s.getType() == Material.WRITTEN_BOOK)) {
-                if (book != null) throw new CodeNotFoundException("More than one written book found in chest!!");
+            if (s != null && s.getAmount() > 0
+                    && (s.getType() == Material.WRITABLE_BOOK || s.getType() == Material.WRITTEN_BOOK)) {
+                if (book != null)
+                    throw new CodeNotFoundException("More than one written book found in chest!!");
                 book = s;
             }
         }
-        if (book == null) throw new CodeNotFoundException("No written books found in chest.");
+        if (book == null)
+            throw new CodeNotFoundException("No written books found in chest.");
 
         StringBuilder code = new StringBuilder();
         for (String s : ((BookMeta) book.getItemMeta()).getPages()) {
@@ -243,9 +249,11 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
         Sign sign = CraftBookBukkitUtil.toSign(this.sign);
 
         Block above = sign.getLocation().add(new Vector(0, 1, 0)).getBlock();
-        if (above.getType() == Material.CHEST) return getBookCode(above);
+        if (above.getType() == Material.CHEST)
+            return getBookCode(above);
         Block below = sign.getLocation().add(new Vector(0, -1, 0)).getBlock();
-        if (below.getType() == Material.CHEST) return getBookCode(below);
+        if (below.getType() == Material.CHEST)
+            return getBookCode(below);
 
         org.bukkit.Location l = sign.getLocation();
         World w = l.getWorld();
@@ -254,22 +262,23 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
         int z = l.getBlockZ();
 
         for (int y = 0; y < w.getMaxHeight(); y++) {
-            if (y != l.getBlockY()) if (SignUtil.isSign(w.getBlockAt(x, y, z))) {
-                ChangedSign s = CraftBookBukkitUtil.toChangedSign(w.getBlockAt(x, y, z));
-                if (s.getLine(1).equalsIgnoreCase("[Code Block]")) {
-                    y--;
-                    Block b = w.getBlockAt(x, y, z);
-                    StringBuilder code = new StringBuilder();
-                    while (SignUtil.isSign(b)) {
-                        s = CraftBookBukkitUtil.toChangedSign(b);
-                        for (int li = 0; li < 4 && y != l.getBlockY(); li++) {
-                            code.append(s.getLine(li)).append('\n');
+            if (y != l.getBlockY())
+                if (SignUtil.isSign(w.getBlockAt(x, y, z))) {
+                    ChangedSign s = CraftBookBukkitUtil.toChangedSign(w.getBlockAt(x, y, z));
+                    if (s.getLine(1).equalsIgnoreCase("[Code Block]")) {
+                        y--;
+                        Block b = w.getBlockAt(x, y, z);
+                        StringBuilder code = new StringBuilder();
+                        while (SignUtil.isSign(b)) {
+                            s = CraftBookBukkitUtil.toChangedSign(b);
+                            for (int li = 0; li < 4 && y != l.getBlockY(); li++) {
+                                code.append(s.getLine(li)).append('\n');
+                            }
+                            b = w.getBlockAt(x, --y, z);
                         }
-                        b = w.getBlockAt(x, --y, z);
+                        return code.toString();
                     }
-                    return code.toString();
                 }
-            }
         }
         throw new CodeNotFoundException("No code source found.");
     }
@@ -354,13 +363,13 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
     }
 
     @Override
-    public ChangedSign getSign () {
+    public ChangedSign getSign() {
 
         return sign;
     }
 
     @Override
-    public void onICBreak (BlockBreakEvent event) {
+    public void onICBreak(BlockBreakEvent event) {
     }
 
     private static class SelfTriggeredPlcIC implements SelfTriggeredIC {
@@ -411,17 +420,17 @@ class PlcIC<StateT, CodeT, Lang extends PlcLanguage<StateT, CodeT>> implements I
         }
 
         @Override
-        public boolean isAlwaysST () {
+        public boolean isAlwaysST() {
             return false;
         }
 
         @Override
-        public ChangedSign getSign () {
+        public ChangedSign getSign() {
             return self.getSign();
         }
 
         @Override
-        public void onICBreak (BlockBreakEvent event) {
+        public void onICBreak(BlockBreakEvent event) {
         }
     }
 }

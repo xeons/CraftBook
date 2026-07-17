@@ -14,7 +14,7 @@ public class CartBlockEnterEvent extends VehicleEnterEvent {
 
     protected final CartMechanismBlocks blocks;
 
-    public CartBlockEnterEvent (Vehicle vehicle, Entity entered, CartMechanismBlocks blocks) {
+    public CartBlockEnterEvent(Vehicle vehicle, Entity entered, CartMechanismBlocks blocks) {
         super(vehicle, entered);
 
         this.blocks = blocks;

@@ -46,38 +46,44 @@ public class HeadDrops extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onEntityDeath(EntityDeathEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event))
+            return;
 
-        if(playerKillsOnly && event.getEntity().getKiller() == null) return;
-        if(event.getEntityType() == null) return;
+        if (playerKillsOnly && event.getEntity().getKiller() == null)
+            return;
+        if (event.getEntityType() == null)
+            return;
 
-        if(event.getEntity().getKiller() != null && !event.getEntity().getKiller().hasPermission("craftbook.mech.headdrops.kill"))
+        if (event.getEntity().getKiller() != null
+                && !event.getEntity().getKiller().hasPermission("craftbook.mech.headdrops.kill"))
             return;
 
         String typeName = event.getEntityType().getName();
         if (typeName == null && event.getEntityType() == EntityType.PLAYER)
             typeName = "PLAYER";
         else if (typeName == null)
-            return; //Invalid type.
+            return; // Invalid type.
         else
             typeName = typeName.toUpperCase();
 
         double chance = Math.min(1, dropRate);
-        if(customDropRates.containsKey(typeName))
+        if (customDropRates.containsKey(typeName))
             chance = Math.min(1, customDropRates.get(typeName));
 
-        if(event.getEntity().getKiller() != null && event.getEntity().getKiller().getItemInHand() != null && event.getEntity().getKiller().getItemInHand().containsEnchantment(Enchantment.LOOTING))
-            chance = Math.min(1, chance + rateModifier * event.getEntity().getKiller().getItemInHand().getEnchantmentLevel(Enchantment.LOOTING));
+        if (event.getEntity().getKiller() != null && event.getEntity().getKiller().getItemInHand() != null
+                && event.getEntity().getKiller().getItemInHand().containsEnchantment(Enchantment.LOOTING))
+            chance = Math.min(1, chance + rateModifier
+                    * event.getEntity().getKiller().getItemInHand().getEnchantmentLevel(Enchantment.LOOTING));
 
-        if(CraftBookPlugin.inst().getRandom().nextDouble() > chance)
+        if (CraftBookPlugin.inst().getRandom().nextDouble() > chance)
             return;
 
         ItemStack toDrop = null;
 
-        switch(event.getEntityType()) {
+        switch (event.getEntityType()) {
 
-            case PLAYER:
-                if(!enablePlayers)
+            case PLAYER :
+                if (!enablePlayers)
                     return;
                 String playerName = event.getEntity().getName();
                 if (ignoredNames.contains(playerName)) {
@@ -89,52 +95,53 @@ public class HeadDrops extends AbstractCraftBookMechanic {
                 meta.setDisplayName(ChatColor.RESET + playerName + "'s Head");
                 toDrop.setItemMeta(meta);
                 break;
-            case ZOMBIE:
-                if(!enableMobs)
+            case ZOMBIE :
+                if (!enableMobs)
                     return;
                 toDrop = new ItemStack(Material.ZOMBIE_HEAD, 1);
                 break;
-            case CREEPER:
-                if(!enableMobs)
+            case CREEPER :
+                if (!enableMobs)
                     return;
                 toDrop = new ItemStack(Material.CREEPER_HEAD, 1);
                 break;
-            case SKELETON:
-                if(!enableMobs)
+            case SKELETON :
+                if (!enableMobs)
                     return;
                 toDrop = new ItemStack(Material.SKELETON_SKULL, 1);
                 break;
-            case WITHER_SKELETON:
+            case WITHER_SKELETON :
                 if (!enableMobs || !overrideNatural)
                     return;
                 toDrop = new ItemStack(Material.WITHER_SKELETON_SKULL, 1);
                 break;
-            case ENDER_DRAGON:
-                if(!enableMobs)
+            case ENDER_DRAGON :
+                if (!enableMobs)
                     return;
                 toDrop = new ItemStack(Material.DRAGON_HEAD, 1);
                 break;
-            case PIGLIN:
-                if(!enableMobs)
+            case PIGLIN :
+                if (!enableMobs)
                     return;
                 toDrop = new ItemStack(Material.PIGLIN_HEAD, 1);
                 break;
-            default:
-                if(!enableMobs)
+            default :
+                if (!enableMobs)
                     return;
                 MobSkullType type = MobSkullType.getFromEntityType(event.getEntityType());
                 String mobName = null;
-                if(type != null)
+                if (type != null)
                     mobName = type.getPlayerName();
-                if(customSkins.containsKey(typeName))
+                if (customSkins.containsKey(typeName))
                     mobName = customSkins.get(typeName);
-                if(mobName == null || mobName.isEmpty())
+                if (mobName == null || mobName.isEmpty())
                     break;
                 toDrop = new ItemStack(Material.PLAYER_HEAD, 1);
                 ItemMeta metaD = toDrop.getItemMeta();
-                if(metaD instanceof SkullMeta) {
+                if (metaD instanceof SkullMeta) {
                     SkullMeta itemMeta = (SkullMeta) metaD;
-                    itemMeta.setDisplayName(ChatColor.RESET + WordUtils.capitalize(typeName.replace("_", " ")) + " Head");
+                    itemMeta.setDisplayName(
+                            ChatColor.RESET + WordUtils.capitalize(typeName.replace("_", " ")) + " Head");
                     itemMeta.setOwner(mobName);
                     toDrop.setItemMeta(itemMeta);
                 } else
@@ -142,7 +149,7 @@ public class HeadDrops extends AbstractCraftBookMechanic {
                 break;
         }
 
-        if(ItemUtil.isStackValid(toDrop)) {
+        if (ItemUtil.isStackValid(toDrop)) {
             event.getEntity().getWorld().dropItemNaturally(event.getEntity().getLocation(), toDrop);
         }
     }
@@ -150,22 +157,27 @@ public class HeadDrops extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerInteract(PlayerInteractEvent event) {
 
-        if(!EventUtil.passesFilter(event) || event.getHand() != EquipmentSlot.HAND) return;
+        if (!EventUtil.passesFilter(event) || event.getHand() != EquipmentSlot.HAND)
+            return;
 
-        if(event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK)
+            return;
 
-        if(event.getClickedBlock().getType() == Material.PLAYER_HEAD || event.getClickedBlock().getType() == Material.PLAYER_WALL_HEAD) {
+        if (event.getClickedBlock().getType() == Material.PLAYER_HEAD
+                || event.getClickedBlock().getType() == Material.PLAYER_WALL_HEAD) {
 
-            Skull skull = (Skull)event.getClickedBlock().getState();
-            if(skull == null || !skull.hasOwner())
+            Skull skull = (Skull) event.getClickedBlock().getState();
+            if (skull == null || !skull.hasOwner())
                 return;
 
             CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
-            if(showNameClick && MobSkullType.getEntityType(skull.getOwner()) == null && skull.getOwner() != null) {
-                player.printRaw(ChatColor.YELLOW + player.translate("mech.headdrops.click-message") + ' ' + skull.getOwner());
+            if (showNameClick && MobSkullType.getEntityType(skull.getOwner()) == null && skull.getOwner() != null) {
+                player.printRaw(
+                        ChatColor.YELLOW + player.translate("mech.headdrops.click-message") + ' ' + skull.getOwner());
             } else if (MobSkullType.getEntityType(skull.getOwner()) != null) {
-                skull.setOwner(MobSkullType.getFromEntityType(MobSkullType.getEntityType(skull.getOwner())).getPlayerName());
+                skull.setOwner(
+                        MobSkullType.getFromEntityType(MobSkullType.getEntityType(skull.getOwner())).getPlayerName());
                 skull.update();
             }
         }
@@ -174,15 +186,18 @@ public class HeadDrops extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onBlockBreak(BlockBreakEvent event) {
 
-        if(!miningDrops) return;
-        if(!EventUtil.passesFilter(event))
+        if (!miningDrops)
             return;
-        if(event.getPlayer().getGameMode() == GameMode.CREATIVE) return;
+        if (!EventUtil.passesFilter(event))
+            return;
+        if (event.getPlayer().getGameMode() == GameMode.CREATIVE)
+            return;
 
-        if(event.getBlock().getType() == Material.PLAYER_HEAD || event.getBlock().getType() == Material.PLAYER_WALL_HEAD) {
+        if (event.getBlock().getType() == Material.PLAYER_HEAD
+                || event.getBlock().getType() == Material.PLAYER_WALL_HEAD) {
 
-            Skull skull = (Skull)event.getBlock().getState();
-            if(!skull.hasOwner())
+            Skull skull = (Skull) event.getBlock().getState();
+            if (!skull.hasOwner())
                 return;
             String playerName = ChatColor.stripColor(skull.getOwner());
             if (playerName == null || ignoredNames.contains(playerName)) {
@@ -196,24 +211,24 @@ public class HeadDrops extends AbstractCraftBookMechanic {
             SkullMeta meta = (SkullMeta) stack.getItemMeta();
             meta.setOwner(playerName);
 
-            if(type != null && !enableMobs)
+            if (type != null && !enableMobs)
                 return;
-            if(type == null && !enablePlayers)
+            if (type == null && !enablePlayers)
                 return;
 
-            if(!event.getPlayer().hasPermission("craftbook.mech.headdrops.break")) {
+            if (!event.getPlayer().hasPermission("craftbook.mech.headdrops.break")) {
                 player.printError("mech.headdrops.break-permission");
                 return;
             }
 
-            if(type != null)
+            if (type != null)
                 meta.setDisplayName(ChatColor.RESET + WordUtils.capitalize(type.getName().replace("_", " ")) + " Head");
             else
                 meta.setDisplayName(ChatColor.RESET + playerName + "'s Head");
 
             stack.setItemMeta(meta);
 
-            if(!ProtectionUtil.canBuild(event.getPlayer(), event.getBlock(), false))
+            if (!ProtectionUtil.canBuild(event.getPlayer(), event.getBlock(), false))
                 return;
 
             event.setCancelled(true);
@@ -224,47 +239,37 @@ public class HeadDrops extends AbstractCraftBookMechanic {
 
     protected enum MobSkullType {
 
-        //Official
-        BAT("bozzobrain", "coolwhip101"),
-        BLAZE("MHF_Blaze", "Blaze_Head"),
-        CAVE_SPIDER("MHF_CaveSpider"),
-        CHICKEN("MHF_Chicken", "scraftbrothers1"),
-        COW("MHF_Cow", "VerifiedBernard", "CarlosTheCow"),
-        DONKEY("Donkey"),
-        ELDER_GUARDIAN("ElderGuardian"),
-        ENDERMAN("MHF_Enderman", "Violit"),
-        ENDERMITE("MHF_Endermite"),
-        ENDER_DRAGON("MHF_EnderDragon"),
-        EVOKER("MFH_Evoker"),
-        GHAST("MHF_Ghast", "_QuBra_"),
-        GUARDIAN("MHF_Guardian", "Guardian"),
-        HORSE("gavertoso"),
-        IRON_GOLEM("MHF_Golem", "zippie007"),
-        MAGMA_CUBE("MHF_LavaSlime"),
-        MUSHROOM_COW("MHF_MushroomCow", "Mooshroom_Stew"),
-        OCELOT("MHF_Ocelot", "scraftbrothers3"),
-        PARROT("MHF_Parrot"),
-        PIG("MHF_Pig", "XlexerX"),
-        ZOMBIFIED_PIGLIN("MHF_PigZombie", "ManBearPigZombie", "scraftbrothers5"),
-        POLAR_BEAR("Polar_Bear", "ice_bear", "_DmacK_"),
-        RABBIT("MHF_Rabbit", "rabbit2077"),
-        SHEEP("MHF_Sheep", "SGT_KICYORASS", "Eagle_Peak"),
-        SHULKER("MHF_Shulker"),
-        //SILVERFISH("Xzomag", "AlexVMiner"),
-        SLIME("MHF_Slime", "HappyHappyMan"),
-        SNOWMAN("MHF_SnowGolem", "Koebasti", "scraftbrothers2"),
-        SPIDER("MHF_Spider", "Kelevra_V"),
-        //STRAY("MHF_Stray"),
-        SQUID("MHF_Squid", "squidette8"),
-        WITCH("MHF_Witch", "scrafbrothers4"),
-        //WITHER("MHF_Wither"),
-        WOLF("MHF_Wolf", "Budwolf"),
-        VEX("MHF_Vex"),
-        VILLAGER("MHF_Villager", "Villager", "Kuvase", "scraftbrothers9");
+        // Official
+        BAT("bozzobrain", "coolwhip101"), BLAZE("MHF_Blaze", "Blaze_Head"), CAVE_SPIDER("MHF_CaveSpider"), CHICKEN(
+                "MHF_Chicken",
+                "scraftbrothers1"), COW("MHF_Cow", "VerifiedBernard", "CarlosTheCow"), DONKEY("Donkey"), ELDER_GUARDIAN(
+                        "ElderGuardian"), ENDERMAN("MHF_Enderman", "Violit"), ENDERMITE("MHF_Endermite"), ENDER_DRAGON(
+                                "MHF_EnderDragon"), EVOKER("MFH_Evoker"), GHAST("MHF_Ghast", "_QuBra_"), GUARDIAN(
+                                        "MHF_Guardian", "Guardian"), HORSE("gavertoso"), IRON_GOLEM("MHF_Golem",
+                                                "zippie007"), MAGMA_CUBE("MHF_LavaSlime"), MUSHROOM_COW(
+                                                        "MHF_MushroomCow", "Mooshroom_Stew"), OCELOT("MHF_Ocelot",
+                                                                "scraftbrothers3"), PARROT("MHF_Parrot"), PIG("MHF_Pig",
+                                                                        "XlexerX"), ZOMBIFIED_PIGLIN("MHF_PigZombie",
+                                                                                "ManBearPigZombie",
+                                                                                "scraftbrothers5"), POLAR_BEAR(
+                                                                                        "Polar_Bear", "ice_bear",
+                                                                                        "_DmacK_"), RABBIT("MHF_Rabbit",
+                                                                                                "rabbit2077"), SHEEP(
+                                                                                                        "MHF_Sheep",
+                                                                                                        "SGT_KICYORASS",
+                                                                                                        "Eagle_Peak"), SHULKER(
+                                                                                                                "MHF_Shulker"),
+        // SILVERFISH("Xzomag", "AlexVMiner"),
+        SLIME("MHF_Slime", "HappyHappyMan"), SNOWMAN("MHF_SnowGolem", "Koebasti",
+                "scraftbrothers2"), SPIDER("MHF_Spider", "Kelevra_V"),
+        // STRAY("MHF_Stray"),
+        SQUID("MHF_Squid", "squidette8"), WITCH("MHF_Witch", "scrafbrothers4"),
+        // WITHER("MHF_Wither"),
+        WOLF("MHF_Wolf", "Budwolf"), VEX("MHF_Vex"), VILLAGER("MHF_Villager", "Villager", "Kuvase", "scraftbrothers9");
 
-        //Unofficial/Community
+        // Unofficial/Community
 
-        MobSkullType(String playerName, String ... oldNames) {
+        MobSkullType(String playerName, String... oldNames) {
 
             this.playerName = playerName;
             this.oldNames = new HashSet<>(Arrays.asList(oldNames));
@@ -287,7 +292,7 @@ public class HeadDrops extends AbstractCraftBookMechanic {
 
             try {
                 return MobSkullType.valueOf(entType.name());
-            } catch(Exception e){
+            } catch (Exception e) {
                 return null;
             }
         }
@@ -297,8 +302,9 @@ public class HeadDrops extends AbstractCraftBookMechanic {
             if (name == null)
                 return null;
 
-            for(MobSkullType type : values())
-                if(type.playerName.equalsIgnoreCase(name) || type.isOldName(name) || name.equalsIgnoreCase(instance.customSkins.get(EntityType.valueOf(type.name()).getName().toUpperCase())))
+            for (MobSkullType type : values())
+                if (type.playerName.equalsIgnoreCase(name) || type.isOldName(name) || name.equalsIgnoreCase(
+                        instance.customSkins.get(EntityType.valueOf(type.name()).getName().toUpperCase())))
                     return EntityType.valueOf(type.name());
 
             return null;
@@ -318,7 +324,7 @@ public class HeadDrops extends AbstractCraftBookMechanic {
     private List<String> ignoredNames;
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadConfiguration(YAMLProcessor config, String path) {
 
         config.setComment(path + "drop-mob-heads", "Allow the Head Drops mechanic to drop mob heads.");
         enableMobs = config.getBoolean(path + "drop-mob-heads", true);
@@ -326,33 +332,39 @@ public class HeadDrops extends AbstractCraftBookMechanic {
         config.setComment(path + "drop-player-heads", "Allow the Head Drops mechanic to drop player heads.");
         enablePlayers = config.getBoolean(path + "drop-player-heads", true);
 
-        config.setComment(path + "require-player-killed", "Only drop heads when killed by a player. Otherwise they will drop heads on any death.");
+        config.setComment(path + "require-player-killed",
+                "Only drop heads when killed by a player. Otherwise they will drop heads on any death.");
         playerKillsOnly = config.getBoolean(path + "require-player-killed", true);
 
-        config.setComment(path + "drop-head-when-mined", "When enabled, heads keep their current skin when mined and are dropped accordingly.");
+        config.setComment(path + "drop-head-when-mined",
+                "When enabled, heads keep their current skin when mined and are dropped accordingly.");
         miningDrops = config.getBoolean(path + "drop-head-when-mined", true);
 
-        config.setComment(path + "override-natural-head-drops", "Override natural head drops, this will cause natural head drops to use the chances provided by CraftBook. (Eg, Wither Skeleton Heads)");
+        config.setComment(path + "override-natural-head-drops",
+                "Override natural head drops, this will cause natural head drops to use the chances provided by CraftBook. (Eg, Wither Skeleton Heads)");
         overrideNatural = config.getBoolean(path + "override-natural-head-drops", false);
 
-        config.setComment(path + "drop-rate", "A value between 1 and 0 which dictates the global chance of heads being dropped. This can be overridden per-entity type.");
+        config.setComment(path + "drop-rate",
+                "A value between 1 and 0 which dictates the global chance of heads being dropped. This can be overridden per-entity type.");
         dropRate = config.getDouble(path + "drop-rate", 0.05);
 
-        config.setComment(path + "looting-rate-modifier", "This amount is added to the chance for every looting level on an item. Eg, a chance of 0.05(5%) and a looting mod of 0.05(5%) on a looting 3 sword, would give a 0.20 chance (20%).");
+        config.setComment(path + "looting-rate-modifier",
+                "This amount is added to the chance for every looting level on an item. Eg, a chance of 0.05(5%) and a looting mod of 0.05(5%) on a looting 3 sword, would give a 0.20 chance (20%).");
         rateModifier = config.getDouble(path + "looting-rate-modifier", 0.05);
 
-        config.setComment(path + "show-name-right-click", "When enabled, right clicking a placed head will say the owner of the head's skin.");
+        config.setComment(path + "show-name-right-click",
+                "When enabled, right clicking a placed head will say the owner of the head's skin.");
         showNameClick = config.getBoolean(path + "show-name-right-click", true);
 
         customDropRates = new HashMap<>();
-        if(config.getKeys(path + "drop-rates") != null) {
-            for(String key : config.getKeys(path + "drop-rates"))
+        if (config.getKeys(path + "drop-rates") != null) {
+            for (String key : config.getKeys(path + "drop-rates"))
                 customDropRates.put(key.toUpperCase(), config.getDouble(path + "drop-rates." + key));
         } else
             config.addNode(path + "drop-rates");
         customSkins = new HashMap<>();
-        if(config.getKeys(path + "custom-mob-skins") != null) {
-            for(String key : config.getKeys(path + "custom-mob-skins"))
+        if (config.getKeys(path + "custom-mob-skins") != null) {
+            for (String key : config.getKeys(path + "custom-mob-skins"))
                 customSkins.put(key.toUpperCase(), config.getString(path + "custom-mob-skins." + key));
         } else
             config.addNode(path + "custom-mob-skins");

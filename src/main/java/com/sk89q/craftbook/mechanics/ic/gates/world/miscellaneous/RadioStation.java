@@ -19,7 +19,7 @@ public class RadioStation extends AbstractSelfTriggeredIC {
 
     public static final Map<String, Playlist> stations = new HashMap<>();
 
-    public RadioStation (Server server, ChangedSign sign, ICFactory factory) {
+    public RadioStation(Server server, ChangedSign sign, ICFactory factory) {
         super(server, sign, factory);
     }
 
@@ -42,17 +42,17 @@ public class RadioStation extends AbstractSelfTriggeredIC {
     }
 
     @Override
-    public String getTitle () {
+    public String getTitle() {
         return "Radio Station";
     }
 
     @Override
-    public String getSignTitle () {
+    public String getSignTitle() {
         return "RADIO STATION";
     }
 
     @Override
-    public void trigger (ChipState chip) {
+    public void trigger(ChipState chip) {
 
         Playlist playlist = null;
 
@@ -64,7 +64,7 @@ public class RadioStation extends AbstractSelfTriggeredIC {
 
         if (chip.getInput(0) && !playlist.isPlaying())
             playlist.startPlaylist();
-        else if(!chip.getInput(0) && playlist.isPlaying())
+        else if (!chip.getInput(0) && playlist.isPlaying())
             playlist.stopPlaylist();
 
         chip.setOutput(0, playlist.isPlaying());
@@ -92,7 +92,7 @@ public class RadioStation extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"Playlist Name", "Radio Band"};
+            return new String[]{"Playlist Name", "Radio Band"};
         }
     }
 }

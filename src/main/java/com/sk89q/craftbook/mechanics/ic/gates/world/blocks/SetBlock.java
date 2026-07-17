@@ -82,7 +82,7 @@ public abstract class SetBlock extends AbstractSelfTriggeredIC {
                     stack.setAmount(stack.getAmount() - 1);
                 }
                 c.getInventory().setContents(is);
-                //c.update();
+                // c.update();
                 return true;
             }
         }

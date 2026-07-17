@@ -1,15 +1,15 @@
 // $Id$
 /*
  * Copyright (C) 2010, 2011 sk89q <http://www.sk89q.com>
- * 
+ *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
  * License as published by the Free
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
  * warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with this program. If not,
  * see <http://www.gnu.org/licenses/>.
  */
@@ -45,8 +45,8 @@ import java.util.*;
 import java.util.regex.Matcher;
 
 /**
- * Manages known registered ICs. For an IC to be detected in-world through CraftBook,
- * the IC's factory has to be registered with this manager.
+ * Manages known registered ICs. For an IC to be detected in-world through CraftBook, the IC's factory has to be
+ * registered with this manager.
  *
  * @author sk89q
  */
@@ -77,8 +77,12 @@ public class ICManager {
     }
 
     public void enable() {
-        CraftBookPlugin.inst().createDefaultConfiguration(new File(CraftBookPlugin.inst().getDataFolder(), "ic-config.yml"), "ic-config.yml");
-        icConfiguration = new ICConfiguration(new YAMLProcessor(new File(CraftBookPlugin.inst().getDataFolder(), "ic-config.yml"), true, YAMLFormat.EXTENDED), CraftBookPlugin.logger());
+        CraftBookPlugin.inst().createDefaultConfiguration(
+                new File(CraftBookPlugin.inst().getDataFolder(), "ic-config.yml"), "ic-config.yml");
+        icConfiguration = new ICConfiguration(
+                new YAMLProcessor(new File(CraftBookPlugin.inst().getDataFolder(), "ic-config.yml"), true,
+                        YAMLFormat.EXTENDED),
+                CraftBookPlugin.logger());
 
         midiFolder = new File(CraftBookPlugin.inst().getDataFolder(), "midi/");
         new File(midiFolder, "playlists").mkdirs();
@@ -98,7 +102,7 @@ public class ICManager {
 
     public void disable() {
 
-        for(RegisteredICFactory factory : registered.values()) {
+        for (RegisteredICFactory factory : registered.values()) {
             factory.getFactory().unload();
         }
         icConfiguration = null;
@@ -148,19 +152,18 @@ public class ICManager {
      */
     public boolean registerIC(String name, String longName, ICFactory factory, ICFamily... families) {
 
-        for(String ic : ICMechanic.instance.disabledICs)
-            if(ic.equalsIgnoreCase(name))
+        for (String ic : ICMechanic.instance.disabledICs)
+            if (ic.equalsIgnoreCase(name))
                 return false;
         return register(name, longName, factory, families);
     }
 
     /**
      * Register an IC with the manager. The casing of the ID can be of any case because IC IDs are case-insensitive.
-     * Re-using an already registered
-     * name will override the previous registration.
+     * Re-using an already registered name will override the previous registration.
      *
-     * @param id       case-insensitive ID (such as MC1001)
-     * @param factory  factory to create ICs
+     * @param id case-insensitive ID (such as MC1001)
+     * @param factory factory to create ICs
      * @param families families for the ic
      */
     public void register(String id, ICFactory factory, ICFamily... families) {
@@ -170,12 +173,11 @@ public class ICManager {
 
     /**
      * Register an IC with the manager. The casing of the ID can be of any case because IC IDs are case-insensitive.
-     * Re-using an already registered
-     * name will override the previous registration.
+     * Re-using an already registered name will override the previous registration.
      *
-     * @param id       case-insensitive ID (such as MC1001)
-     * @param longId   case-insensitive long name (such as inverter)
-     * @param factory  factory to create ICs
+     * @param id case-insensitive ID (such as MC1001)
+     * @param longId case-insensitive long name (such as inverter)
+     * @param factory factory to create ICs
      * @param families families for the ic
      *
      * @return true if IC registration was a success
@@ -183,14 +185,17 @@ public class ICManager {
     public boolean register(String id, String longId, ICFactory factory, ICFamily... families) {
 
         // check if at least one family is given
-        if (families.length < 1) return false;
+        if (families.length < 1)
+            return false;
         // this is needed so we dont have two patterns
         String id2 = "[" + id + "]";
         // lets check if the IC ID has already been registered
-        if (registered.containsKey(id.toLowerCase(Locale.ENGLISH))) return false;
+        if (registered.containsKey(id.toLowerCase(Locale.ENGLISH)))
+            return false;
         // check if the ic matches the requirements
         Matcher matcher = RegexUtil.IC_PATTERN.matcher(id2);
-        if (!matcher.matches()) return false;
+        if (!matcher.matches())
+            return false;
         String prefix = matcher.group(2).toLowerCase(Locale.ENGLISH);
         // lets get the custom prefix
         customPrefix.add(prefix);
@@ -258,8 +263,10 @@ public class ICManager {
      */
     public static void addCachedIC(Location pt, IC ic) {
 
-        if (!ICMechanic.instance.cache) return;
-        if(cachedICs.containsKey(pt)) return;
+        if (!ICMechanic.instance.cache)
+            return;
+        if (cachedICs.containsKey(pt))
+            return;
         CraftBookPlugin.logDebugMessage("Caching IC at: " + pt.toString(), "ic-cache");
         cachedICs.put(pt, ic);
     }
@@ -377,10 +384,10 @@ public class ICManager {
         registerIC("MC1243", "distributer", new Distributer.Factory(server), familySISO, familyAISO);
         registerIC("MC1244", "animal harv", new AnimalHarvester.Factory(server), familySISO, familyAISO);
         registerIC("MC1245", "cont stkr", new ContainerStacker.Factory(server), familySISO, familyAISO);
-        registerIC("MC1246", "xp spawner", new XPSpawner.Factory(server), familySISO, familyAISO); //Restricted
-        //TODO Dyed Armour Spawner (MC1247) (Sign Title: DYE ARMOUR)
-        registerIC("MC1248", "driller", new Driller.Factory(server), familySISO, familyAISO); //Restricted
-        registerIC("MC1249", "replacer", new BlockReplacer.Factory(server), familySISO, familyAISO); //Restricted
+        registerIC("MC1246", "xp spawner", new XPSpawner.Factory(server), familySISO, familyAISO); // Restricted
+        // TODO Dyed Armour Spawner (MC1247) (Sign Title: DYE ARMOUR)
+        registerIC("MC1248", "driller", new Driller.Factory(server), familySISO, familyAISO); // Restricted
+        registerIC("MC1249", "replacer", new BlockReplacer.Factory(server), familySISO, familyAISO); // Restricted
         registerIC("MC1250", "shoot fire", new FireShooter.Factory(server), familySISO, familyAISO); // Restricted
         registerIC("MC1251", "shoot fires", new FireBarrage.Factory(server), familySISO, familyAISO); // Restricted
         registerIC("MC1252", "flame thower", new FlameThrower.Factory(server), familySISO, familyAISO); // Restricted
@@ -392,7 +399,7 @@ public class ICManager {
         registerIC("MC1264", "sense item", new ItemSensor.Factory(server), familySISO, familyAISO);
         registerIC("MC1265", "inv sns itm", new ItemNotSensor.Factory(server), familySISO, familyAISO);
         registerIC("MC1266", "sense power", new PowerSensor.Factory(server), familySISO, familyAISO);
-        //FIXME registerIC("MC1267", "sense move", new MovementSensor.Factory(server), familySISO, familyAISO);
+        // FIXME registerIC("MC1267", "sense move", new MovementSensor.Factory(server), familySISO, familyAISO);
         registerIC("MC1268", "sns cntns", new ContentsSensor.Factory(server), familySISO, familyAISO);
         registerIC("MC1269", "sns p cntns", new PlayerInventorySensor.Factory(server), familySISO, familyAISO);
         registerIC("MC1270", "melody", new Melody.Factory(server), familySISO, familyAISO);
@@ -402,8 +409,8 @@ public class ICManager {
         registerIC("MC1275", "tune", new Tune.Factory(server), familySISO, familyAISO);
         registerIC("MC1276", "radio station", new RadioStation.Factory(server), familySISO, familyAISO);
         registerIC("MC1277", "radio player", new RadioPlayer.Factory(server), familySISO, familyAISO);
-        registerIC("MC1278", "sentry gun", new SentryGun.Factory(server), familySISO, familyAISO); //Restricted
-        registerIC("MC1279", "player trap",new PlayerTrap.Factory(server), familySISO, familyAISO);
+        registerIC("MC1278", "sentry gun", new SentryGun.Factory(server), familySISO, familyAISO); // Restricted
+        registerIC("MC1279", "player trap", new PlayerTrap.Factory(server), familySISO, familyAISO);
         registerIC("MC1280", "animal brd", new AnimalBreeder.Factory(server), familySISO, familyAISO);
         registerIC("MC1420", "divide clock", new ClockDivider.Factory(server), familySISO, familyAISO);
         registerIC("MC1421", "clock", new Clock.Factory(server), familySISO, familyAISO);
@@ -454,7 +461,8 @@ public class ICManager {
 
         // PLCs
         registerIC("MC5000", "perlstone", PlcFactory.fromLang(server, new Perlstone(), false, "MC5000"), familyVIVO);
-        registerIC("MC5001", "perlstone 3i3o", PlcFactory.fromLang(server, new Perlstone(), false, "MC5001"), family3I3O);
+        registerIC("MC5001", "perlstone 3i3o", PlcFactory.fromLang(server, new Perlstone(), false, "MC5001"),
+                family3I3O);
 
         // Xtra ICs
         // SISOs
@@ -464,8 +472,8 @@ public class ICManager {
         // 3ISOs
         registerIC("MCT233", "weather set ad", new WeatherControlAdvanced.Factory(server), family3ISO);
 
-        //Variable ICs
-        if(VariableManager.instance != null) {
+        // Variable ICs
+        if (VariableManager.instance != null) {
             registerIC("VAR100", "num mod", new NumericModifier.Factory(server), familySISO, familyAISO);
             registerIC("VAR170", "at least", new IsAtLeast.Factory(server), familySISO, familyAISO);
             registerIC("VAR200", "item count", new ItemCounter.Factory(server), familySISO, familyAISO);
@@ -482,8 +490,10 @@ public class ICManager {
             try {
                 RegisteredICFactory ric = registered.get(ic);
                 IC tic = ric.getFactory().create(null);
-                if (search != null && !tic.getTitle().toLowerCase(Locale.ENGLISH).contains(search.toLowerCase(Locale.ENGLISH))
-                        && !ric.getId().toLowerCase(Locale.ENGLISH).contains(search.toLowerCase(Locale.ENGLISH))) continue;
+                if (search != null
+                        && !tic.getTitle().toLowerCase(Locale.ENGLISH).contains(search.toLowerCase(Locale.ENGLISH))
+                        && !ric.getId().toLowerCase(Locale.ENGLISH).contains(search.toLowerCase(Locale.ENGLISH)))
+                    continue;
 
                 return ic;
             } catch (Exception ignored) {
@@ -510,48 +520,57 @@ public class ICManager {
         boolean col = true;
         for (String ic : icNameList) {
             try {
-                thisIC:
-                {
-                RegisteredICFactory ric = registered.get(ic);
-                IC tic = ric.getFactory().create(null);
-                if (search != null && !tic.getTitle().toLowerCase(Locale.ENGLISH).contains(search.toLowerCase(Locale.ENGLISH))
-                        && !ric.getId().toLowerCase(Locale.ENGLISH).contains(search.toLowerCase(Locale.ENGLISH))) continue;
-                if (parameters != null) {
-                    for (char c : parameters) {
-                        if (c == 'r' && !(ric.getFactory() instanceof RestrictedIC)) break thisIC;
-                        else if (c == 's' && ric.getFactory() instanceof RestrictedIC) break thisIC;
-                        else if (c == 'b' && !ric.getFactory().getClass().getPackage().getName().endsWith("blocks"))
-                            break thisIC;
-                        else if (c == 'i' && !ric.getFactory().getClass().getPackage().getName().endsWith("items"))
-                            break thisIC;
-                        else if (c == 'e' && !ric.getFactory().getClass().getPackage().getName().endsWith("entity"))
-                            break thisIC;
-                        else if (c == 'w' && !ric.getFactory().getClass().getPackage().getName().endsWith("weather"))
-                            break thisIC;
-                        else if (c == 'l' && !ric.getFactory().getClass().getPackage().getName().endsWith("logic"))
-                            break thisIC;
-                        else if (c == 'm' && !ric.getFactory().getClass().getPackage().getName().endsWith("miscellaneous"))
-                            break thisIC;
-                        else if (c == 'c' && !ric.getFactory().getClass().getPackage().getName().endsWith("sensors"))
-                            break thisIC;
-                        else if (c == 'v' && !ric.getFactory().getClass().getPackage().getName().endsWith("variables"))
-                            break thisIC;
+                thisIC : {
+                    RegisteredICFactory ric = registered.get(ic);
+                    IC tic = ric.getFactory().create(null);
+                    if (search != null
+                            && !tic.getTitle().toLowerCase(Locale.ENGLISH).contains(search.toLowerCase(Locale.ENGLISH))
+                            && !ric.getId().toLowerCase(Locale.ENGLISH).contains(search.toLowerCase(Locale.ENGLISH)))
+                        continue;
+                    if (parameters != null) {
+                        for (char c : parameters) {
+                            if (c == 'r' && !(ric.getFactory() instanceof RestrictedIC))
+                                break thisIC;
+                            else if (c == 's' && ric.getFactory() instanceof RestrictedIC)
+                                break thisIC;
+                            else if (c == 'b' && !ric.getFactory().getClass().getPackage().getName().endsWith("blocks"))
+                                break thisIC;
+                            else if (c == 'i' && !ric.getFactory().getClass().getPackage().getName().endsWith("items"))
+                                break thisIC;
+                            else if (c == 'e' && !ric.getFactory().getClass().getPackage().getName().endsWith("entity"))
+                                break thisIC;
+                            else if (c == 'w'
+                                    && !ric.getFactory().getClass().getPackage().getName().endsWith("weather"))
+                                break thisIC;
+                            else if (c == 'l' && !ric.getFactory().getClass().getPackage().getName().endsWith("logic"))
+                                break thisIC;
+                            else if (c == 'm'
+                                    && !ric.getFactory().getClass().getPackage().getName().endsWith("miscellaneous"))
+                                break thisIC;
+                            else if (c == 'c'
+                                    && !ric.getFactory().getClass().getPackage().getName().endsWith("sensors"))
+                                break thisIC;
+                            else if (c == 'v'
+                                    && !ric.getFactory().getClass().getPackage().getName().endsWith("variables"))
+                                break thisIC;
 
+                        }
                     }
-                }
-                col = !col;
-                ChatColor colour = col ? ChatColor.YELLOW : ChatColor.GOLD;
+                    col = !col;
+                    ChatColor colour = col ? ChatColor.YELLOW : ChatColor.GOLD;
 
-                if (!ICMechanic.checkPermissionsBoolean(CraftBookPlugin.inst().wrapPlayer(p), ric.getFactory(), ic.toLowerCase(Locale.ENGLISH))) {
-                    colour = col ? ChatColor.RED : ChatColor.DARK_RED;
-                }
-                strings.add(colour + tic.getTitle() + " (" + ric.getId() + ")"
-                        + ": " + (tic instanceof SelfTriggeredIC ? "ST " : "T ")
-                        + (ric.getFactory() instanceof RestrictedIC ? ChatColor.DARK_RED + "R " : ""));
+                    if (!ICMechanic.checkPermissionsBoolean(CraftBookPlugin.inst().wrapPlayer(p), ric.getFactory(),
+                            ic.toLowerCase(Locale.ENGLISH))) {
+                        colour = col ? ChatColor.RED : ChatColor.DARK_RED;
+                    }
+                    strings.add(colour + tic.getTitle() + " (" + ric.getId() + ")"
+                            + ": " + (tic instanceof SelfTriggeredIC ? "ST " : "T ")
+                            + (ric.getFactory() instanceof RestrictedIC ? ChatColor.DARK_RED + "R " : ""));
                 }
             } catch (Throwable e) {
                 CraftBookPlugin.logger().warning("An error occurred generating the docs for IC: " + ic + ".");
-                CraftBookPlugin.logger().warning("Please report this error on: https://github.com/EngineHub/CraftBook/.");
+                CraftBookPlugin.logger()
+                        .warning("Please report this error on: https://github.com/EngineHub/CraftBook/.");
             }
         }
 

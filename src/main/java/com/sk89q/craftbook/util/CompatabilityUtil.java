@@ -17,22 +17,23 @@ public final class CompatabilityUtil {
 
     /**
      * The initialization method for this Util.
-     * 
-     * This util needs initialization as it must check for available compatability handlers, and enable them if possible.
+     *
+     * This util needs initialization as it must check for available compatability handlers, and enable them if
+     * possible.
      */
     public static void init() {
-        if(Bukkit.getPluginManager().getPlugin("NoCheatPlus") != null)
+        if (Bukkit.getPluginManager().getPlugin("NoCheatPlus") != null)
             compatChecks.add(new NoCheatPlusCompatability());
     }
 
     public static void disableInterferences(Player player) {
 
-        for(CraftBookCompatability compat : compatChecks)
+        for (CraftBookCompatability compat : compatChecks)
             compat.enable(player);
     }
 
     public static void enableInterferences(Player player) {
-        for(CraftBookCompatability compat : compatChecks)
+        for (CraftBookCompatability compat : compatChecks)
             compat.disable(player);
     }
 }

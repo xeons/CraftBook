@@ -16,18 +16,19 @@ public class VisionSteering extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onPlayerMove(PlayerMoveEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
-
-        if(!event.getPlayer().isInsideVehicle())
+        if (!EventUtil.passesFilter(event))
             return;
 
-        if(!(event.getPlayer().getVehicle() instanceof Minecart))
+        if (!event.getPlayer().isInsideVehicle())
             return;
 
-        if(Math.abs((double)event.getFrom().getYaw() - (double)event.getTo().getYaw()) < minimumSensitivity)
+        if (!(event.getPlayer().getVehicle() instanceof Minecart))
             return;
 
-        if(RailUtil.isTrack(event.getPlayer().getVehicle().getLocation().getBlock().getType()))
+        if (Math.abs((double) event.getFrom().getYaw() - (double) event.getTo().getYaw()) < minimumSensitivity)
+            return;
+
+        if (RailUtil.isTrack(event.getPlayer().getVehicle().getLocation().getBlock().getType()))
             return;
 
         Vector direction = event.getPlayer().getLocation().getDirection();
@@ -41,7 +42,7 @@ public class VisionSteering extends AbstractCraftBookMechanic {
     private int minimumSensitivity;
 
     @Override
-    public void loadConfiguration (YAMLProcessor config, String path) {
+    public void loadConfiguration(YAMLProcessor config, String path) {
 
         config.setComment(path + "minimum-sensitivity", "Sets the sensitivity of Vision Steering.");
         minimumSensitivity = config.getInt(path + "minimum-sensitivity", 3);

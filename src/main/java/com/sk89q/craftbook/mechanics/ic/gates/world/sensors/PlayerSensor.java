@@ -116,7 +116,7 @@ public class PlayerSensor extends AbstractSelfTriggeredIC {
         @Override
         public void verify(ChangedSign sign) throws ICVerificationException {
 
-            if(!SearchArea.createArea(CraftBookBukkitUtil.toSign(sign).getBlock(), sign.getLine(2)).isValid())
+            if (!SearchArea.createArea(CraftBookBukkitUtil.toSign(sign).getBlock(), sign.getLine(2)).isValid())
                 throw new ICVerificationException("Invalid SearchArea on line 3!");
         }
 
@@ -129,7 +129,7 @@ public class PlayerSensor extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {
+            return new String[]{
                     "SearchArea",
                     "PlayerType"
             };

@@ -49,15 +49,17 @@ public class Cultivator extends AbstractSelfTriggeredIC {
     @Override
     public void trigger(ChipState chip) {
 
-        if (chip.getInput(0)) chip.setOutput(0, cultivate());
+        if (chip.getInput(0))
+            chip.setOutput(0, cultivate());
     }
 
     @Override
     public void think(ChipState state) {
 
-        if(state.getInput(0)) return;
+        if (state.getInput(0))
+            return;
 
-        for(int i = 0; i < 10; i++)
+        for (int i = 0; i < 10; i++)
             state.setOutput(0, cultivate());
     }
 
@@ -65,7 +67,8 @@ public class Cultivator extends AbstractSelfTriggeredIC {
 
         Block b = area.getRandomBlockInArea();
 
-        if(b == null) return false;
+        if (b == null)
+            return false;
 
         if (b.getType() == Material.DIRT || b.getType() == Material.GRASS_BLOCK) {
             if (b.getRelative(BlockFace.UP).getType() == Material.AIR && damageHoe()) {
@@ -77,7 +80,8 @@ public class Cultivator extends AbstractSelfTriggeredIC {
         return false;
     }
 
-    private static final Set<Material> hoes = Set.of(Material.WOODEN_HOE, Material.STONE_HOE, Material.IRON_HOE, Material.GOLDEN_HOE,
+    private static final Set<Material> hoes = Set.of(Material.WOODEN_HOE, Material.STONE_HOE, Material.IRON_HOE,
+            Material.GOLDEN_HOE,
             Material.DIAMOND_HOE);
 
     public boolean damageHoe() {
@@ -90,7 +94,7 @@ public class Cultivator extends AbstractSelfTriggeredIC {
                 if (ItemUtil.isStackValid(c.getInventory().getItem(slot))) {
                     ItemStack item = c.getInventory().getItem(slot);
                     item.setDurability((short) (item.getDurability() + 1));
-                    if(item.getDurability() > ItemUtil.getMaxDurability(item.getType()))
+                    if (item.getDurability() > ItemUtil.getMaxDurability(item.getType()))
                         item = null;
                     c.getInventory().setItem(slot, item);
                     return true;
@@ -136,12 +140,12 @@ public class Cultivator extends AbstractSelfTriggeredIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"+oSearchArea", null};
+            return new String[]{"+oSearchArea", null};
         }
 
         @Override
         public void verify(ChangedSign sign) throws ICVerificationException {
-            if(!SearchArea.isValidArea(CraftBookBukkitUtil.toSign(sign).getBlock(), sign.getLine(2)))
+            if (!SearchArea.isValidArea(CraftBookBukkitUtil.toSign(sign).getBlock(), sign.getLine(2)))
                 throw new ICVerificationException("Invalid SearchArea on 3rd line!");
         }
     }

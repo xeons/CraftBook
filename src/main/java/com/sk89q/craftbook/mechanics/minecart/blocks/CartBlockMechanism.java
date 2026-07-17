@@ -23,9 +23,8 @@ import java.util.Locale;
 
 /**
  * Implementers of CartMechanism are intended to be singletons and do all their logic at interation time (like
- * non-persistant mechanics, but allowed
- * zero state even in RAM). In order to be effective, configuration loading in MinecartManager must be modified to
- * include an implementer.
+ * non-persistant mechanics, but allowed zero state even in RAM). In order to be effective, configuration loading in
+ * MinecartManager must be modified to include an implementer.
  *
  * @author hash
  */
@@ -37,9 +36,9 @@ public abstract class CartBlockMechanism extends AbstractCraftBookMechanic {
         return material;
     }
 
-    public static final BlockFace[] powerSupplyOptions = new BlockFace[] {
-        BlockFace.NORTH, BlockFace.EAST,
-        BlockFace.SOUTH, BlockFace.WEST
+    public static final BlockFace[] powerSupplyOptions = new BlockFace[]{
+            BlockFace.NORTH, BlockFace.EAST,
+            BlockFace.SOUTH, BlockFace.WEST
     };
 
     /**
@@ -54,31 +53,31 @@ public abstract class CartBlockMechanism extends AbstractCraftBookMechanic {
         boolean isWired = false;
         if (blocks.hasSign()) {
             switch (isActive(blocks.sign)) {
-                case ON:
+                case ON :
                     return Power.ON;
-                case NA:
+                case NA :
                     break;
-                case OFF:
+                case OFF :
                     isWired = true;
             }
         }
         if (blocks.hasBase()) {
             switch (isActive(blocks.base)) {
-                case ON:
+                case ON :
                     return Power.ON;
-                case NA:
+                case NA :
                     break;
-                case OFF:
+                case OFF :
                     isWired = true;
             }
         }
         if (blocks.hasRail()) {
             switch (isActive(blocks.rail)) {
-                case ON:
+                case ON :
                     return Power.ON;
-                case NA:
+                case NA :
                     break;
-                case OFF:
+                case OFF :
                     isWired = true;
             }
         }
@@ -98,11 +97,11 @@ public abstract class CartBlockMechanism extends AbstractCraftBookMechanic {
         for (BlockFace face : powerSupplyOptions) {
             Power p = RedstoneUtil.isPowered(block, face);
             switch (p) {
-                case ON:
+                case ON :
                     return Power.ON;
-                case NA:
+                case NA :
                     break;
-                case OFF:
+                case OFF :
                     isWired = true;
             }
         }
@@ -110,19 +109,19 @@ public abstract class CartBlockMechanism extends AbstractCraftBookMechanic {
     }
 
     /**
-     * @param rail the block we're searching for carts (mostly likely containing rails generally,
-     *             though it's not strictly relevant).
+     * @param rail the block we're searching for carts (mostly likely containing rails generally, though it's not
+     *        strictly relevant).
      *
      * @return a Minecart if one is found within the given block, or null if none found. (If there is more than one
-     *         minecart within the block, the
-     *         first one encountered when traversing the list of Entity in the Chunk is the one returned.)
+     *         minecart within the block, the first one encountered when traversing the list of Entity in the Chunk is
+     *         the one returned.)
      */
     public static Minecart getCart(Block rail) {
 
         for (Entity ent : rail.getChunk().getEntities()) {
             if (!(ent instanceof Minecart))
                 continue;
-            if(EntityUtil.isEntityInBlock(ent, rail))
+            if (EntityUtil.isEntityInBlock(ent, rail))
                 return (Minecart) ent;
         }
         return null;
@@ -131,14 +130,16 @@ public abstract class CartBlockMechanism extends AbstractCraftBookMechanic {
     @EventHandler(priority = EventPriority.HIGH)
     public void onSignChange(SignChangeEvent event) {
 
-        if(!EventUtil.passesFilter(event)) return;
+        if (!EventUtil.passesFilter(event))
+            return;
 
         Block block = event.getBlock();
         String[] lines = event.getLines();
         CraftBookPlayer player = CraftBookPlugin.inst().wrapPlayer(event.getPlayer());
 
         try {
-            if (getApplicableSigns() == null || getApplicableSigns().length == 0) return;
+            if (getApplicableSigns() == null || getApplicableSigns().length == 0)
+                return;
             boolean found = false;
             String lineFound = null;
             int lineNum = 1;
@@ -155,7 +156,8 @@ public abstract class CartBlockMechanism extends AbstractCraftBookMechanic {
                     break;
                 }
             }
-            if (!found) return;
+            if (!found)
+                return;
             if (!verify(CraftBookBukkitUtil.toChangedSign(event.getBlock(), lines, player), player)) {
                 block.breakNaturally();
                 event.setCancelled(true);

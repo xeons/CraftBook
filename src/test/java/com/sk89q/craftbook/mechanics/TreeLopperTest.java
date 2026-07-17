@@ -30,7 +30,7 @@ import java.util.ArrayList;
 
 @Ignore
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({TreeLopper.class,BlockBreakEvent.class})
+@PrepareForTest({TreeLopper.class, BlockBreakEvent.class})
 public class TreeLopperTest extends BaseTestCase {
 
     private TreeLopper lopper;
@@ -40,7 +40,7 @@ public class TreeLopperTest extends BaseTestCase {
 
         setup();
 
-        if(lopper == null)
+        if (lopper == null)
             lopper = new TreeLopper();
 
         World world = mock(World.class);
@@ -60,7 +60,7 @@ public class TreeLopperTest extends BaseTestCase {
 
         final Block block = mock(Block.class);
         when(block.getType()).thenReturn(Material.OAK_LOG);
-        when(block.getLocation()).thenReturn(new Location(world, 64,64,64));
+        when(block.getLocation()).thenReturn(new Location(world, 64, 64, 64));
 
         lopper.enabledBlocks = new ArrayList<>();
         lopper.enabledBlocks.add(BlockTypes.OAK_LOG.getDefaultState().toBaseBlock());

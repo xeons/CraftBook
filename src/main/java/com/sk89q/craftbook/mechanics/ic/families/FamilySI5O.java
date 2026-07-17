@@ -45,19 +45,19 @@ public class FamilySI5O extends AbstractICFamily {
             Block farBlock = backBlock.getRelative(fback);
 
             switch (pin) {
-                case 0:
+                case 0 :
                     return SignUtil.getFrontBlock(CraftBookBukkitUtil.toSign(sign).getBlock());
-                case 1:
+                case 1 :
                     return farBlock.getRelative(fback);
-                case 2:
+                case 2 :
                     return farBlock.getRelative(SignUtil.getCounterClockWise(fback));
-                case 3:
+                case 3 :
                     return farBlock.getRelative(SignUtil.getClockWise(fback));
-                case 4:
+                case 4 :
                     return backBlock.getRelative(SignUtil.getCounterClockWise(fback));
-                case 5:
+                case 5 :
                     return backBlock.getRelative(SignUtil.getClockWise(fback));
-                default:
+                default :
                     return null;
             }
 
@@ -86,10 +86,12 @@ public class FamilySI5O extends AbstractICFamily {
 
             Block block = getBlock(pin);
             if (block != null) {
-                if(pin == 1 || pin == 2 || pin == 3)
-                    ICUtil.setState(block, value, icBlock.getRelative(SignUtil.getBack(CraftBookBukkitUtil.toSign(sign).getBlock()), 2));
+                if (pin == 1 || pin == 2 || pin == 3)
+                    ICUtil.setState(block, value,
+                            icBlock.getRelative(SignUtil.getBack(CraftBookBukkitUtil.toSign(sign).getBlock()), 2));
                 else
-                    ICUtil.setState(block, value, icBlock.getRelative(SignUtil.getBack(CraftBookBukkitUtil.toSign(sign).getBlock())));
+                    ICUtil.setState(block, value,
+                            icBlock.getRelative(SignUtil.getBack(CraftBookBukkitUtil.toSign(sign).getBlock())));
             }
         }
 
@@ -108,7 +110,7 @@ public class FamilySI5O extends AbstractICFamily {
     }
 
     @Override
-    public String getName () {
+    public String getName() {
         return "SI5O";
     }
 }

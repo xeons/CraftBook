@@ -72,18 +72,22 @@ public class Spigot extends AbstractIC {
 
     public boolean searchAt(InventoryHolder chest, ArrayList<Location> searched, Block off) {
 
-        if (searched.contains(off.getLocation())) return false;
+        if (searched.contains(off.getLocation()))
+            return false;
         searched.add(off.getLocation());
-        if (!LocationUtil.isWithinRadius(off.getLocation(), offset, radius)) return false;
+        if (!LocationUtil.isWithinRadius(off.getLocation(), offset, radius))
+            return false;
         if (off.getType() == Material.AIR) {
             Material m = getFromChest(chest);
-            if (m == Material.AIR) return false;
+            if (m == Material.AIR)
+                return false;
             off.setType(unparse(m));
             return true;
         } else if (off.isLiquid()) {
             if (off.getData() != 0x0) { // Moving
                 Material m = getFromChest(chest, off.getType());
-                if (m == Material.AIR) return false;
+                if (m == Material.AIR)
+                    return false;
                 off.setType(unparse(m));
                 return true;
             } else { // Still
@@ -127,14 +131,18 @@ public class Spigot extends AbstractIC {
     }
 
     public static Material parse(Material mat) {
-        if (mat == Material.WATER || mat == Material.WATER_BUCKET) return Material.WATER_BUCKET;
-        if (mat == Material.LAVA || mat == Material.LAVA_BUCKET) return Material.LAVA_BUCKET;
+        if (mat == Material.WATER || mat == Material.WATER_BUCKET)
+            return Material.WATER_BUCKET;
+        if (mat == Material.LAVA || mat == Material.LAVA_BUCKET)
+            return Material.LAVA_BUCKET;
         return Material.AIR;
     }
 
     public static Material unparse(Material mat) {
-        if (mat == Material.WATER_BUCKET || mat == Material.WATER) return Material.WATER;
-        if (mat == Material.LAVA_BUCKET || mat == Material.LAVA) return Material.LAVA;
+        if (mat == Material.WATER_BUCKET || mat == Material.WATER)
+            return Material.WATER;
+        if (mat == Material.LAVA_BUCKET || mat == Material.LAVA)
+            return Material.LAVA;
         return Material.AIR;
     }
 
@@ -160,7 +168,7 @@ public class Spigot extends AbstractIC {
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"+oradius=x:y:z offset", null};
+            return new String[]{"+oradius=x:y:z offset", null};
         }
     }
 }

@@ -51,9 +51,10 @@ public class CommandItemDefinition {
         return name;
     }
 
-    public CommandItemDefinition(String name, ItemStack stack, CommandType type, ClickType clickType, String permNode, String[] commands, int
-            delay, String[] delayedCommands, int cooldown, boolean cancelAction, ItemStack[] consumables, boolean consumeSelf, TernaryState
-            requireSneaking, boolean keepOnDeath, CommandItemAction[] actions, String missingConsumableMessage, String cooldownMessage, boolean fakeCommand) {
+    public CommandItemDefinition(String name, ItemStack stack, CommandType type, ClickType clickType, String permNode,
+            String[] commands, int delay, String[] delayedCommands, int cooldown, boolean cancelAction,
+            ItemStack[] consumables, boolean consumeSelf, TernaryState requireSneaking, boolean keepOnDeath,
+            CommandItemAction[] actions, String missingConsumableMessage, String cooldownMessage, boolean fakeCommand) {
 
         this.name = name;
         this.stack = stack;
@@ -81,11 +82,13 @@ public class CommandItemDefinition {
         ItemStack stack = ItemSyntax.getItem(config.getString(path + ".item"));
         List<String> commands = config.getStringList(path + ".commands", new ArrayList<>());
         String permNode = config.getString(path + ".permission-node", "");
-        CommandType type = CommandType.valueOf(config.getString(path + ".run-as", "PLAYER").toUpperCase(Locale.ENGLISH));
-        ClickType clickType = ClickType.valueOf(config.getString(path + ".click-type", "CLICK_RIGHT").toUpperCase(Locale.ENGLISH));
+        CommandType type = CommandType
+                .valueOf(config.getString(path + ".run-as", "PLAYER").toUpperCase(Locale.ENGLISH));
+        ClickType clickType = ClickType
+                .valueOf(config.getString(path + ".click-type", "CLICK_RIGHT").toUpperCase(Locale.ENGLISH));
         int delay = config.getInt(path + ".delay", 0);
         List<String> delayedCommands = new ArrayList<>();
-        if(delay > 0)
+        if (delay > 0)
             delayedCommands = config.getStringList(path + ".delayed-commands", new ArrayList<>());
         int cooldown = config.getInt(path + ".cooldown", 0);
         boolean cancelAction = config.getBoolean(path + ".cancel-action", true);
@@ -93,24 +96,27 @@ public class CommandItemDefinition {
         List<ItemStack> consumables = new ArrayList<>();
 
         try {
-            for(String s : config.getStringList(path + ".consumed-items", new ArrayList<>()))
+            for (String s : config.getStringList(path + ".consumed-items", new ArrayList<>()))
                 consumables.add(ItemUtil.makeItemValid(ItemSyntax.getItem(s)));
-        } catch(Exception ignored){}
+        } catch (Exception ignored) {
+        }
 
         boolean consumeSelf = config.getBoolean(path + ".consume-self", false);
-        TernaryState requireSneaking = TernaryState.getFromString(config.getString(path + ".require-sneaking-state", "either"));
+        TernaryState requireSneaking = TernaryState
+                .getFromString(config.getString(path + ".require-sneaking-state", "either"));
 
         boolean keepOnDeath = config.getBoolean(path + ".keep-on-death", false);
         boolean fakeCommand = config.getBoolean(path + ".fake-command-compatibility", false);
 
         List<CommandItemAction> actionList = new ArrayList<>();
 
-        if(config.getKeys(path + ".actions") != null)
-            for(String ac : config.getKeys(path + ".actions")) {
+        if (config.getKeys(path + ".actions") != null)
+            for (String ac : config.getKeys(path + ".actions")) {
 
                 ActionType acType = ActionType.valueOf(config.getString(path + ".actions." + ac + ".type"));
                 String acValue = config.getString(path + ".actions." + ac + ".value");
-                ActionRunStage acStage = ActionRunStage.valueOf(config.getString(path + ".actions." + ac + ".run-stage"));
+                ActionRunStage acStage = ActionRunStage
+                        .valueOf(config.getString(path + ".actions." + ac + ".run-stage"));
 
                 actionList.add(new CommandItemAction(ac, acType, acValue, acStage));
             }
@@ -118,9 +124,13 @@ public class CommandItemDefinition {
         String missingConsumableMessage = config.getString(path + ".consumable-message", "mech.command-items.need");
         String cooldownMessage = config.getString(path + ".cooldown-message", "mech.command-items.wait");
 
-        return new CommandItemDefinition(name, stack, type, clickType, permNode, commands.toArray(new String[commands.size()]), delay,
-                delayedCommands.toArray(new String[delayedCommands.size()]), cooldown, cancelAction, consumables.toArray(new ItemStack[consumables
-                .size()]), consumeSelf, requireSneaking, keepOnDeath, actionList.toArray(new CommandItemAction[actionList.size()]), missingConsumableMessage, cooldownMessage, fakeCommand);
+        return new CommandItemDefinition(name, stack, type, clickType, permNode,
+                commands.toArray(new String[commands.size()]), delay,
+                delayedCommands.toArray(new String[delayedCommands.size()]), cooldown, cancelAction,
+                consumables.toArray(new ItemStack[consumables
+                        .size()]),
+                consumeSelf, requireSneaking, keepOnDeath, actionList.toArray(new CommandItemAction[actionList.size()]),
+                missingConsumableMessage, cooldownMessage, fakeCommand);
     }
 
     public void save(YAMLProcessor config, String path) {
@@ -131,13 +141,13 @@ public class CommandItemDefinition {
         config.setProperty(path + ".run-as", type.name());
         config.setProperty(path + ".click-type", clickType.name());
         config.setProperty(path + ".delay", delay);
-        if(delay > 0)
+        if (delay > 0)
             config.setProperty(path + ".delayed-commands", delayedCommands);
         config.setProperty(path + ".cooldown", cooldown);
         config.setProperty(path + ".cancel-action", cancelAction);
 
         List<String> consumables = new ArrayList<>();
-        for(ItemStack s : this.consumables)
+        for (ItemStack s : this.consumables)
             consumables.add(ItemSyntax.getStringFromItem(s));
         config.setProperty(path + ".consumed-items", consumables);
         config.setProperty(path + ".consume-self", consumeSelf);
@@ -146,7 +156,7 @@ public class CommandItemDefinition {
         config.setProperty(path + ".fake-command-compatibility", fakeCommand);
 
         config.addNode(path + ".actions");
-        for(CommandItemAction ac : actions) {
+        for (CommandItemAction ac : actions) {
             config.addNode(path + ".actions." + ac.name);
             config.setProperty(path + ".actions." + ac.name + ".type", ac.type.name());
             config.setProperty(path + ".actions." + ac.name + ".value", ac.value);
@@ -158,6 +168,6 @@ public class CommandItemDefinition {
     }
 
     enum CommandType {
-        PLAYER,CONSOLE,SUPERUSER
+        PLAYER, CONSOLE, SUPERUSER
     }
 }

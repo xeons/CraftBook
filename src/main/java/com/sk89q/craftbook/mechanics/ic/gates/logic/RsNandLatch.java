@@ -55,11 +55,11 @@ public class RsNandLatch extends AbstractIC {
         @Override
         public String[] getPinDescription(ChipState state) {
 
-            return new String[] {
-                    "Set",//Inputs
+            return new String[]{
+                    "Set", // Inputs
                     "Reset",
                     "Nothing",
-                    "Output",//Outputs
+                    "Output",// Outputs
             };
         }
 

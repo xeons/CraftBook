@@ -1,15 +1,15 @@
 // $Id$
 /*
  * Copyright (C) 2010, 2011 sk89q <http://www.sk89q.com>
- * 
+ *
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public
  * License as published by the Free
  * Software Foundation, either version 3 of the License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied
  * warranty of MERCHANTABILITY or
  * FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with this program. If not,
  * see <http://www.gnu.org/licenses/>.
  */
@@ -52,10 +52,11 @@ public class WirelessReceiver extends AbstractSelfTriggeredIC {
 
         band = getSign().getLine(2);
         if (!getLine(3).trim().isEmpty()) {
-            if(CraftBookPlugin.inst().getConfiguration().convertNamesToCBID && CraftBookPlugin.inst().getUUIDMappings().getUUID(getLine(3)) == null) {
+            if (CraftBookPlugin.inst().getConfiguration().convertNamesToCBID
+                    && CraftBookPlugin.inst().getUUIDMappings().getUUID(getLine(3)) == null) {
                 String line3 = getLine(3);
                 OfflinePlayer player = Bukkit.getOfflinePlayer(getLine(3));
-                if(player.hasPlayedBefore()) {
+                if (player.hasPlayedBefore()) {
                     try {
                         ProfileService resolver = HttpRepositoryService.forMinecraft();
                         Profile profile = resolver.findByName(player.getName()); // May be null
@@ -146,36 +147,40 @@ public class WirelessReceiver extends AbstractSelfTriggeredIC {
         @Override
         public String[] getPinDescription(ChipState state) {
 
-            return new String[] {
-                    "Trigger IC",//Inputs
-                    "State of Wireless Band",//Outputs
+            return new String[]{
+                    "Trigger IC", // Inputs
+                    "State of Wireless Band",// Outputs
             };
         }
 
         @Override
         public String[] getLineHelp() {
 
-            return new String[] {"Wireless Band", "Player's CBID (Automatic)"};
+            return new String[]{"Wireless Band", "Player's CBID (Automatic)"};
         }
 
         @Override
         public void checkPlayer(ChangedSign sign, CraftBookPlayer player) throws ICVerificationException {
 
-            if (requirename && (sign.getLine(3).isEmpty() || !ICMechanic.hasRestrictedPermissions(player, this, "MC1111"))) sign.setLine(3, player.getCraftBookId());
-            else if (!sign.getLine(3).isEmpty() && !ICMechanic.hasRestrictedPermissions(player, this, "MC1111")) sign.setLine(3, player.getCraftBookId());
+            if (requirename
+                    && (sign.getLine(3).isEmpty() || !ICMechanic.hasRestrictedPermissions(player, this, "MC1111")))
+                sign.setLine(3, player.getCraftBookId());
+            else if (!sign.getLine(3).isEmpty() && !ICMechanic.hasRestrictedPermissions(player, this, "MC1111"))
+                sign.setLine(3, player.getCraftBookId());
             sign.update(false);
         }
 
         @Override
         public void addConfiguration(YAMLProcessor config, String path) {
 
-            config.setComment(path + "per-player", "Require a name to be entered on the sign. This allows for 'per-player' wireless bands. This is done automatically.");
+            config.setComment(path + "per-player",
+                    "Require a name to be entered on the sign. This allows for 'per-player' wireless bands. This is done automatically.");
             requirename = config.getBoolean(path + "per-player", false);
         }
     }
 
     @Override
-    public boolean isActive () {
+    public boolean isActive() {
         return true;
     }
 }
