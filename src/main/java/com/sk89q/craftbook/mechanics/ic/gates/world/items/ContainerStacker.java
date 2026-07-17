@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.bukkit.Server;
 import org.bukkit.block.Block;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
@@ -65,46 +66,52 @@ public class ContainerStacker extends AbstractSelfTriggeredIC {
         Block bl = CraftBookBukkitUtil.toSign(getSign()).getBlock().getWorld().getBlockAt(x, y, z);
         if (InventoryUtil.doesBlockHaveInventory(bl)) {
             InventoryHolder c = (InventoryHolder) bl.getState();
-            for (int i = 0; i < c.getInventory().getSize(); i++) {
-                ItemStack it = c.getInventory().getItem(i);
-                if (ItemUtil.isStackValid(it)) {
+            Inventory inv = c.getInventory();
+            for (int i = 0; i < inv.getSize(); i++) {
+                ItemStack it = inv.getItem(i);
+                if (!ItemUtil.isStackValid(it))
+                    continue;
+                if (((Factory) getFactory()).blacklist.contains(new ItemInfo(it)))
+                    continue;
 
-                    if(((Factory)getFactory()).blacklist.contains(new ItemInfo(it)))
+                // Only compress plain items - never merge anything carrying enchants or meta.
+                if (!it.getEnchantments().isEmpty() || it.hasItemMeta())
+                    continue;
+
+                int max = it.getMaxStackSize();
+                if (it.getAmount() >= max)
+                    continue;
+
+                boolean merged = false;
+                for (int ii = 0; ii < inv.getSize(); ii++) {
+                    if (ii == i)
                         continue;
-                    int amount = it.getAmount();
-                    if (it.getAmount() < 64) {
+                    ItemStack itt = inv.getItem(ii);
+                    if (!ItemUtil.isStackValid(itt) || !ItemUtil.areItemsIdentical(it, itt))
+                        continue;
+                    if (!itt.getEnchantments().isEmpty() || itt.hasItemMeta())
+                        continue;
 
-                        int missing = 0;
+                    int space = max - it.getAmount();
+                    if (space <= 0)
+                        break;
 
-                        for (int ii = 0; ii < c.getInventory().getSize(); ii++) {
-                            if (ii == i)
-                                continue;
-                            ItemStack itt = c.getInventory().getItem(ii);
-                            if (ItemUtil.isStackValid(itt) && ItemUtil.areItemsIdentical(it, itt) && it.getEnchantments().isEmpty() && !itt.getEnchantments().isEmpty() && !it.hasItemMeta() && !itt.hasItemMeta()) {
+                    // Pull only what fits; leave any remainder in the source slot.
+                    int transfer = Math.min(space, itt.getAmount());
+                    it.setAmount(it.getAmount() + transfer);
+                    merged = true;
 
-                                if (amount + itt.getAmount() <= 64) {
-                                    amount += itt.getAmount();
-                                } else {
-                                    missing = amount + itt.getAmount() - 64;
-                                    amount = 64;
-                                }
-                                c.getInventory().remove(itt);
-                            }
-                        }
-
-                        if (amount != it.getAmount()) {
-
-                            it.setAmount(amount);
-                            c.getInventory().setItem(i, it);
-                            break;
-                        }
-                        if(missing > 0) {
-
-                            ItemStack miss = new ItemStack(it);
-                            miss.setAmount(missing);
-                            c.getInventory().addItem(miss);
-                        }
+                    if (itt.getAmount() - transfer <= 0) {
+                        inv.setItem(ii, null);
+                    } else {
+                        itt.setAmount(itt.getAmount() - transfer);
+                        inv.setItem(ii, itt);
                     }
+                }
+
+                if (merged) {
+                    inv.setItem(i, it);
+                    break;
                 }
             }
         }
