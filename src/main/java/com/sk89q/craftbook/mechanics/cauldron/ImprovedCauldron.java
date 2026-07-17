@@ -33,6 +33,7 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.material.Cauldron;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
@@ -250,9 +251,18 @@ public class ImprovedCauldron extends AbstractCraftBookMechanic {
                 return true;
             } else if(player != null) { // Spoons
                 if (isItemSpoon(BukkitAdapter.adapt(player.getItemInHand(HandSide.MAIN_HAND).getType()))) {
-                    double chance = getSpoonChance(((BukkitCraftBookPlayer) player).getPlayer().getInventory().getItemInMainHand(), recipe.getChance());
+                    org.bukkit.entity.Player bukkitPlayer = ((BukkitCraftBookPlayer) player).getPlayer();
+                    ItemStack spoon = bukkitPlayer.getInventory().getItemInMainHand();
+                    double chance = getSpoonChance(spoon, recipe.getChance());
                     double ran = CraftBookPlugin.inst().getRandom().nextDouble();
-                    ((BukkitCraftBookPlayer) player).getPlayer().getInventory().getItemInMainHand().setDurability((short) (((BukkitCraftBookPlayer) player).getPlayer().getInventory().getItemInMainHand().getDurability() - (short) 1));
+                    // Wear the spoon down by one point of damage. The old code mutated a copy
+                    // returned by getItemInHand() without writing it back, so it never persisted.
+                    if (spoon.getItemMeta() instanceof Damageable) {
+                        Damageable damageable = (Damageable) spoon.getItemMeta();
+                        damageable.setDamage(damageable.getDamage() + 1);
+                        spoon.setItemMeta(damageable);
+                        bukkitPlayer.getInventory().setItemInMainHand(spoon);
+                    }
                     if (chance <= ran) {
                         cook(block, recipe, items);
                         player.print(player.translate("mech.cauldron.cook") + " " + ChatColor.AQUA + recipe.getName());
