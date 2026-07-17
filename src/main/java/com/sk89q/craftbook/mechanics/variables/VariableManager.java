@@ -52,8 +52,18 @@ public class VariableManager extends AbstractCraftBookMechanic {
             return false;
         }
 
-        if(packetMessageOverride)
-            new VariablePacketModifier();
+        if(packetMessageOverride) {
+            if(!CraftBookPlugin.plugins.hasProtocolLib()) {
+                CraftBookPlugin.inst().getLogger().warning("The Variables 'override-all-text' option requires ProtocolLib, which is not installed. Packet message overrides will be disabled.");
+            } else {
+                try {
+                    new VariablePacketModifier();
+                } catch (Throwable t) {
+                    // ProtocolLib present but a linkage/runtime error occurred; don't let it break the mechanic.
+                    CraftBookPlugin.inst().getLogger().warning("Failed to enable Variables packet message overrides: " + t.getMessage());
+                }
+            }
+        }
 
         return true;
     }
