@@ -58,5 +58,9 @@
     <!-- Preserve at most one blank line, so the existing "blank line after {" idiom survives -->
     <setting id="org.eclipse.jdt.core.formatter.number_of_empty_lines_to_preserve" value="1"/>
     <setting id="org.eclipse.jdt.core.formatter.join_wrapped_lines" value="false"/>
+
+    <!-- Keep Javadoc tag descriptions on the same line: @param name description (not split) -->
+    <setting id="org.eclipse.jdt.core.formatter.comment.insert_new_line_for_parameter" value="do not insert"/>
+    <setting id="org.eclipse.jdt.core.formatter.comment.indent_parameter_description" value="false"/>
   </profile>
 </profiles>
