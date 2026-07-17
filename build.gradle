@@ -15,6 +15,7 @@ buildscript {
 plugins {
     id 'com.github.johnrengelman.shadow' version '8.1.1'
     id "com.jfrog.artifactory" version "5.2.2"
+    id 'com.diffplug.spotless' version '6.25.0'
 }
 
 println """
@@ -177,5 +178,17 @@ allprojects {
             expand 'internalVersion': project.internalVersion
             include 'plugin.yml'
         }
+    }
+}
+
+spotless {
+    java {
+        target 'src/**/*.java'
+        // Eclipse JDT formatter configured for the Oracle coding conventions
+        // (4-space indent, 120-col wrap, K&R braces). See CONTRIBUTING.md.
+        eclipse().configFile("$rootDir/config/spotless/eclipse-formatter.xml")
+        removeUnusedImports()
+        trimTrailingWhitespace()
+        endWithNewline()
     }
 }
