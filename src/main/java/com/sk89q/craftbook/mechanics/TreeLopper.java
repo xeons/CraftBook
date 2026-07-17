@@ -25,7 +25,6 @@ import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Tag;
-import org.bukkit.TreeSpecies;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
@@ -33,9 +32,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.material.Leaves;
-import org.bukkit.material.MaterialData;
-import org.bukkit.material.Tree;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -76,14 +72,12 @@ public class TreeLopper extends AbstractCraftBookMechanic {
         if(!player.hasPermission("craftbook.mech.treelopper.sapling"))
             planted = 100;
 
-        TreeSpecies species = null;
-        if(placeSaplings && usedBlock.getState().getData() instanceof Tree
-                && (usedBlock.getRelative(0, -1, 0).getType() == Material.DIRT || usedBlock.getRelative(0, -1, 0).getType() == Material.PODZOL || usedBlock.getRelative(0, -1, 0).getType() == Material.GRASS_BLOCK || usedBlock.getRelative(0, -1, 0).getType() == Material.MYCELIUM)) {
-            species = ((Tree) usedBlock.getState().getData()).getSpecies();
-        }
+        Material sapling = null;
+        if(placeSaplings && isPlantableSoil(usedBlock.getRelative(0, -1, 0).getType()))
+            sapling = getSaplingFor(usedBlock.getType());
 
-        if(species != null && planted < maxSaplings(species)) {
-            Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SaplingPlanter(usedBlock, species), 2);
+        if(sapling != null && planted < maxSaplings(sapling)) {
+            Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SaplingPlanter(usedBlock, sapling), 2);
             planted ++;
         }
 
@@ -100,11 +94,49 @@ public class TreeLopper extends AbstractCraftBookMechanic {
         }
     }
 
-    private static int maxSaplings(TreeSpecies tree) {
-        if (tree == TreeSpecies.DARK_OAK || tree == TreeSpecies.JUNGLE)
+    private static int maxSaplings(Material sapling) {
+        // 2x2 trees (dark oak, jungle) have up to four trunk blocks touching the ground.
+        if (sapling == Material.DARK_OAK_SAPLING || sapling == Material.JUNGLE_SAPLING)
             return 4;
         else
             return 1;
+    }
+
+    private static boolean isPlantableSoil(Material material) {
+        return material == Material.DIRT || material == Material.PODZOL
+                || material == Material.GRASS_BLOCK || material == Material.MYCELIUM;
+    }
+
+    /**
+     * Maps a log/wood/leaf {@link Material} to the sapling that regrows it. Replaces the
+     * pre-1.13 {@code MaterialData}/{@code TreeSpecies} lookup, which returns nothing for
+     * wood types added since the flattening (e.g. mangrove, cherry, pale oak).
+     *
+     * @return the sapling material, or {@code null} if the block is not a recognised tree block
+     */
+    private static Material getSaplingFor(Material treeBlock) {
+        switch (treeBlock) {
+            case OAK_LOG: case OAK_WOOD: case STRIPPED_OAK_LOG: case STRIPPED_OAK_WOOD: case OAK_LEAVES:
+                return Material.OAK_SAPLING;
+            case SPRUCE_LOG: case SPRUCE_WOOD: case STRIPPED_SPRUCE_LOG: case STRIPPED_SPRUCE_WOOD: case SPRUCE_LEAVES:
+                return Material.SPRUCE_SAPLING;
+            case BIRCH_LOG: case BIRCH_WOOD: case STRIPPED_BIRCH_LOG: case STRIPPED_BIRCH_WOOD: case BIRCH_LEAVES:
+                return Material.BIRCH_SAPLING;
+            case JUNGLE_LOG: case JUNGLE_WOOD: case STRIPPED_JUNGLE_LOG: case STRIPPED_JUNGLE_WOOD: case JUNGLE_LEAVES:
+                return Material.JUNGLE_SAPLING;
+            case ACACIA_LOG: case ACACIA_WOOD: case STRIPPED_ACACIA_LOG: case STRIPPED_ACACIA_WOOD: case ACACIA_LEAVES:
+                return Material.ACACIA_SAPLING;
+            case DARK_OAK_LOG: case DARK_OAK_WOOD: case STRIPPED_DARK_OAK_LOG: case STRIPPED_DARK_OAK_WOOD: case DARK_OAK_LEAVES:
+                return Material.DARK_OAK_SAPLING;
+            case MANGROVE_LOG: case MANGROVE_WOOD: case STRIPPED_MANGROVE_LOG: case STRIPPED_MANGROVE_WOOD: case MANGROVE_LEAVES:
+                return Material.MANGROVE_PROPAGULE;
+            case CHERRY_LOG: case CHERRY_WOOD: case STRIPPED_CHERRY_LOG: case STRIPPED_CHERRY_WOOD: case CHERRY_LEAVES:
+                return Material.CHERRY_SAPLING;
+            case PALE_OAK_LOG: case PALE_OAK_WOOD: case STRIPPED_PALE_OAK_LOG: case STRIPPED_PALE_OAK_WOOD: case PALE_OAK_LEAVES:
+                return Material.PALE_OAK_SAPLING;
+            default:
+                return null;
+        }
     }
 
     private boolean canBreakBlock(Player player, BlockStateHolder originalBlock, Block toBreak) {
@@ -134,18 +166,12 @@ public class TreeLopper extends AbstractCraftBookMechanic {
             return false;
         if(!enabledItems.contains(player.getItemInHand(HandSide.MAIN_HAND).getType()))
             return false;
-        TreeSpecies species = null;
-        if(placeSaplings
-                && (block.getRelative(0, -1, 0).getType() == Material.DIRT || block.getRelative(0, -1, 0).getType() == Material.PODZOL || block.getRelative(0, -1, 0).getType() == Material.GRASS_BLOCK || block.getRelative(0, -1, 0).getType() == Material.MYCELIUM)) {
-            MaterialData data = block.getState().getData();
-            if (data instanceof Leaves)
-                species = ((Leaves) data).getSpecies();
-            else if (data instanceof Tree)
-                species = ((Tree) data).getSpecies();
-        }
+        Material sapling = null;
+        if(placeSaplings && isPlantableSoil(block.getRelative(0, -1, 0).getType()))
+            sapling = getSaplingFor(block.getType());
         block.breakNaturally(event.getPlayer().getInventory().getItemInMainHand());
-        if(species != null && planted < maxSaplings(species)) {
-            Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SaplingPlanter(block, species), 2);
+        if(sapling != null && planted < maxSaplings(sapling)) {
+            Bukkit.getScheduler().runTaskLater(CraftBookPlugin.inst(), new SaplingPlanter(block, sapling), 2);
             planted ++;
         }
         visitedLocations.add(block.getLocation());
@@ -206,40 +232,18 @@ public class TreeLopper extends AbstractCraftBookMechanic {
 
     private static class SaplingPlanter implements Runnable {
         private final Block usedBlock;
-        private final TreeSpecies fspecies;
+        private final Material saplingMaterial;
 
-        SaplingPlanter(Block usedBlock, TreeSpecies fspecies) {
+        SaplingPlanter(Block usedBlock, Material saplingMaterial) {
             this.usedBlock = usedBlock;
-            this.fspecies = fspecies;
+            this.saplingMaterial = saplingMaterial;
         }
 
         @Override
         public void run () {
-            Material saplingMaterial;
-            switch (fspecies) {
-                case DARK_OAK:
-                    saplingMaterial = Material.DARK_OAK_SAPLING;
-                    break;
-                case GENERIC:
-                    saplingMaterial = Material.OAK_SAPLING;
-                    break;
-                case REDWOOD:
-                    saplingMaterial = Material.SPRUCE_SAPLING;
-                    break;
-                case BIRCH:
-                    saplingMaterial = Material.BIRCH_SAPLING;
-                    break;
-                case JUNGLE:
-                    saplingMaterial = Material.JUNGLE_SAPLING;
-                    break;
-                case ACACIA:
-                    saplingMaterial = Material.ACACIA_SAPLING;
-                    break;
-                default:
-                    saplingMaterial = Material.OAK_SAPLING;
-                    break;
-            }
-            usedBlock.setType(saplingMaterial);
+            // Only plant if the spot is still empty; the log may have been replaced by something else.
+            if (usedBlock.getType() == Material.AIR)
+                usedBlock.setType(saplingMaterial);
         }
 
     }
