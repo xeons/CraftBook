@@ -334,10 +334,10 @@ public class AutomaticCrafter extends AbstractSelfTriggeredIC implements PipeInp
         if (crafter.getType() == Material.DISPENSER || crafter.getType() == Material.DROPPER) {
             InventoryHolder disp = (InventoryHolder) crafter.getState();
 
-            boolean delete = true;
             List<ItemStack> newItems = new ArrayList<>(event.getItems());
             for (ItemStack ite : event.getItems()) {
                 if (!ItemUtil.isStackValid(ite)) continue;
+                boolean delete = true;
                 int iteind = newItems.indexOf(ite);
                 int newAmount = ite.getAmount();
                 for (int i = 0; i < ite.getAmount(); i++) {
