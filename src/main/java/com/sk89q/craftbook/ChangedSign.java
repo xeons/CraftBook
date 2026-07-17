@@ -11,6 +11,8 @@ import org.apache.commons.lang.Validate;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
+import org.bukkit.block.sign.Side;
+import org.bukkit.block.sign.SignSide;
 
 import java.util.Arrays;
 import java.util.Locale;
@@ -21,6 +23,9 @@ public class ChangedSign {
     private Sign sign;
     private String[] lines;
     private String[] oldLines;
+    // Which physical side of the sign these lines belong to. Modern (1.20+) signs have two
+    // writable sides; this is resolved in flushLines() so reads and writes hit the same side.
+    private Side side = Side.FRONT;
 
     public ChangedSign(Block block, String[] lines, CraftBookPlayer player) {
         this(block, lines);
@@ -131,8 +136,9 @@ public class ChangedSign {
 
         if(!hasChanged() && !force)
             return false;
+        SignSide signSide = getSign().getSide(side);
         for(int i = 0; i < 4; i++) {
-            getSign().setLine(i, lines[i]);
+            signSide.setLine(i, lines[i]);
         }
         System.arraycopy(this.lines, 0, this.oldLines, 0, this.lines.length);
 
@@ -162,11 +168,30 @@ public class ChangedSign {
 
     public void flushLines () {
         this.sign = null;
-        this.lines = this.getSign().getLines();
+        Sign state = this.getSign();
+        // Prefer the front side, but fall back to the back when the front is blank so that
+        // a mechanic written on the back of the sign is still picked up (1.20+ two-sided signs).
+        this.side = Side.FRONT;
+        if (isBlank(state.getSide(Side.FRONT).getLines()) && !isBlank(state.getSide(Side.BACK).getLines())) {
+            this.side = Side.BACK;
+        }
+        this.lines = state.getSide(this.side).getLines();
         if (this.oldLines == null) {
             this.oldLines = new String[lines.length];
         }
         System.arraycopy(this.lines, 0, this.oldLines, 0, this.lines.length);
+    }
+
+    public Side getSide() {
+        return side;
+    }
+
+    private static boolean isBlank(String[] lines) {
+        if (lines == null) return true;
+        for (String line : lines)
+            if (line != null && !line.isEmpty())
+                return false;
+        return true;
     }
 
     public boolean updateSign(ChangedSign sign) {
