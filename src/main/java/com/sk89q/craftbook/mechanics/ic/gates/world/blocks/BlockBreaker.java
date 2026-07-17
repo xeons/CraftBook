@@ -22,6 +22,9 @@ import org.bukkit.Material;
 import org.bukkit.Server;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.List;
 
@@ -60,10 +63,12 @@ public class BlockBreaker extends AbstractSelfTriggeredIC {
 
     private Block broken;
     private BaseBlock item;
+    private boolean useSilkTouch;
 
     @Override
     public void load() {
         item = BlockSyntax.getBlock(getLine(2), true);
+        useSilkTouch = getLine(3).trim().equalsIgnoreCase("true");
     }
 
     public boolean breakBlock() {
@@ -86,8 +91,19 @@ public class BlockBreaker extends AbstractSelfTriggeredIC {
             return false;
         }
 
+        ItemStack tool = null;
+
+        if(useSilkTouch) {
+            tool = new ItemStack(Material.NETHERITE_PICKAXE);
+            ItemMeta meta = tool.getItemMeta();
+            if (meta != null) {
+                meta.addEnchant(Enchantment.SILK_TOUCH, 1, false);
+                tool.setItemMeta(meta);
+            }
+        }
+
         if (item == null || item.equalsFuzzy(BukkitAdapter.adapt(brokenData))) {
-            ICUtil.collectItem(this, above ? BlockVector3.at(0, -1, 0) : BlockVector3.at(0, 1, 0), BlockUtil.getBlockDrops(broken, null));
+            ICUtil.collectItem(this, above ? BlockVector3.at(0, -1, 0) : BlockVector3.at(0, 1, 0), BlockUtil.getBlockDrops(broken, tool));
             broken.setType(Material.AIR);
         }
 
